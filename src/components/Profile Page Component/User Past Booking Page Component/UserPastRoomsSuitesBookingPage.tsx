@@ -4,22 +4,32 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+
 import { useAppSelector, useAppDispatch } from "@/redux store/hooks";
+
 import { 
     updateLoginPageCalledFrom, 
     updateLoginRedirectPage 
 } from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
+
 
 import { 
     ROOMS_SUITES_BOOKING_INFO_IS_PRESENT, 
     ROOMS_SUITES_BOOKING_INFO_IS_EMPTY 
 } from "@/constant string files/apiSuccessMessageConstants";
 
+
 import UserRoomsSuitesBookingComponent from "@/components/User Booking Component/UserRoomsSuitesBookingComponent";
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 
+
 import { LoginUserDetails } from "@/interface/Hotel User Interface/hotelUsersInterfce";
-import { IRoomsSuitesBookingInfoForArrayForCustomer, ViewRoomsSuitesBookingResponseForCustomer } from "@/interface/Rooms and Suites Interface/viewRoomSuiteBookingApiResponse";
+
+import { 
+    IRoomsSuitesBookingInfoForArrayForCustomer, 
+    ViewRoomsSuitesBookingResponseForCustomer 
+} from "@/interface/Rooms and Suites Interface/viewRoomSuiteBookingApiResponse";
+
 
 
 function UserPastRoomsSuitesBookingPageFunctionalComponent(){
@@ -27,7 +37,8 @@ function UserPastRoomsSuitesBookingPageFunctionalComponent(){
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const loginUserDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
 
     useEffect(function() {
         if (loginUserDetails == null) {
@@ -47,7 +58,8 @@ function UserPastRoomsSuitesBookingPageFunctionalComponent(){
 
     const [loadingBookingDetails, setLoadingBookingDetails] = useState<boolean>(true);
 
-    const [roomSuitesBooking, setRoomSuitesBooking] = useState<null | IRoomsSuitesBookingInfoForArrayForCustomer[]>(null);
+    const [roomSuitesBooking, setRoomSuitesBooking] = 
+        useState<null | IRoomsSuitesBookingInfoForArrayForCustomer[]>(null);
 
     useEffect(()=>{
         fetchRoomSuiteBookingDb(loginUserId);
@@ -55,7 +67,9 @@ function UserPastRoomsSuitesBookingPageFunctionalComponent(){
 
     async function fetchRoomSuiteBookingDb(loginUserId: string) {
         try {
-            const response: Response = await fetch(`/api/view-past-booking/rooms-suites/${loginUserId}`);
+            const response: Response = await fetch(
+                `/api/view-past-booking/rooms-suites/${loginUserId}`
+            );
             const data: ViewRoomsSuitesBookingResponseForCustomer = await response.json();
             
             if(response.status === 200){
@@ -65,7 +79,8 @@ function UserPastRoomsSuitesBookingPageFunctionalComponent(){
                         setRoomSuitesBooking(roomSuitesBookingDb);
                     }
                     else if(data.message === ROOMS_SUITES_BOOKING_INFO_IS_PRESENT){
-                        const roomSuitesBookingDb: IRoomsSuitesBookingInfoForArrayForCustomer[] | undefined = data.roomSuitesBookingInfo;
+                        const roomSuitesBookingDb: IRoomsSuitesBookingInfoForArrayForCustomer[] | undefined = 
+                            data.roomSuitesBookingInfo;
                         if(roomSuitesBookingDb){
                             setRoomSuitesBooking(roomSuitesBookingDb);
                         }

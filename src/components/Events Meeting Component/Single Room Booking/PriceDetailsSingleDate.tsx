@@ -17,9 +17,34 @@ import { eventMeetingTimingConstants } from "@/constant string files/eventsMeeti
 import EquipmentsPriceBreakup from '@/components/Events Meeting Component/Common Components/EquipmentsPriceBreakup';
 import MealsPriceBreakup from '@/components/Events Meeting Component/Common Components/MealsPriceBreakup';
 
-import { EventMeetingPriceForSeatingArrangement, FoodServicePricePerGuest, PriceForEquipments, SeatingArrangement } from '@/interface/Event Meeting Interface/eventMeetingRoomInterface';
-import { DateDetailsBasicPrice, DateDetailsForFoodPrice, EventTimingDetailsBasicPrice, EventTimingDetailsForFoodPrice, MeetingEventDetails } from '@/interface/Event Meeting Interface/eachDayEventMeetingInfoInterface';
-import { FinalPriceList, SeatingArrangementPriceList, SelectedMealsType, SingleDateEventBookingDetailsInterface } from '@/interface/Event Meeting Interface/eventMeetingBookingInterface';
+
+import { 
+    EventMeetingPriceForSeatingArrangement, 
+    FoodServicePricePerGuest, 
+    PriceForEquipments, 
+    SeatingArrangement 
+} from '@/interface/Event Meeting Interface/eventMeetingRoomInterface';
+
+import { 
+    DateDetailsBasicPrice, 
+    DateDetailsForFoodPrice, 
+    EventTimingDetailsBasicPrice, 
+    EventTimingDetailsForFoodPrice, 
+    MeetingEventDetails 
+} from '@/interface/Event Meeting Interface/eachDayEventMeetingInfoInterface';
+
+import { 
+    FinalPriceList, 
+    SeatingArrangementPriceList, 
+    SelectedMealsType, 
+    SingleDateEventBookingDetailsInterface 
+} from '@/interface/Event Meeting Interface/eventMeetingBookingInterface';
+
+import { 
+    MeetingEventBookingTime, 
+    MeetingEventSeatingArrangement, 
+    MeetingEventsRoomTitle 
+} from '@/interface/Event Meeting Interface/eventMeetingRoomConstantInterface';
 
 
 interface IPropsPriceDetailsSingleDate{
@@ -30,9 +55,14 @@ interface IPropsPriceDetailsSingleDate{
 
 function PriceDetailsSingleDate(props: IPropsPriceDetailsSingleDate) {
 
-    const eachDayFoodPrice: DateDetailsForFoodPrice[] = useAppSelector((reduxStore) => reduxStore.eventMeetingEachDayFoodPriceSliceName.eachDayFoodPrice);
-    const eachDayInfomation: MeetingEventDetails[] = useAppSelector((reduxStore) => reduxStore.eventMeetingEachDayInformationSliceName.eachDayInfomation);
-    const eachDaySeatingArrangement: EventMeetingPriceForSeatingArrangement[] = useAppSelector((reduxStore) => reduxStore.eventMeetingEachDaySeatingArrangementSliceName.eachDaySeatingArrangement);
+    const eachDayFoodPrice: DateDetailsForFoodPrice[] = 
+        useAppSelector((reduxStore) => reduxStore.eventMeetingEachDayFoodPriceSliceName.eachDayFoodPrice);
+    
+    const eachDayInfomation: MeetingEventDetails[] = 
+        useAppSelector((reduxStore) => reduxStore.eventMeetingEachDayInformationSliceName.eachDayInfomation);
+    
+    const eachDaySeatingArrangement: EventMeetingPriceForSeatingArrangement[] = 
+        useAppSelector((reduxStore) => reduxStore.eventMeetingEachDaySeatingArrangementSliceName.eachDaySeatingArrangement);
 
     const bookingDetails: SingleDateEventBookingDetailsInterface | null = props.bookingDetailsForCart;
 
@@ -40,18 +70,20 @@ function PriceDetailsSingleDate(props: IPropsPriceDetailsSingleDate) {
         throw new Error("bookingDetails is null");
     }
 
-    const meetingEventAreaTitle: string = bookingDetails.meetingEventsInfoTitle;
-    const meetingEventBookingSlots: string[] = bookingDetails.meetingEventBookingTime;
-    const meetingEventSeatingArrangement: string = bookingDetails.meetingEventSeatingArrangement;
+    const meetingEventAreaTitle: MeetingEventsRoomTitle = bookingDetails.meetingEventsInfoTitle;
+    const meetingEventBookingSlots: MeetingEventBookingTime[] = bookingDetails.meetingEventBookingTime;
+    const meetingEventSeatingArrangement: MeetingEventSeatingArrangement = bookingDetails.meetingEventSeatingArrangement;
     const maximumGuestAttending: number = bookingDetails.maximumGuestAttending;
     const meetingEventBookingDate: string | Date = bookingDetails.meetingEventBookingDate;
 
     let meetingEventBookingDateString: string = "";
     if(typeof bookingDetails.meetingEventBookingDate == "string"){
-        meetingEventBookingDateString = convertDateTextToDate(bookingDetails.meetingEventBookingDate).toString();
+        meetingEventBookingDateString = 
+            convertDateTextToDate(bookingDetails.meetingEventBookingDate).toString();
     }
     else if(bookingDetails.meetingEventBookingDate instanceof Date){
-        meetingEventBookingDateString = convertDateTextToDate(bookingDetails.meetingEventBookingDate.toISOString()).toString();
+        meetingEventBookingDateString = 
+            convertDateTextToDate(bookingDetails.meetingEventBookingDate.toISOString()).toString();
     }
 
     let selectedBookingDate: Date = new Date();
@@ -61,22 +93,47 @@ function PriceDetailsSingleDate(props: IPropsPriceDetailsSingleDate) {
         selectedBookingDate = new Date(meetingEventBookingDate);
     }
     
-    const isMorningSlotSelected: boolean = meetingEventBookingSlots.includes(eventMeetingTimingConstants.MORNING_TIME);
-    const isAfternoonSlotSelected: boolean = meetingEventBookingSlots.includes(eventMeetingTimingConstants.AFTERNOON_TIME);
-    const isEveningSlotSelected: boolean = meetingEventBookingSlots.includes(eventMeetingTimingConstants.EVENING_TIME);
-    const isNightSlotSelected: boolean = meetingEventBookingSlots.includes(eventMeetingTimingConstants.NIGHT_TIME);
-    const isMidNightSlotSelected: boolean = meetingEventBookingSlots.includes(eventMeetingTimingConstants.MID_NIGHT_TIME);
+    const isMorningSlotSelected: boolean = 
+        meetingEventBookingSlots.includes(eventMeetingTimingConstants.MORNING_TIME);
 
-    const foodServicePriceInformation: DateDetailsForFoodPrice = fetchCurrentDayFoodServicePrice(eachDayFoodPrice);
-    const basicPriceDetailsInformation: DateDetailsBasicPrice = fetchCurrentDateBasicPrice(eachDayInfomation);
-    const seatingArrangementPriceInformation: SeatingArrangement = fetchCurrentRoomSeatingArrangementPrice(eachDaySeatingArrangement);
+    const isAfternoonSlotSelected: boolean = 
+        meetingEventBookingSlots.includes(eventMeetingTimingConstants.AFTERNOON_TIME);
+    
+    const isEveningSlotSelected: boolean = 
+        meetingEventBookingSlots.includes(eventMeetingTimingConstants.EVENING_TIME);
+    
+    const isNightSlotSelected: boolean = 
+        meetingEventBookingSlots.includes(eventMeetingTimingConstants.NIGHT_TIME);
+    
+    const isMidNightSlotSelected: boolean = 
+        meetingEventBookingSlots.includes(eventMeetingTimingConstants.MID_NIGHT_TIME);
+
+
+    const foodServicePriceInformation: DateDetailsForFoodPrice = 
+        fetchCurrentDayFoodServicePrice(eachDayFoodPrice);
+
+    const basicPriceDetailsInformation: DateDetailsBasicPrice = 
+        fetchCurrentDateBasicPrice(eachDayInfomation);
+
+    const seatingArrangementPriceInformation: SeatingArrangement = 
+        fetchCurrentRoomSeatingArrangementPrice(eachDaySeatingArrangement);
 
     const bookingDateEventArray: EventTimingDetailsBasicPrice[] = basicPriceDetailsInformation.eventTimingDetails;
-    const morningSlotBasicPrice: number = getBasicPriceOfRoomForSlot(bookingDateEventArray, eventMeetingTimingConstants.MORNING_TIME);
-    const afternoonSlotBasicPrice: number = getBasicPriceOfRoomForSlot(bookingDateEventArray, eventMeetingTimingConstants.AFTERNOON_TIME);
-    const eveningSlotBasicPrice: number = getBasicPriceOfRoomForSlot(bookingDateEventArray, eventMeetingTimingConstants.EVENING_TIME);
-    const nightSlotBasicPrice: number = getBasicPriceOfRoomForSlot(bookingDateEventArray, eventMeetingTimingConstants.NIGHT_TIME);
-    const midNightSlotBasicPrice: number = getBasicPriceOfRoomForSlot(bookingDateEventArray, eventMeetingTimingConstants.MID_NIGHT_TIME);
+    
+    const morningSlotBasicPrice: number = 
+        getBasicPriceOfRoomForSlot(bookingDateEventArray, eventMeetingTimingConstants.MORNING_TIME);
+    
+    const afternoonSlotBasicPrice: number = 
+        getBasicPriceOfRoomForSlot(bookingDateEventArray, eventMeetingTimingConstants.AFTERNOON_TIME);
+    
+    const eveningSlotBasicPrice: number = 
+        getBasicPriceOfRoomForSlot(bookingDateEventArray, eventMeetingTimingConstants.EVENING_TIME);
+    
+    const nightSlotBasicPrice: number = 
+        getBasicPriceOfRoomForSlot(bookingDateEventArray, eventMeetingTimingConstants.NIGHT_TIME);
+    
+    const midNightSlotBasicPrice: number = 
+        getBasicPriceOfRoomForSlot(bookingDateEventArray, eventMeetingTimingConstants.MID_NIGHT_TIME);
 
 
     const priceList: PriceForEquipments = seatingArrangementPriceInformation.priceForEquipments;
@@ -87,19 +144,26 @@ function PriceDetailsSingleDate(props: IPropsPriceDetailsSingleDate) {
         ...priceList, 
         totalPriceOfAllSeats 
     };
-    if(Object.hasOwn(priceList, 'priceForEachCircularTable') && Object.hasOwn(priceList, 'noOfGuestInEachCircularTable')){
-        const noOfGuestInEachCircularTable = priceList.noOfGuestInEachCircularTable;
-        const priceForEachCircularTable = priceList.priceForEachCircularTable;
+    if(Object.hasOwn(priceList, 'priceForEachCircularTable') && 
+        Object.hasOwn(priceList, 'noOfGuestInEachCircularTable')
+    ){
+        const noOfGuestInEachCircularTable: number | undefined = priceList.noOfGuestInEachCircularTable;
+        const priceForEachCircularTable: number | undefined = priceList.priceForEachCircularTable;
+
         if(noOfGuestInEachCircularTable && priceForEachCircularTable){
-            const numberOfCircularTableRequired = Math.ceil(maximumGuestAttending/noOfGuestInEachCircularTable);
-            const totalPriceOfAllCircularTables = priceForEachCircularTable * numberOfCircularTableRequired;
+            const numberOfCircularTableRequired: number = 
+                Math.ceil(maximumGuestAttending/noOfGuestInEachCircularTable);
+
+            const totalPriceOfAllCircularTables: number = 
+                priceForEachCircularTable * numberOfCircularTableRequired;
+
             finalPriceList.totalPriceOfAllCircularTables = totalPriceOfAllCircularTables;
             finalPriceList.numberOfCircularTableRequired = numberOfCircularTableRequired;
         }
     }
         
     const priceListNameArray: string[] = Object.keys(finalPriceList);
-    const priceListArrayObj: SeatingArrangementPriceList[] = priceListNameArray.map(function(eachName){
+    const priceListArrayObj: SeatingArrangementPriceList[] = priceListNameArray.map(function(eachName: string){
         const eachPrice: SeatingArrangementPriceList = {};
         let propertyName: string =  eachName;
         propertyName = propertyName.replace(/([A-Z])/g, ' $1');
@@ -110,7 +174,7 @@ function PriceDetailsSingleDate(props: IPropsPriceDetailsSingleDate) {
     });
     const seatingArrangementPriceList: SeatingArrangementPriceList[] = priceListArrayObj;
 
-    let totalPriceOfRoomAppliance = 0;
+    let totalPriceOfRoomAppliance: number = 0;
     seatingArrangementPriceList.forEach(function(eachPriceList: SeatingArrangementPriceList) {
         const commonPriceIncludedForTotal = ['Price For Stage', 'Price For Projector', 'Price For Electrical Appliance', 'Total Price Of All Seats'];
         const specialPriceIncludedForTotal = ['Price For U Shape Table', 'Price Of Boardroom Table', 'Total Price Of All Circular Tables'];
@@ -139,38 +203,57 @@ function PriceDetailsSingleDate(props: IPropsPriceDetailsSingleDate) {
     let selectedNightMeals;
     let selectedMidNightMeals;
 
-    const allMorningMealsInformation: EventTimingDetailsForFoodPrice = getSpecificMealAllFoodService(foodServicePriceInformation, eventMeetingTimingConstants.MORNING_TIME);
-    const allAfternoonMealsInformation: EventTimingDetailsForFoodPrice = getSpecificMealAllFoodService(foodServicePriceInformation, eventMeetingTimingConstants.AFTERNOON_TIME);
-    const allEveningMealsInformation: EventTimingDetailsForFoodPrice = getSpecificMealAllFoodService(foodServicePriceInformation, eventMeetingTimingConstants.EVENING_TIME);
-    const allNightMealsInformation: EventTimingDetailsForFoodPrice = getSpecificMealAllFoodService(foodServicePriceInformation, eventMeetingTimingConstants.NIGHT_TIME);
-    const allMidNightMealsInformation: EventTimingDetailsForFoodPrice = getSpecificMealAllFoodService(foodServicePriceInformation, eventMeetingTimingConstants.MID_NIGHT_TIME);
+    
+    const allMorningMealsInformation: EventTimingDetailsForFoodPrice = 
+        getSpecificMealAllFoodService(foodServicePriceInformation, eventMeetingTimingConstants.MORNING_TIME);
+    
+    const allAfternoonMealsInformation: EventTimingDetailsForFoodPrice = 
+        getSpecificMealAllFoodService(foodServicePriceInformation, eventMeetingTimingConstants.AFTERNOON_TIME);
+    
+    const allEveningMealsInformation: EventTimingDetailsForFoodPrice = 
+        getSpecificMealAllFoodService(foodServicePriceInformation, eventMeetingTimingConstants.EVENING_TIME);
+    
+    const allNightMealsInformation: EventTimingDetailsForFoodPrice = 
+        getSpecificMealAllFoodService(foodServicePriceInformation, eventMeetingTimingConstants.NIGHT_TIME);
+    
+    const allMidNightMealsInformation: EventTimingDetailsForFoodPrice = 
+        getSpecificMealAllFoodService(foodServicePriceInformation, eventMeetingTimingConstants.MID_NIGHT_TIME);
 
-    if(bookingDetails.wantFoodServices == 'Yes' && Object.hasOwn(bookingDetails, 'selectedMealsOnBookingDate')){
-        const mealsBookingDetails = bookingDetails.selectedMealsOnBookingDate;
+
+    if(bookingDetails.wantFoodServices == 'Yes' && 
+        Object.hasOwn(bookingDetails, 'selectedMealsOnBookingDate')
+    ){
+        const mealsBookingDetails: SelectedMealsType | undefined = bookingDetails.selectedMealsOnBookingDate;
+        
         if(mealsBookingDetails){
             if(mealsBookingDetails.morning.length > 0){
                 selectedMorningMeals = mealsBookingDetails.morning;
-                morningSlotTotalFoodPricePerGuest = getSpecificMealFoodServiceTotalPricePerGuest(foodServicePriceInformation, eventMeetingTimingConstants.MORNING_TIME, selectedMorningMeals);
+                morningSlotTotalFoodPricePerGuest = 
+                    getSpecificMealFoodServiceTotalPricePerGuest(foodServicePriceInformation, eventMeetingTimingConstants.MORNING_TIME, selectedMorningMeals);
                 morningSlotTotalFoodPrice = morningSlotTotalFoodPricePerGuest * maximumGuestAttending;
             }
             if(mealsBookingDetails.afternoon.length > 0){
                 selectedAfternoonMeals = mealsBookingDetails.afternoon;
-                afternoonSlotTotalFoodPricePerGuest = getSpecificMealFoodServiceTotalPricePerGuest(foodServicePriceInformation, eventMeetingTimingConstants.AFTERNOON_TIME, selectedAfternoonMeals);
+                afternoonSlotTotalFoodPricePerGuest = 
+                    getSpecificMealFoodServiceTotalPricePerGuest(foodServicePriceInformation, eventMeetingTimingConstants.AFTERNOON_TIME, selectedAfternoonMeals);
                 afternoonSlotTotalFoodPrice = afternoonSlotTotalFoodPricePerGuest * maximumGuestAttending;
             }
             if(mealsBookingDetails.evening.length > 0){
                 selectedEveningMeals = mealsBookingDetails.evening;
-                eveningSlotTotalFoodPricePerGuest = getSpecificMealFoodServiceTotalPricePerGuest(foodServicePriceInformation, eventMeetingTimingConstants.EVENING_TIME, selectedEveningMeals);
+                eveningSlotTotalFoodPricePerGuest = 
+                    getSpecificMealFoodServiceTotalPricePerGuest(foodServicePriceInformation, eventMeetingTimingConstants.EVENING_TIME, selectedEveningMeals);
                 eveningSlotTotalFoodPrice = eveningSlotTotalFoodPricePerGuest * maximumGuestAttending;
             }
             if(mealsBookingDetails.night.length > 0){
                 selectedNightMeals = mealsBookingDetails.night;
-                nightSlotTotalFoodPricePerGuest = getSpecificMealFoodServiceTotalPricePerGuest(foodServicePriceInformation, eventMeetingTimingConstants.NIGHT_TIME, selectedNightMeals);
+                nightSlotTotalFoodPricePerGuest = 
+                    getSpecificMealFoodServiceTotalPricePerGuest(foodServicePriceInformation, eventMeetingTimingConstants.NIGHT_TIME, selectedNightMeals);
                 nightSlotTotalFoodPrice = nightSlotTotalFoodPricePerGuest * maximumGuestAttending;
             }
             if(mealsBookingDetails.midNight.length > 0){
                 selectedMidNightMeals = mealsBookingDetails.midNight;
-                midNightSlotTotalFoodPricePerGuest = getSpecificMealFoodServiceTotalPricePerGuest(foodServicePriceInformation, eventMeetingTimingConstants.MID_NIGHT_TIME, selectedMidNightMeals);
+                midNightSlotTotalFoodPricePerGuest = 
+                    getSpecificMealFoodServiceTotalPricePerGuest(foodServicePriceInformation, eventMeetingTimingConstants.MID_NIGHT_TIME, selectedMidNightMeals);
                 midNightSlotTotalFoodPrice = midNightSlotTotalFoodPricePerGuest * maximumGuestAttending;
             }
         }
@@ -182,98 +265,153 @@ function PriceDetailsSingleDate(props: IPropsPriceDetailsSingleDate) {
     let nightSlotTotalPrice: number = 0;
     let midNightSlotTotalPrice: number = 0;
     if(isMorningSlotSelected){
-        morningSlotTotalPrice = morningSlotBasicPrice + totalPriceOfRoomAppliance + morningSlotTotalFoodPrice;
+        morningSlotTotalPrice = 
+            morningSlotBasicPrice + totalPriceOfRoomAppliance + morningSlotTotalFoodPrice;
     }
     if(isAfternoonSlotSelected){
-        afternoonSlotTotalPrice = afternoonSlotBasicPrice + totalPriceOfRoomAppliance + afternoonSlotTotalFoodPrice;
+        afternoonSlotTotalPrice = 
+            afternoonSlotBasicPrice + totalPriceOfRoomAppliance + afternoonSlotTotalFoodPrice;
     }
     if(isEveningSlotSelected){
-        eveningSlotTotalPrice = eveningSlotBasicPrice + totalPriceOfRoomAppliance + eveningSlotTotalFoodPrice;
+        eveningSlotTotalPrice = 
+            eveningSlotBasicPrice + totalPriceOfRoomAppliance + eveningSlotTotalFoodPrice;
     }
     if(isNightSlotSelected){
-        nightSlotTotalPrice = nightSlotBasicPrice + totalPriceOfRoomAppliance + nightSlotTotalFoodPrice;
+        nightSlotTotalPrice = 
+            nightSlotBasicPrice + totalPriceOfRoomAppliance + nightSlotTotalFoodPrice;
     }
     if(isMidNightSlotSelected){
-        midNightSlotTotalPrice = midNightSlotBasicPrice + totalPriceOfRoomAppliance + midNightSlotTotalFoodPrice;
+        midNightSlotTotalPrice = 
+            midNightSlotBasicPrice + totalPriceOfRoomAppliance + midNightSlotTotalFoodPrice;
     }
     
-    const allSlotsTotalPrice: number = morningSlotTotalPrice + afternoonSlotTotalPrice + eveningSlotTotalPrice + nightSlotTotalPrice + midNightSlotTotalPrice;
+    const allSlotsTotalPrice: number = 
+        morningSlotTotalPrice + afternoonSlotTotalPrice + eveningSlotTotalPrice + nightSlotTotalPrice + midNightSlotTotalPrice;
     //props.setTotalPriceOfRoom(allSlotsTotalPrice);
+    
     useEffect(()=>{
         props.setTotalPriceOfRoom(allSlotsTotalPrice);
     },[allSlotsTotalPrice]);
 
-    function fetchCurrentDateBasicPrice(eachDayInfomation: MeetingEventDetails[]): DateDetailsBasicPrice {
+
+    function fetchCurrentDateBasicPrice(
+        eachDayInfomation: MeetingEventDetails[]
+    ): DateDetailsBasicPrice {
         const allRoomBasicPriceData: MeetingEventDetails[] = eachDayInfomation;
-        const bookingRoomBasicPriceData: MeetingEventDetails | undefined = allRoomBasicPriceData.find(function(eachRoom: MeetingEventDetails){
-            return meetingEventAreaTitle == eachRoom.meetingEventTitle;
-        });
+        const bookingRoomBasicPriceData: MeetingEventDetails | undefined = 
+            allRoomBasicPriceData.find(function(eachRoom: MeetingEventDetails){
+                return meetingEventAreaTitle == eachRoom.meetingEventTitle;
+            });
+
         if(!bookingRoomBasicPriceData){
             throw new Error("bookingRoomBasicPriceData is mssing");
         }
+
         const bookingRoomAllDateBasicPriceData: DateDetailsBasicPrice[] = bookingRoomBasicPriceData.dateDetails;
-        const bookingDateBasicPriceData: DateDetailsBasicPrice | undefined = bookingRoomAllDateBasicPriceData.find(function(eachDate: DateDetailsBasicPrice){
-            const eachDateString = (eachDate.date).split("T")[0];
-            return eachDateString == meetingEventBookingDateString;
-        });
+        const bookingDateBasicPriceData: DateDetailsBasicPrice | undefined = 
+            bookingRoomAllDateBasicPriceData.find(function(eachDate: DateDetailsBasicPrice){
+                const eachDateString = (eachDate.date).split("T")[0];
+                return eachDateString == meetingEventBookingDateString;
+            });
+
         if(!bookingDateBasicPriceData){
             throw new Error("bookingDateBasicPriceData is missing");
         }
+
         return bookingDateBasicPriceData;
         
     }
 
-    function fetchCurrentRoomSeatingArrangementPrice(eachDaySeatingArrangement: EventMeetingPriceForSeatingArrangement[]): SeatingArrangement {
+    
+    function fetchCurrentRoomSeatingArrangementPrice(
+        eachDaySeatingArrangement: EventMeetingPriceForSeatingArrangement[]
+    ): SeatingArrangement {
         const allEventMeetingRoomData: EventMeetingPriceForSeatingArrangement[] = eachDaySeatingArrangement;
-        const selectedEventMeetingRoomData: EventMeetingPriceForSeatingArrangement | undefined = allEventMeetingRoomData.find(function(eachRoom: EventMeetingPriceForSeatingArrangement){
-            return eachRoom.meetingEventAreaTitle == meetingEventAreaTitle;
-        });
+
+        const selectedEventMeetingRoomData: EventMeetingPriceForSeatingArrangement | undefined = 
+            allEventMeetingRoomData.find(function(eachRoom: EventMeetingPriceForSeatingArrangement){
+                return eachRoom.meetingEventAreaTitle == meetingEventAreaTitle;
+            });
+
         if(!selectedEventMeetingRoomData){
             throw new Error("selectedEventMeetingRoomData is missing");
         }
+
         const allSeatingArrangementData: SeatingArrangement[] = selectedEventMeetingRoomData.seatingArrangement;
-        const selectedSeatingArrangementData: SeatingArrangement | undefined = allSeatingArrangementData.find(function(eachArrangement: SeatingArrangement){
-            return meetingEventSeatingArrangement == eachArrangement.meetingEventAreaSeatingTitle;
-        });
+
+        const selectedSeatingArrangementData: SeatingArrangement | undefined = 
+            allSeatingArrangementData.find(function(eachArrangement: SeatingArrangement){
+                return meetingEventSeatingArrangement == eachArrangement.meetingEventAreaSeatingTitle;
+            });
+
         if(!selectedSeatingArrangementData){
             throw new Error("selectedSeatingArrangementData is missing");
         }
+
         return selectedSeatingArrangementData;
     }
 
-    function fetchCurrentDayFoodServicePrice(eachDayFoodPrice: DateDetailsForFoodPrice[]): DateDetailsForFoodPrice {
+
+    function fetchCurrentDayFoodServicePrice(
+        eachDayFoodPrice: DateDetailsForFoodPrice[]
+    ): DateDetailsForFoodPrice {
+
         const allDateFoodServicePrice: DateDetailsForFoodPrice[] = eachDayFoodPrice;
-        const bookingDateFoodServicePrice: DateDetailsForFoodPrice | undefined = allDateFoodServicePrice.find(function(eachDate: DateDetailsForFoodPrice){
-            const eachDateString: string = (eachDate.date).split("T")[0];
-            return eachDateString == meetingEventBookingDateString;
-        });
+        const bookingDateFoodServicePrice: DateDetailsForFoodPrice | undefined = 
+            allDateFoodServicePrice.find(function(eachDate: DateDetailsForFoodPrice){
+                const eachDateString: string = (eachDate.date).split("T")[0];
+                return eachDateString == meetingEventBookingDateString;
+            });
+
         if(!bookingDateFoodServicePrice){
             throw new Error("bookingDateFoodServicePrice is missing");
         }
+
         return bookingDateFoodServicePrice;
         
     }
 
-    function getBasicPriceOfRoomForSlot(dateEvent: EventTimingDetailsBasicPrice[], timeSlot: string): number {
-        const getDateEventSlotDetails: EventTimingDetailsBasicPrice | undefined = dateEvent.find(function(eachSlot: EventTimingDetailsBasicPrice){
-            return eachSlot.currentMeetingEventTiming == timeSlot
-        });
+
+    function getBasicPriceOfRoomForSlot(
+        dateEvent: EventTimingDetailsBasicPrice[], 
+        timeSlot: MeetingEventBookingTime
+    ): number {
+        const getDateEventSlotDetails: EventTimingDetailsBasicPrice | undefined = 
+            dateEvent.find(function(eachSlot: EventTimingDetailsBasicPrice){
+                return eachSlot.currentMeetingEventTiming == timeSlot
+            });
+
         if(!getDateEventSlotDetails){
             throw new Error("getDateEventSlotDetails is missing");
         }
+
         const basicPriceOfSlot: number = getDateEventSlotDetails.currentMeetingEventTimingBasicPrice;
         return basicPriceOfSlot;
     }
 
-    function getSpecificMealFoodServiceTotalPricePerGuest(foodServicePriceInformation: DateDetailsForFoodPrice, selectedFoodServiceSlot: string, selectedMeals: string[]): number{
+    
+    function getSpecificMealFoodServiceTotalPricePerGuest(
+        foodServicePriceInformation: DateDetailsForFoodPrice, 
+        selectedFoodServiceSlot: MeetingEventBookingTime, 
+        selectedMeals: string[]
+    ): number{
+
         let currentFoodTotalPricePerGuest: number = 0;
-        const currentTimeFoodDetails: EventTimingDetailsForFoodPrice | undefined = foodServicePriceInformation.eventTimingDetails.find(function(eachFoodTime: EventTimingDetailsForFoodPrice){
-            return eachFoodTime.meetingEventCurrentTiming == selectedFoodServiceSlot;
-        });
+
+        const currentTimeFoodDetails: EventTimingDetailsForFoodPrice | undefined = 
+            foodServicePriceInformation.eventTimingDetails.find(function(
+                eachFoodTime: EventTimingDetailsForFoodPrice
+            ){
+                return eachFoodTime.meetingEventCurrentTiming == selectedFoodServiceSlot;
+            });
+
         if(!currentTimeFoodDetails){
             throw new Error("currentTimeFoodDetails is missing");
         }
-        const currentTimeFoodPriceDetails: FoodServicePricePerGuest[] = currentTimeFoodDetails.meetingEventCurrentTimingFoodPrice;
+
+        const currentTimeFoodPriceDetails: FoodServicePricePerGuest[] = 
+            currentTimeFoodDetails.meetingEventCurrentTimingFoodPrice;
+
         currentTimeFoodPriceDetails.forEach(function(eachFoodItem: FoodServicePricePerGuest){
             const foodItemName: string = eachFoodItem.foodTitle;
             const foodItemPrice: number = eachFoodItem.pricePerGuest;
@@ -286,13 +424,22 @@ function PriceDetailsSingleDate(props: IPropsPriceDetailsSingleDate) {
         return currentFoodTotalPricePerGuest;
     }
 
-    function getSpecificMealAllFoodService(foodServicePriceInformation: DateDetailsForFoodPrice, mealName: string): EventTimingDetailsForFoodPrice {
-        const currentTimeFoodDetails: EventTimingDetailsForFoodPrice | undefined = foodServicePriceInformation.eventTimingDetails.find(function(eachFoodTime: EventTimingDetailsForFoodPrice){
-            return eachFoodTime.meetingEventCurrentTiming == mealName;
-        });
+    
+    function getSpecificMealAllFoodService(
+        foodServicePriceInformation: DateDetailsForFoodPrice, 
+        mealName: string
+    ): EventTimingDetailsForFoodPrice {
+        const currentTimeFoodDetails: EventTimingDetailsForFoodPrice | undefined = 
+            foodServicePriceInformation.eventTimingDetails.find(function(
+                eachFoodTime: EventTimingDetailsForFoodPrice
+            ){
+                return eachFoodTime.meetingEventCurrentTiming == mealName;
+            });
+
         if(!currentTimeFoodDetails){
             throw new Error("currentTimeFoodDetails is missing");
         }
+
         return currentTimeFoodDetails;
     }
 
@@ -462,7 +609,9 @@ function PriceDetailsSingleDate(props: IPropsPriceDetailsSingleDate) {
                             <TableCell></TableCell>
                             <TableCell></TableCell>
                             <TableCell></TableCell>
-                            <TableCell sx={totalStyling} align="right">{convertToINR(allSlotsTotalPrice)}</TableCell>
+                            <TableCell sx={totalStyling} align="right">
+                                {convertToINR(allSlotsTotalPrice)}
+                            </TableCell>
                         </TableRow>
 
                     </TableBody>

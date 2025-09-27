@@ -3,9 +3,14 @@ import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import { useRouter } from 'next/navigation';
 
+
 import { useAppDispatch, useAppSelector } from "@/redux store/hooks";
 import { addNewBookingToEventMeetingCart } from "@/redux store/features/Booking Features/eventMeetingRoomBookingCartSlice";
-import { updateLoginPageCalledFrom, updateLoginRedirectPage } from '@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice';
+import { 
+    updateLoginPageCalledFrom, 
+    updateLoginRedirectPage 
+} from '@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice';
+
 
 import { getOnlyDate, getOnlyMonth, getOnlyYear, convertDateTextToDate } from "@/functions/date";
 import { isAllElementsUniqueInArray } from "@/functions/array";
@@ -13,17 +18,25 @@ import { multipleNonContinousDatesEventsMeetingSelectionErrorConstants } from "@
 
 import EachDateBookingComponent from "./EachDateBookingComponent";
 
-import { IPropsEventsMeetingDateTypeBookingComponent, NonContinuousMultipleDatesBookingDetailsInterface, NonContinuousMultipleDatesDateBookingDetailsWithPrice } from '@/interface/Event Meeting Interface/eventMeetingBookingInterface';
+
 import { LoginUserDetails } from '@/redux store/features/Auth Features/loginUserDetailsSlice';
 import { MeetingEventAreaSeatingCapacity } from '@/interface/Event Meeting Interface/eventMeetingRoomInterface';
 import { AddEventMeetingRoomCartApiResponse } from '@/interface/Event Meeting Interface/eventMeetingCartApiResponse';
+import { MeetingEventsRoomTitle } from '@/interface/Event Meeting Interface/eventMeetingRoomConstantInterface';
+
+import { 
+    IPropsEventsMeetingDateTypeBookingComponent, 
+    NonContinuousMultipleDatesBookingDetailsInterface, 
+    NonContinuousMultipleDatesDateBookingDetailsWithPrice 
+} from '@/interface/Event Meeting Interface/eventMeetingBookingInterface';
 
 
 function MultipleDateNonContinuousBookingComponent(props: IPropsEventsMeetingDateTypeBookingComponent) {
 
-    const loginUserIdDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserIdDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
 
-    const meetingEventsInfoTitle: string = props.meetingEventsInfoTitle;
+    const meetingEventsInfoTitle: MeetingEventsRoomTitle = props.meetingEventsInfoTitle;
     const meetingEventsSeatingInfo: MeetingEventAreaSeatingCapacity[] = props.meetingEventsSeatingInfo;
     const roomBookingDateType: string = props.roomBookingDateType;
     const meetingEventAreaPath: string = props.meetingEventAreaPath;
@@ -143,13 +156,16 @@ function MultipleDateNonContinuousBookingComponent(props: IPropsEventsMeetingDat
         try {
             if(loginUserIdDetails != null){
                 const loginUserId: string = loginUserIdDetails.userId;
-                const response: Response = await fetch(`/api/add-cart/meeting-events/multiple-dates-non-continous/${loginUserId}`, {
-                    method: 'POST',
-                    body: JSON.stringify(bookingDetails),
-                    headers: {
-                        'Content-type': 'application/json; charset=UTF-8',
+                const response: Response = await fetch(
+                    `/api/add-cart/meeting-events/multiple-dates-non-continous/${loginUserId}`, 
+                    {
+                        method: 'POST',
+                        body: JSON.stringify(bookingDetails),
+                        headers: {
+                            'Content-type': 'application/json; charset=UTF-8',
+                        }
                     }
-                });
+                );
                 const data: AddEventMeetingRoomCartApiResponse = await response.json();
                 if(response.status === 200){
                     if('message' in data){

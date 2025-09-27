@@ -10,15 +10,32 @@ import { getCommaAndSeperatedArray } from "@/functions/array";
 import { wantFoodServiceConstants } from "@/constant string files/eventsMeetingRoomImportantConstants";
 import { convertToINR } from '@/functions/currency';
 
-import { MultipleContinuousDatesBookingDetailsInterface, NonContinuousMultipleDatesBookingDetailsWithDateNumberInterface, SingleDateEventBookingDetailsInterface } from '@/interface/Event Meeting Interface/eventMeetingBookingInterface';
+
+import { MeetingEventBookingTime } from '@/interface/Event Meeting Interface/eventMeetingRoomConstantInterface';
+
+import { 
+    MultipleContinuousDatesBookingDetailsInterface, 
+    NonContinuousMultipleDatesBookingDetailsWithDateNumberInterface, 
+    SingleDateEventBookingDetailsInterface 
+} from '@/interface/Event Meeting Interface/eventMeetingBookingInterface';
+
 
 
 interface IPropsEventMeetingBookingsDetailsConfirmation {
-    bookingDetailsForCart: NonContinuousMultipleDatesBookingDetailsWithDateNumberInterface | SingleDateEventBookingDetailsInterface | MultipleContinuousDatesBookingDetailsInterface | null;
+    bookingDetailsForCart: 
+        | NonContinuousMultipleDatesBookingDetailsWithDateNumberInterface 
+        | SingleDateEventBookingDetailsInterface 
+        | MultipleContinuousDatesBookingDetailsInterface | null;
     totalPriceEventMeetingRoom: number;
 }
 
-function isMultipleContinuousDatesBookingDetails( details: NonContinuousMultipleDatesBookingDetailsWithDateNumberInterface | SingleDateEventBookingDetailsInterface | MultipleContinuousDatesBookingDetailsInterface | null): details is MultipleContinuousDatesBookingDetailsInterface {
+function isMultipleContinuousDatesBookingDetails(
+    details: 
+        | NonContinuousMultipleDatesBookingDetailsWithDateNumberInterface 
+        | SingleDateEventBookingDetailsInterface 
+        | MultipleContinuousDatesBookingDetailsInterface 
+        | null
+): details is MultipleContinuousDatesBookingDetailsInterface {
     return (
         details !== null &&
         'meetingEventStartBookingDate' in details &&
@@ -30,10 +47,15 @@ function isMultipleContinuousDatesBookingDetails( details: NonContinuousMultiple
 
 function EventMeetingBookingsDetailsConfirmation(props: IPropsEventMeetingBookingsDetailsConfirmation) {
 
-    const bookingDetailsForCart: NonContinuousMultipleDatesBookingDetailsWithDateNumberInterface | SingleDateEventBookingDetailsInterface | MultipleContinuousDatesBookingDetailsInterface | null = props.bookingDetailsForCart;
+    const bookingDetailsForCart: 
+        | NonContinuousMultipleDatesBookingDetailsWithDateNumberInterface 
+        | SingleDateEventBookingDetailsInterface 
+        | MultipleContinuousDatesBookingDetailsInterface 
+        | null = props.bookingDetailsForCart;
+    
     const totalPriceEventMeetingRoom: number = props.totalPriceEventMeetingRoom;
 
-    function getTimeSlotText(timeSlotArray: string[]){
+    function getTimeSlotText(timeSlotArray: MeetingEventBookingTime[]){
         if(timeSlotArray.length === 1){
             return timeSlotArray[0];
         }
@@ -68,80 +90,128 @@ function EventMeetingBookingsDetailsConfirmation(props: IPropsEventMeetingBookin
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableBody>
-                        {(bookingDetailsForCart.hasOwnProperty('meetingEventBookingDate') && !isMultipleContinuousDatesBookingDetails(bookingDetailsForCart) && bookingDetailsForCart.meetingEventBookingDate) &&
-                        <TableRow>
-                            <TableCell>Event Room Booking Date</TableCell>
-                            <TableCell>
-                                {getDateText(typeof bookingDetailsForCart.meetingEventBookingDate === 'string' ? new Date(bookingDetailsForCart.meetingEventBookingDate) : bookingDetailsForCart.meetingEventBookingDate)}
-                            </TableCell>
-                        </TableRow>
+
+                        {(bookingDetailsForCart.hasOwnProperty('meetingEventBookingDate') && 
+                            !isMultipleContinuousDatesBookingDetails(bookingDetailsForCart) && 
+                            bookingDetailsForCart.meetingEventBookingDate) &&
+                            <TableRow>
+                                <TableCell>Event Room Booking Date</TableCell>
+                                <TableCell>
+                                    {
+                                        getDateText(
+                                            typeof bookingDetailsForCart.meetingEventBookingDate === 'string' 
+                                            ? new Date(bookingDetailsForCart.meetingEventBookingDate) 
+                                            : bookingDetailsForCart.meetingEventBookingDate
+                                        )
+                                    }
+                                </TableCell>
+                            </TableRow>
                         }
-                        {(bookingDetailsForCart.hasOwnProperty('meetingEventStartBookingDate') && isMultipleContinuousDatesBookingDetails(bookingDetailsForCart) && bookingDetailsForCart.meetingEventStartBookingDate) &&
-                        <TableRow>
-                            <TableCell>Event Room Booking Start Date</TableCell>
-                            <TableCell>
-                                {getDateText(typeof bookingDetailsForCart.meetingEventStartBookingDate === 'string' ? new Date(bookingDetailsForCart.meetingEventStartBookingDate) : bookingDetailsForCart.meetingEventStartBookingDate)}
-                            </TableCell>
-                        </TableRow>
+                        
+                        {(bookingDetailsForCart.hasOwnProperty('meetingEventStartBookingDate') && 
+                            isMultipleContinuousDatesBookingDetails(bookingDetailsForCart) && 
+                            bookingDetailsForCart.meetingEventStartBookingDate) &&
+                            <TableRow>
+                                <TableCell>Event Room Booking Start Date</TableCell>
+                                <TableCell>
+                                    {
+                                        getDateText(
+                                            typeof bookingDetailsForCart.meetingEventStartBookingDate === 'string' 
+                                            ? new Date(bookingDetailsForCart.meetingEventStartBookingDate) 
+                                            : bookingDetailsForCart.meetingEventStartBookingDate
+                                        )
+                                    }
+                                </TableCell>
+                            </TableRow>
                         }
-                        {(bookingDetailsForCart.hasOwnProperty('meetingEventEndBookingDate') && isMultipleContinuousDatesBookingDetails(bookingDetailsForCart) && bookingDetailsForCart.meetingEventEndBookingDate) &&
-                        <TableRow>
-                            <TableCell>Event Room Booking End Date</TableCell>
-                            <TableCell>
-                                {getDateText(typeof bookingDetailsForCart.meetingEventEndBookingDate === 'string' ? new Date(bookingDetailsForCart.meetingEventEndBookingDate) : bookingDetailsForCart.meetingEventEndBookingDate)}
-                            </TableCell>
-                        </TableRow>
+                        
+                        {(bookingDetailsForCart.hasOwnProperty('meetingEventEndBookingDate') && 
+                            isMultipleContinuousDatesBookingDetails(bookingDetailsForCart) && 
+                            bookingDetailsForCart.meetingEventEndBookingDate) &&
+                            <TableRow>
+                                <TableCell>Event Room Booking End Date</TableCell>
+                                <TableCell>
+                                    {
+                                        getDateText(
+                                            typeof bookingDetailsForCart.meetingEventEndBookingDate === 'string' 
+                                            ? new Date(bookingDetailsForCart.meetingEventEndBookingDate) 
+                                            : bookingDetailsForCart.meetingEventEndBookingDate
+                                        )
+                                    }
+                                </TableCell>
+                            </TableRow>
                         }
+                        
                         <TableRow>
                             <TableCell>Time Slot of Booking</TableCell>
                             <TableCell>{getTimeSlotText(bookingDetailsForCart.meetingEventBookingTime)}</TableCell>
                         </TableRow>
+                        
                         <TableRow>
                             <TableCell>Seating Arrangement</TableCell>
                             <TableCell>{bookingDetailsForCart.meetingEventSeatingArrangement}</TableCell>
                         </TableRow>
+                        
                         <TableRow>
                             <TableCell>Maximum Number Of Guests Booked</TableCell>
                             <TableCell>{bookingDetailsForCart.maximumGuestAttending}</TableCell>
                         </TableRow>
+                        
                         <TableRow>
                             <TableCell>Want Food Services</TableCell>
                             <TableCell>{bookingDetailsForCart.wantFoodServices}</TableCell>
                         </TableRow>
-                        {(bookingDetailsForCart.wantFoodServices == wantFoodServiceConstants.WANT_FOOD_SERVICE_YES && bookingDetailsForCart.selectedMealsOnBookingDate && bookingDetailsForCart.selectedMealsOnBookingDate.morning.length > 0) &&
-                        <TableRow>
-                            <TableCell>Morning Meals</TableCell>
-                            <TableCell>{getFoodList(bookingDetailsForCart.selectedMealsOnBookingDate.morning)}</TableCell>
-                        </TableRow>
+                        
+                        {(bookingDetailsForCart.wantFoodServices == wantFoodServiceConstants.WANT_FOOD_SERVICE_YES && 
+                            bookingDetailsForCart.selectedMealsOnBookingDate && 
+                            bookingDetailsForCart.selectedMealsOnBookingDate.morning.length > 0) &&
+                            <TableRow>
+                                <TableCell>Morning Meals</TableCell>
+                                <TableCell>{getFoodList(bookingDetailsForCart.selectedMealsOnBookingDate.morning)}</TableCell>
+                            </TableRow>
                         }
-                        {(bookingDetailsForCart.wantFoodServices == wantFoodServiceConstants.WANT_FOOD_SERVICE_YES && bookingDetailsForCart.selectedMealsOnBookingDate && bookingDetailsForCart.selectedMealsOnBookingDate.afternoon.length > 0) &&
-                        <TableRow>
-                            <TableCell>Afternoon Meals</TableCell>
-                            <TableCell>{getFoodList(bookingDetailsForCart.selectedMealsOnBookingDate.afternoon)}</TableCell>
-                        </TableRow>
+                        
+                        {(bookingDetailsForCart.wantFoodServices == wantFoodServiceConstants.WANT_FOOD_SERVICE_YES && 
+                            bookingDetailsForCart.selectedMealsOnBookingDate && 
+                            bookingDetailsForCart.selectedMealsOnBookingDate.afternoon.length > 0) &&
+                            <TableRow>
+                                <TableCell>Afternoon Meals</TableCell>
+                                <TableCell>{getFoodList(bookingDetailsForCart.selectedMealsOnBookingDate.afternoon)}</TableCell>
+                            </TableRow>
                         }
-                        {(bookingDetailsForCart.wantFoodServices == wantFoodServiceConstants.WANT_FOOD_SERVICE_YES && bookingDetailsForCart.selectedMealsOnBookingDate && bookingDetailsForCart.selectedMealsOnBookingDate.evening.length > 0) &&
-                        <TableRow>
-                            <TableCell>Evening Meals</TableCell>
-                            <TableCell>{getFoodList(bookingDetailsForCart.selectedMealsOnBookingDate.evening)}</TableCell>
-                        </TableRow>
+                        
+                        {(bookingDetailsForCart.wantFoodServices == wantFoodServiceConstants.WANT_FOOD_SERVICE_YES && 
+                            bookingDetailsForCart.selectedMealsOnBookingDate && 
+                            bookingDetailsForCart.selectedMealsOnBookingDate.evening.length > 0) &&
+                            <TableRow>
+                                <TableCell>Evening Meals</TableCell>
+                                <TableCell>{getFoodList(bookingDetailsForCart.selectedMealsOnBookingDate.evening)}</TableCell>
+                            </TableRow>
                         }
-                        {(bookingDetailsForCart.wantFoodServices == wantFoodServiceConstants.WANT_FOOD_SERVICE_YES && bookingDetailsForCart.selectedMealsOnBookingDate && bookingDetailsForCart.selectedMealsOnBookingDate.night.length > 0) &&
-                        <TableRow>
-                            <TableCell>Night Meals</TableCell>
-                            <TableCell>{getFoodList(bookingDetailsForCart.selectedMealsOnBookingDate.night)}</TableCell>
-                        </TableRow>
+                        
+                        {(bookingDetailsForCart.wantFoodServices == wantFoodServiceConstants.WANT_FOOD_SERVICE_YES && 
+                            bookingDetailsForCart.selectedMealsOnBookingDate && 
+                            bookingDetailsForCart.selectedMealsOnBookingDate.night.length > 0) &&
+                            <TableRow>
+                                <TableCell>Night Meals</TableCell>
+                                <TableCell>{getFoodList(bookingDetailsForCart.selectedMealsOnBookingDate.night)}</TableCell>
+                            </TableRow>
                         }
-                        {(bookingDetailsForCart.wantFoodServices == wantFoodServiceConstants.WANT_FOOD_SERVICE_YES && bookingDetailsForCart.selectedMealsOnBookingDate && bookingDetailsForCart.selectedMealsOnBookingDate.midNight.length > 0) &&
-                        <TableRow>
-                            <TableCell>Mid Night Meals</TableCell>
-                            <TableCell>{getFoodList(bookingDetailsForCart.selectedMealsOnBookingDate.midNight)}</TableCell>
-                        </TableRow>
+                        
+                        {(bookingDetailsForCart.wantFoodServices == wantFoodServiceConstants.WANT_FOOD_SERVICE_YES && 
+                            bookingDetailsForCart.selectedMealsOnBookingDate && 
+                            bookingDetailsForCart.selectedMealsOnBookingDate.midNight.length > 0) &&
+                            <TableRow>
+                                <TableCell>Mid Night Meals</TableCell>
+                                <TableCell>{getFoodList(bookingDetailsForCart.selectedMealsOnBookingDate.midNight)}</TableCell>
+                            </TableRow>
                         }
+                        
                         <TableRow>
                             <TableCell>Total Price Of Room</TableCell>
                             <TableCell>{convertToINR(totalPriceEventMeetingRoom)}</TableCell>
                         </TableRow>
+
                     </TableBody>
                 </Table>
             </TableContainer>

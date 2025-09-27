@@ -7,7 +7,10 @@ import validator from "validator";
 import { useRouter } from 'next/navigation';
 
 import { useAppDispatch } from "@/redux store/hooks";
-import { updateLoginPageCalledFrom, updateLoginRedirectPage } from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
+import { 
+    updateLoginPageCalledFrom, 
+    updateLoginRedirectPage 
+} from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
 
 import InputAreaForRegisterLogin from "@/components/Input Area/InputAreaForRegisterLogin";
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
@@ -71,7 +74,18 @@ function RegisterFunctionalComponent(){
     const [registrationSuccessMessage, setRegistrationSuccessMessage] = useState<string>('');
     const [registrationProcessing, setRegistrationProcessing] = useState<boolean>(false);
 
-    const { firstName, middleName, lastName, dob, gender, email, contactNo, alternateContactNo, password, confirmPassword } = inputValue;
+    
+    const firstName: string = inputValue.firstName;
+    const middleName: string = inputValue.middleName;
+    const lastName: string = inputValue.lastName;
+    const dob: string = inputValue.dob;
+    const gender: string = inputValue.gender;
+    const email: string = inputValue.email;
+    const contactNo: string = inputValue.contactNo;
+    const alternateContactNo: string = inputValue.alternateContactNo;
+    const password: string = inputValue.password;
+    const confirmPassword: string = inputValue.confirmPassword;
+
 
     let fullName: string;
     if (middleName.trim() !== "") {
@@ -155,13 +169,21 @@ function RegisterFunctionalComponent(){
         return isButtonDisabled;
     }
 
-    function isSuccessRegisterResponse(data: RegisterResponse): data is ISuccessRegisterResponse {
+    function isSuccessRegisterResponse(
+        data: RegisterResponse
+    ): data is ISuccessRegisterResponse {
         return (data as ISuccessRegisterResponse).message !== undefined;
     }
     
+
     // Type Guard to check if the response is an Error Response
-    function isErrorResponse(data: RegisterResponse): data is IErrorRegisterResponse {
-        return (data as IErrorRegisterResponse).errorMessage !== undefined || (data as IErrorRegisterResponse).error !== undefined;
+    function isErrorResponse(
+        data: RegisterResponse
+    ): data is IErrorRegisterResponse {
+        return (
+            (data as IErrorRegisterResponse).errorMessage !== undefined || 
+            (data as IErrorRegisterResponse).error !== undefined
+        );
     }
 
     async function handleSubmit(event: React.FormEvent) {
@@ -184,13 +206,16 @@ function RegisterFunctionalComponent(){
         setRegistrationProcessing(true);
 
         try {
-        const response: Response = await fetch('api/users-authentication/customers-authenticatication/register', {
-            method: 'POST',
-            body: JSON.stringify(registrationInputData),
-            headers: {
-            'Content-type': 'application/json; charset=UTF-8',
+        const response: Response = await fetch(
+            'api/users-authentication/customers-authenticatication/register', 
+            {
+                method: 'POST',
+                body: JSON.stringify(registrationInputData),
+                headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+                }
             }
-        });
+        );
         const data: RegisterResponse = await response.json();
         if (response.status === 404) {
             if(isErrorResponse(data)){
@@ -210,16 +235,16 @@ function RegisterFunctionalComponent(){
             if (isSuccessRegisterResponse(data)) {
                 setRegistrationSuccessMessage(data.message);
                 setInputValue({
-                firstName: "",
-                middleName: "",
-                lastName: "",
-                gender: "",
-                dob: "",
-                email: "",
-                contactNo: "",
-                alternateContactNo: "",
-                password: "",
-                confirmPassword: ""
+                    firstName: "",
+                    middleName: "",
+                    lastName: "",
+                    gender: "",
+                    dob: "",
+                    email: "",
+                    contactNo: "",
+                    alternateContactNo: "",
+                    password: "",
+                    confirmPassword: ""
                 });
             }
         }
@@ -290,12 +315,16 @@ function RegisterFunctionalComponent(){
                 <div className="flex items-center mb-2">
                     <div className="w-1/3 text-blue-900 font-medium">Gender:</div>
                     <div className="w-2/3">
-                    <select className="w-1/3 p-2 border border-blue-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-700" onChange={handleChange} name="gender" id="gender">
-                        <option value="">Choose Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                    </select>
-                    {!genderInputGiven && <div className="text-red-600 text-sm font-light">Gender cannot be blank</div>}
+                        <select className="w-1/3 p-2 border border-blue-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-700" onChange={handleChange} name="gender" id="gender">
+                            <option value="">Choose Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                        {!genderInputGiven && 
+                            <div className="text-red-600 text-sm font-light">
+                                Gender cannot be blank
+                            </div>
+                        }
                     </div>
                 </div>
                 </label>

@@ -1,7 +1,9 @@
 'use client'
 import React, { useState } from "react";
 
+
 import { roomBookingDateTypeConstants } from "@/constant string files/eventsMeetingRoomImportantConstants";
+
 import { 
     DATE_BOOKED_ASCENDING, 
     DATE_BOOKED_DESCENDING,
@@ -15,24 +17,53 @@ import {
     NUMBER_OF_GUESTS_DESCENDING 
 } from "@/constant string files/bookingViewSortingConstants";
 
+
 import EachRoomBookingInfo from "@/components/User Past Current Booking Info Component/Rooms Suites Booking/EachRoomBookingInfo"
 import EachDiningBookingInfo from "@/components/User Past Current Booking Info Component/Dining Booking/EachDiningBookingInfo";
 import EachEventMeetingBookingInfo from "@/components/User Past Current Booking Info Component/Event Meeting Booking/EachEventMeetingBookingInfo";
 
-import { IRoomsSuitesBookingInfoForArrayForCustomer, IRoomsSuitesBookingInfoForCustomer } from "@/interface/Rooms and Suites Interface/viewRoomSuiteBookingApiResponse";
-import { EventMeetingBookingInfoForCustomer, IContinousMultipleDatesBookingInfoForCustomer, INonContinousMultipleDatesBookingInfoForCustomer, ISingleDateBookingInfoForCustomer } from "@/interface/Event Meeting Interface/viewEventMeetingBookingApiResponse";
-import { IDiningBookingInfoForArrayForCustomer, IDiningBookingInfoForCustomer } from "@/interface/Dining Interface/viewDiningBookingApiResponse";
+
 import { ITransactionDetailsFrontend } from "@/interface/hotelCustomersInterface";
+import { IDateBooking } from "@/interface/Event Meeting Interface/eventMeetingDbModelInterface";
+import { RoomsSuitesTitle } from "@/interface/Rooms and Suites Interface/roomsSuitesConstantInterface";
+import { DiningRestaurantTitle } from "@/interface/Dining Interface/hotelDiningConstantInterface";
+import { MeetingEventsRoomTitle } from "@/interface/Event Meeting Interface/eventMeetingRoomConstantInterface";
+
+import { 
+    IRoomsSuitesBookingInfoForArrayForCustomer, 
+    IRoomsSuitesBookingInfoForCustomer 
+} from "@/interface/Rooms and Suites Interface/viewRoomSuiteBookingApiResponse";
+
+import { 
+    EventMeetingBookingInfoForCustomer, 
+    IContinousMultipleDatesBookingInfoForCustomer, 
+    INonContinousMultipleDatesBookingInfoForCustomer, 
+    ISingleDateBookingInfoForCustomer 
+} from "@/interface/Event Meeting Interface/viewEventMeetingBookingApiResponse";
+
+import { 
+    IDiningBookingInfoForArrayForCustomer, 
+    IDiningBookingInfoForCustomer 
+} from "@/interface/Dining Interface/viewDiningBookingApiResponse";
+
 
 
 interface IPropsUserAllBookingComponent {
-    allBookingInfo: (IRoomsSuitesBookingInfoForArrayForCustomer | IDiningBookingInfoForArrayForCustomer | EventMeetingBookingInfoForCustomer)[];
+    allBookingInfo: (
+        IRoomsSuitesBookingInfoForArrayForCustomer | 
+        IDiningBookingInfoForArrayForCustomer | 
+        EventMeetingBookingInfoForCustomer
+    )[];
 }
 
 
 function UserAllBookingComponent(props: IPropsUserAllBookingComponent){
 
-    const allBookingInfo: (IRoomsSuitesBookingInfoForArrayForCustomer | IDiningBookingInfoForArrayForCustomer | EventMeetingBookingInfoForCustomer)[] = props.allBookingInfo;
+    const allBookingInfo: (
+        IRoomsSuitesBookingInfoForArrayForCustomer | 
+        IDiningBookingInfoForArrayForCustomer | 
+        EventMeetingBookingInfoForCustomer
+    )[] = props.allBookingInfo;
 
     const [sortSelection, setSortSelection] = useState<string>("");
 
@@ -152,8 +183,20 @@ function UserAllBookingComponent(props: IPropsUserAllBookingComponent){
     }
 
 
-    function getBookingDateForSorting(bookingInformation: IRoomsSuitesBookingInfoForArrayForCustomer | IDiningBookingInfoForArrayForCustomer | EventMeetingBookingInfoForCustomer): Date {
-        const bookingInfo: IRoomsSuitesBookingInfoForCustomer | IDiningBookingInfoForCustomer | ISingleDateBookingInfoForCustomer | IContinousMultipleDatesBookingInfoForCustomer | INonContinousMultipleDatesBookingInfoForCustomer = bookingInformation.bookingInfo;
+    function getBookingDateForSorting(
+        bookingInformation: (
+            IRoomsSuitesBookingInfoForArrayForCustomer | 
+            IDiningBookingInfoForArrayForCustomer | 
+            EventMeetingBookingInfoForCustomer
+        )
+    ): Date {
+        const bookingInfo: (
+            IRoomsSuitesBookingInfoForCustomer | 
+            IDiningBookingInfoForCustomer | 
+            ISingleDateBookingInfoForCustomer | 
+            IContinousMultipleDatesBookingInfoForCustomer | 
+            INonContinousMultipleDatesBookingInfoForCustomer
+        ) = bookingInformation.bookingInfo;
         
         if('bookingRoomTitle' in bookingInfo){
             if (bookingInfo.bookingCheckoutDate) {
@@ -173,11 +216,11 @@ function UserAllBookingComponent(props: IPropsUserAllBookingComponent){
                 return new Date(bookingInfo.meetingEventEndBookingDate);
             }       
             else if (bookingInfo.roomBookingDateType === roomBookingDateTypeConstants.MULTIPLE_DATES_NON_CONTINOUS) {
-                const dates = bookingInfo.allDatesBookingInformation.map(function(dateInfo){ 
+                const dates = bookingInfo.allDatesBookingInformation.map(function(dateInfo: IDateBooking){ 
                     return new Date(dateInfo.meetingEventBookingDate);
                 });
                 if(dates.length > 0){
-                    return new Date(Math.max(...dates.map(function(eachDate){
+                    return new Date(Math.max(...dates.map(function(eachDate: Date){
                         return eachDate.getTime();
                     })));
                 }
@@ -187,8 +230,20 @@ function UserAllBookingComponent(props: IPropsUserAllBookingComponent){
     }
 
 
-    function getBookingTitleForSorting(bookingInformation: IRoomsSuitesBookingInfoForArrayForCustomer | IDiningBookingInfoForArrayForCustomer | EventMeetingBookingInfoForCustomer): string {
-        const bookingInfo: IRoomsSuitesBookingInfoForCustomer | IDiningBookingInfoForCustomer | ISingleDateBookingInfoForCustomer | IContinousMultipleDatesBookingInfoForCustomer | INonContinousMultipleDatesBookingInfoForCustomer = bookingInformation.bookingInfo;
+    function getBookingTitleForSorting(
+        bookingInformation: (
+            IRoomsSuitesBookingInfoForArrayForCustomer | 
+            IDiningBookingInfoForArrayForCustomer | 
+            EventMeetingBookingInfoForCustomer
+        )
+    ): (RoomsSuitesTitle | DiningRestaurantTitle| MeetingEventsRoomTitle | "") {
+        const bookingInfo: (
+            IRoomsSuitesBookingInfoForCustomer | 
+            IDiningBookingInfoForCustomer | 
+            ISingleDateBookingInfoForCustomer | 
+            IContinousMultipleDatesBookingInfoForCustomer | 
+            INonContinousMultipleDatesBookingInfoForCustomer
+        ) = bookingInformation.bookingInfo;
 
         if('bookingRoomTitle' in bookingInfo){
             return bookingInfo.bookingRoomTitle;         
@@ -203,8 +258,20 @@ function UserAllBookingComponent(props: IPropsUserAllBookingComponent){
     }
 
 
-    function getTotalPriceForSorting(bookingInformation: IRoomsSuitesBookingInfoForArrayForCustomer | IDiningBookingInfoForArrayForCustomer | EventMeetingBookingInfoForCustomer): number {
-        const bookingInfo: IRoomsSuitesBookingInfoForCustomer | IDiningBookingInfoForCustomer | ISingleDateBookingInfoForCustomer | IContinousMultipleDatesBookingInfoForCustomer | INonContinousMultipleDatesBookingInfoForCustomer = bookingInformation.bookingInfo;
+    function getTotalPriceForSorting(
+        bookingInformation: (
+            IRoomsSuitesBookingInfoForArrayForCustomer | 
+            IDiningBookingInfoForArrayForCustomer | 
+            EventMeetingBookingInfoForCustomer
+        )
+    ): number {
+        const bookingInfo: (
+            IRoomsSuitesBookingInfoForCustomer | 
+            IDiningBookingInfoForCustomer | 
+            ISingleDateBookingInfoForCustomer | 
+            IContinousMultipleDatesBookingInfoForCustomer | 
+            INonContinousMultipleDatesBookingInfoForCustomer
+        ) = bookingInformation.bookingInfo;
 
         if('bookingRoomTitle' in bookingInfo){
             if (bookingInfo.totalPriceOfAllRooms) {
@@ -231,8 +298,20 @@ function UserAllBookingComponent(props: IPropsUserAllBookingComponent){
     }
 
 
-    function getNumberOfGuestsForSorting(bookingInformation: IRoomsSuitesBookingInfoForArrayForCustomer | IDiningBookingInfoForArrayForCustomer | EventMeetingBookingInfoForCustomer): number {
-        const bookingInfo: IRoomsSuitesBookingInfoForCustomer | IDiningBookingInfoForCustomer | ISingleDateBookingInfoForCustomer | IContinousMultipleDatesBookingInfoForCustomer | INonContinousMultipleDatesBookingInfoForCustomer = bookingInformation.bookingInfo;
+    function getNumberOfGuestsForSorting(
+        bookingInformation: (
+            IRoomsSuitesBookingInfoForArrayForCustomer | 
+            IDiningBookingInfoForArrayForCustomer | 
+            EventMeetingBookingInfoForCustomer
+        )
+    ): number {
+        const bookingInfo: (
+            IRoomsSuitesBookingInfoForCustomer | 
+            IDiningBookingInfoForCustomer | 
+            ISingleDateBookingInfoForCustomer | 
+            IContinousMultipleDatesBookingInfoForCustomer | 
+            INonContinousMultipleDatesBookingInfoForCustomer
+        ) = bookingInformation.bookingInfo;
 
         if('bookingRoomTitle' in bookingInfo){
             if (bookingInfo.totalGuest) {
@@ -287,8 +366,21 @@ function UserAllBookingComponent(props: IPropsUserAllBookingComponent){
                 </select>
             </div>
 
-            {allBookingInfo.map(function(eachBookingInfo: IRoomsSuitesBookingInfoForArrayForCustomer | IDiningBookingInfoForArrayForCustomer | EventMeetingBookingInfoForCustomer){
-                const bookingInfo: IRoomsSuitesBookingInfoForCustomer | IDiningBookingInfoForCustomer | ISingleDateBookingInfoForCustomer | IContinousMultipleDatesBookingInfoForCustomer | INonContinousMultipleDatesBookingInfoForCustomer =  eachBookingInfo.bookingInfo; 
+            {allBookingInfo.map(function(
+                eachBookingInfo: (
+                    IRoomsSuitesBookingInfoForArrayForCustomer | 
+                    IDiningBookingInfoForArrayForCustomer | 
+                    EventMeetingBookingInfoForCustomer
+                )
+            ){
+                const bookingInfo: (
+                    IRoomsSuitesBookingInfoForCustomer | 
+                    IDiningBookingInfoForCustomer | 
+                    ISingleDateBookingInfoForCustomer | 
+                    IContinousMultipleDatesBookingInfoForCustomer | 
+                    INonContinousMultipleDatesBookingInfoForCustomer
+                ) =  eachBookingInfo.bookingInfo; 
+
                 const transactionDetails: ITransactionDetailsFrontend = bookingInfo.transactionDetails;
 
                 if('bookingRoomTitle' in bookingInfo){

@@ -13,7 +13,12 @@ import { convertToINR } from '@/functions/currency';
 
 import PriceDetailsEachDate from './PriceDetailsEachDate';
 
-import { DateWithPriceInterface, MultipleContinuousDatesBookingDetailsEachDayInfoInterface, MultipleContinuousDatesBookingDetailsInterface, SelectedMealsType } from '@/interface/Event Meeting Interface/eventMeetingBookingInterface';
+import { 
+    DateWithPriceInterface, 
+    MultipleContinuousDatesBookingDetailsEachDayInfoInterface, 
+    MultipleContinuousDatesBookingDetailsInterface, 
+    SelectedMealsType 
+} from '@/interface/Event Meeting Interface/eventMeetingBookingInterface';
 
 
 
@@ -27,6 +32,7 @@ function PriceDetailsAllDates(props: IPropsPriceDetailsMultipleContinousDates){
 
     const bookingDetails: MultipleContinuousDatesBookingDetailsInterface | null = props.bookingDetailsForCart;
     const [eachDateTotalPrice, setEachDateTotalPrice] = useState<DateWithPriceInterface[]>([]);
+    
     if(bookingDetails == null){
         throw new Error("bookingDetails is null");
     }
@@ -62,17 +68,21 @@ function PriceDetailsAllDates(props: IPropsPriceDetailsMultipleContinousDates){
     const eventMeetingRoomBookingEndDate: Date = new Date(eventMeetingRoomBookingEndDateString);
 
     const eventMeetingBookingDatesArrayList: Date[] = getDatesInRangeInclusiveBothDate(eventMeetingRoomBookingStartDate, eventMeetingRoomBookingEndDate);
-    const eventMeetingBookingDatesStringArrayList: string[] = eventMeetingBookingDatesArrayList.map(function(eachDate: Date){
-        return convertDateTextToDate(eachDate.toISOString()).toString();
-    });
+    const eventMeetingBookingDatesStringArrayList: string[] = 
+        eventMeetingBookingDatesArrayList.map(function(eachDate: Date){
+            return convertDateTextToDate(eachDate.toISOString()).toString();
+        });
     //console.log(eventMeetingBookingDatesStringArrayList);
 
     function getEachDateTotalPrice(dateWithPrice: DateWithPriceInterface) {
     setEachDateTotalPrice(function (previousState: DateWithPriceInterface[]): DateWithPriceInterface[] {
         let updatedEachDateTotalPrice: DateWithPriceInterface[] = [];
-        const isSameDateInPreviousDate = previousState.filter(function (eachDate: DateWithPriceInterface) {
-            return eachDate.currentDate === dateWithPrice.currentDate;
-        });
+        
+        const isSameDateInPreviousDate: DateWithPriceInterface[] = 
+            previousState.filter(function (eachDate: DateWithPriceInterface) {
+                return eachDate.currentDate === dateWithPrice.currentDate;
+            });
+        
         if (isSameDateInPreviousDate.length === 0) {
             updatedEachDateTotalPrice = [...previousState, dateWithPrice];
         } else if (isSameDateInPreviousDate.length > 0) {
@@ -138,7 +148,9 @@ function PriceDetailsAllDates(props: IPropsPriceDetailsMultipleContinousDates){
                             <TableCell></TableCell>
                             <TableCell></TableCell>
                             <TableCell></TableCell>
-                            <TableCell sx={totalStyling} align="right">{convertToINR(totalPriceForAllDay)}</TableCell>
+                            <TableCell sx={totalStyling} align="right">
+                                {convertToINR(totalPriceForAllDay)}
+                            </TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>

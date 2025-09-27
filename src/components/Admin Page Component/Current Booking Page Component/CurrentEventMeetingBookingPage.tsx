@@ -11,16 +11,26 @@ import {
     updateLoginRedirectPage 
 } from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
 
+
 import { 
     EVENT_MEETING_ROOM_BOOKING_INFO_IS_PRESENT, 
     EVENT_MEETING_ROOM_BOOKING_INFO_IS_EMPTY 
 } from "@/constant string files/apiSuccessMessageConstants";
 
+
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 import EachAdminEventMeetingBookingInfo from "@/components/Admin Booking Information Component/Event Meeting Booking/EachAdminEventMeetingBookingInfo";
 
+
 import { LoginUserDetails } from "@/interface/Hotel User Interface/hotelUsersInterfce";
-import { EventMeetingBookingInfoForAdmin, IContinousMultipleDatesBookingInfoForAdmin, INonContinousMultipleDatesBookingInfoForAdmin, ISingleDateBookingInfoForAdmin, ViewEventMeetingBookingResponseForAdmin } from "@/interface/Event Meeting Interface/viewEventMeetingBookingApiResponse";
+
+import { 
+    EventMeetingBookingInfoForAdmin, 
+    IContinousMultipleDatesBookingInfoForAdmin, 
+    INonContinousMultipleDatesBookingInfoForAdmin, 
+    ISingleDateBookingInfoForAdmin, 
+    ViewEventMeetingBookingResponseForAdmin 
+} from "@/interface/Event Meeting Interface/viewEventMeetingBookingApiResponse";
 
 
 function CurrentEventMeetingBookingPage(){
@@ -37,7 +47,8 @@ function CurrentEventMeetingBookingPageFunctionalComponent(){
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const loginUserDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore) => reduxStore.userSlice.loginUserDetails);
 
     let loginUserId: string;
     let loginUserFullName: string;
@@ -73,7 +84,8 @@ function CurrentEventMeetingBookingPageFunctionalComponent(){
 
     const [loadingBookingDetails, setLoadingBookingDetails] = useState<boolean>(true);
 
-    const [eventMeetingBooking, setEventMeetingBooking] = useState<null | EventMeetingBookingInfoForAdmin[]>(null);
+    const [eventMeetingBooking, setEventMeetingBooking] = 
+        useState<null | EventMeetingBookingInfoForAdmin[]>(null);
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
@@ -100,7 +112,9 @@ function CurrentEventMeetingBookingPageFunctionalComponent(){
                         setTotalPages(1);
                     }
                     else if(data.message === EVENT_MEETING_ROOM_BOOKING_INFO_IS_PRESENT){
-                        const eventMeetingBookingDb: EventMeetingBookingInfoForAdmin[] | undefined = data.eventMeetingBookingInfo;
+                        const eventMeetingBookingDb: EventMeetingBookingInfoForAdmin[] | undefined = 
+                            data.eventMeetingBookingInfo;
+
                         if(eventMeetingBookingDb){
                             setEventMeetingBooking(eventMeetingBookingDb);
                             const total: number = Math.ceil(eventMeetingBookingDb.length / BOOKINGS_PER_PAGE);
@@ -134,12 +148,20 @@ function CurrentEventMeetingBookingPageFunctionalComponent(){
      // Get bookings for current page only
     const indexOfLastBooking: number = currentPage * BOOKINGS_PER_PAGE;
     const indexOfFirstBooking: number = indexOfLastBooking - BOOKINGS_PER_PAGE;
-    const currentPageBookings: EventMeetingBookingInfoForAdmin[] = Array.isArray(eventMeetingBooking) ? eventMeetingBooking.slice(indexOfFirstBooking, indexOfLastBooking) : [];
+    const currentPageBookings: EventMeetingBookingInfoForAdmin[] = 
+        Array.isArray(eventMeetingBooking) 
+        ? eventMeetingBooking.slice(indexOfFirstBooking, indexOfLastBooking) 
+        : [];
 
 
     return (
         <div>
-            <Image src={'/hotel photo.jpg'} alt="hotel" width={1500} height={500} />
+            <Image 
+                src={'/hotel photo.jpg'} 
+                alt="hotel" 
+                width={1500} 
+                height={500} 
+            />
 
             {/* Breadcrumb Navigation */}
             <div className="m-6 bg-[#f0f8ff] p-4">
@@ -213,13 +235,21 @@ function CurrentEventMeetingBookingPageFunctionalComponent(){
 
                             {/* Pagination controls */}
                             <div className="mt-12 text-center space-x-4">
-                                <Button onClick={goToPrevPage} variant="contained" disabled={currentPage === 1}>
+                                <Button 
+                                    onClick={goToPrevPage} 
+                                    variant="contained" 
+                                    disabled={currentPage === 1}
+                                >
                                     Prev
                                 </Button>
                                 <span className="mx-2">
                                     Page {currentPage} of {totalPages}
                                 </span>
-                                <Button onClick={goToNextPage} variant="contained" disabled={currentPage === totalPages}>
+                                <Button 
+                                    onClick={goToNextPage} 
+                                    variant="contained" 
+                                    disabled={currentPage === totalPages}
+                                >
                                     Next
                                 </Button>
                             </div>

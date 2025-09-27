@@ -10,6 +10,7 @@ import { wantFoodServiceConstants, eventMeetingTimingConstants } from "@/constan
 import { convertToINR } from '@/functions/currency';
 
 import { IDateBooking } from '@/interface/Event Meeting Interface/eventMeetingDbModelInterface';
+import { MeetingEventBookingTime } from '@/interface/Event Meeting Interface/eventMeetingRoomConstantInterface';
 
 
 const boxStyle = {
@@ -33,7 +34,7 @@ function EventMeetingEachDayNonContinuous(props: IPropsEventMeetingEachDayNonCon
 
     const eachBookingDate: IDateBooking = props.eachBookingDate;
 
-    const meetingEventBookingTime: ("Morning" | "Afternoon" | "Evening" | "Night" | "Mid Night")[] = eachBookingDate.meetingEventBookingTime;
+    const meetingEventBookingTime: MeetingEventBookingTime[] = eachBookingDate.meetingEventBookingTime;
     const isMorningSlotBooked: boolean = meetingEventBookingTime.includes(eventMeetingTimingConstants.MORNING_TIME);
     const isAfternoonSlotBooked: boolean = meetingEventBookingTime.includes(eventMeetingTimingConstants.AFTERNOON_TIME);
     const isEveningSlotBooked: boolean = meetingEventBookingTime.includes(eventMeetingTimingConstants.EVENING_TIME);

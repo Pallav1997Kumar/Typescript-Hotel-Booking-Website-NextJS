@@ -7,16 +7,38 @@ import { useRouter } from 'next/navigation';
 import Button from '@mui/material/Button';
 
 import { useAppSelector, useAppDispatch } from "@/redux store/hooks";
-import { updateLoginPageCalledFrom, updateLoginRedirectPage } from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
-import { addRoomSuiteBookingInfo, resetRoomSuiteBookingInfo } from "@/redux store/features/Booking Information/roomSuiteBookingInfoSlice";
 
-import { ROOMS_SUITES_PRESENT_IN_CART, ROOMS_SUITES_CART_IS_EMPTY } from "@/constant string files/apiSuccessMessageConstants";
+import { 
+    updateLoginPageCalledFrom, 
+    updateLoginRedirectPage 
+} from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
+
+import { 
+    addRoomSuiteBookingInfo, 
+    resetRoomSuiteBookingInfo 
+} from "@/redux store/features/Booking Information/roomSuiteBookingInfoSlice";
+
+
+import { 
+    ROOMS_SUITES_PRESENT_IN_CART, 
+    ROOMS_SUITES_CART_IS_EMPTY 
+} from "@/constant string files/apiSuccessMessageConstants";
+
 
 import UserRoomSuiteBookingCart from "@/components/User Carts Component/UserRoomSuiteBookingCart";
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 
+
 import { LoginUserDetails } from "@/redux store/features/Auth Features/loginUserDetailsSlice";
-import { DeleteRoomsSuitesCartByCartIdApiResponse, IRoomsSuitesCartInformation, IViewRoomsSuitesCartByCartIdSuccessApiResponse, ViewRoomsSuitesCartByCartIdApiResponse, ViewRoomsSuitesCartByUserIdApiResponse } from "@/interface/Rooms and Suites Interface/roomsSuitesCartApiResponse";
+
+import { 
+    DeleteRoomsSuitesCartByCartIdApiResponse, 
+    IRoomsSuitesCartInformation, 
+    IViewRoomsSuitesCartByCartIdSuccessApiResponse, 
+    ViewRoomsSuitesCartByCartIdApiResponse, 
+    ViewRoomsSuitesCartByUserIdApiResponse 
+} from "@/interface/Rooms and Suites Interface/roomsSuitesCartApiResponse";
+
 
 
 function UserRoomsSuitesCartPageComponentFunctionalComponent(){
@@ -24,7 +46,8 @@ function UserRoomsSuitesCartPageComponentFunctionalComponent(){
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const loginUserDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
 
     useEffect(function() {
         if (loginUserDetails == null) {
@@ -55,7 +78,9 @@ function UserRoomsSuitesCartPageComponentFunctionalComponent(){
 
     async function fetchRoomSuiteCartDb(loginUserId: string) {
         try {
-            const response: Response = await fetch(`/api/view-cart/rooms-suites/search-by-user-id/${loginUserId}`);
+            const response: Response = await fetch(
+                `/api/view-cart/rooms-suites/search-by-user-id/${loginUserId}`
+            );
             const data: ViewRoomsSuitesCartByUserIdApiResponse = await response.json();
             
             if(response.status === 200){
@@ -82,12 +107,14 @@ function UserRoomsSuitesCartPageComponentFunctionalComponent(){
 
     async function removeRoomsSuitesItemFromCartDb(id: string){
         try {
-            const response: Response = await fetch(`/api/delete-cart/rooms-suites/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8',
+            const response: Response = await fetch(`/api/delete-cart/rooms-suites/${id}`, 
+                {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8',
+                    }
                 }
-            }); 
+            ); 
             const data: DeleteRoomsSuitesCartByCartIdApiResponse = await response.json();   
             if(response.status !== 200){
             }  
@@ -109,13 +136,22 @@ function UserRoomsSuitesCartPageComponentFunctionalComponent(){
         const roomSuitesPaymentCartList: IViewRoomsSuitesCartByCartIdSuccessApiResponse[] = [];
         setProceedBtnClickable(false);
         try{
-            const fetchRoomSuiteCartPromise: Promise<ViewRoomsSuitesCartByCartIdApiResponse>[] = roomSuiteCartIdList.map(async function(eachRoomSuiteCartId: string){
-                const roomSuitesCartResponse: Response = await fetch(`/api/view-cart/rooms-suites/search-by-cart-id/${eachRoomSuiteCartId}`);
-                const roomSuitesCartData: ViewRoomsSuitesCartByCartIdApiResponse = await roomSuitesCartResponse.json();
-                return roomSuitesCartData;
-            });
-            const roomSuitesCartPromiseResult: ViewRoomsSuitesCartByCartIdApiResponse[] = await Promise.all(fetchRoomSuiteCartPromise);
-            roomSuitesCartPromiseResult.forEach(function(eachRoomSuiteCartPromise: ViewRoomsSuitesCartByCartIdApiResponse){
+            const fetchRoomSuiteCartPromise: Promise<ViewRoomsSuitesCartByCartIdApiResponse>[] = 
+                roomSuiteCartIdList.map(async function(eachRoomSuiteCartId: string){
+                    const roomSuitesCartResponse: Response = await fetch(
+                        `/api/view-cart/rooms-suites/search-by-cart-id/${eachRoomSuiteCartId}`
+                    );
+                    const roomSuitesCartData: ViewRoomsSuitesCartByCartIdApiResponse = 
+                        await roomSuitesCartResponse.json();
+                    return roomSuitesCartData;
+                });
+
+            const roomSuitesCartPromiseResult: ViewRoomsSuitesCartByCartIdApiResponse[] = 
+                await Promise.all(fetchRoomSuiteCartPromise);
+            
+            roomSuitesCartPromiseResult.forEach(function(
+                eachRoomSuiteCartPromise: ViewRoomsSuitesCartByCartIdApiResponse
+            ){
                 if('cartInfo' in eachRoomSuiteCartPromise){
                     roomSuitesPaymentCartList.push(eachRoomSuiteCartPromise);
                 }

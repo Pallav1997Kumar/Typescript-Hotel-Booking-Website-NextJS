@@ -31,24 +31,32 @@ function EquipmentsPriceBreakup(props: IPropsEquipmentsPriceBreakup) {
     const priceNotIncludedForTotal = ['Price For Each Circular Table', 'Price For Each Seat'];
     const titleUsedForCounting = 'Number Of Circular Table Required';
 
-    const seatingArrangementPriceListTitleUsedForCounting: SeatingArrangementPriceList[] = seatingArrangementPriceList.filter(function(eachListItem: SeatingArrangementPriceList){
-        return eachListItem.priceNameProperty == titleUsedForCounting;
-    });
-    const seatingArrangementPriceListNotIncludedForTotal: SeatingArrangementPriceList[] = seatingArrangementPriceList.filter(function(eachListItem: SeatingArrangementPriceList){
-        if(eachListItem.priceNameProperty){
-            return priceNotIncludedForTotal.includes(eachListItem.priceNameProperty);
-        }   
-    });
-    const seatingArrangementPriceListIncludedForSpecialTotal: SeatingArrangementPriceList[] = seatingArrangementPriceList.filter(function(eachListItem: SeatingArrangementPriceList){
-        if(eachListItem.priceNameProperty){
-            return specialPriceIncludedForTotal.includes(eachListItem.priceNameProperty);
-        }
-    });
-    const seatingArrangementPriceListIncludedForCommonTotal: SeatingArrangementPriceList[] = seatingArrangementPriceList.filter(function(eachListItem: SeatingArrangementPriceList){
-        if(eachListItem.priceNameProperty){
-            return commonPriceIncludedForTotal.includes(eachListItem.priceNameProperty);
-        }
-    });
+    const seatingArrangementPriceListTitleUsedForCounting: SeatingArrangementPriceList[] = 
+        seatingArrangementPriceList.filter(function(eachListItem: SeatingArrangementPriceList){
+            return eachListItem.priceNameProperty == titleUsedForCounting;
+        });
+
+    const seatingArrangementPriceListNotIncludedForTotal: SeatingArrangementPriceList[] = 
+        seatingArrangementPriceList.filter(function(eachListItem: SeatingArrangementPriceList){
+            if(eachListItem.priceNameProperty){
+                return priceNotIncludedForTotal.includes(eachListItem.priceNameProperty);
+            }   
+        });
+
+    const seatingArrangementPriceListIncludedForSpecialTotal: SeatingArrangementPriceList[] = 
+        seatingArrangementPriceList.filter(function(eachListItem: SeatingArrangementPriceList){
+            if(eachListItem.priceNameProperty){
+                return specialPriceIncludedForTotal.includes(eachListItem.priceNameProperty);
+            }
+        });
+
+    const seatingArrangementPriceListIncludedForCommonTotal: SeatingArrangementPriceList[] = 
+        seatingArrangementPriceList.filter(function(eachListItem: SeatingArrangementPriceList){
+            if(eachListItem.priceNameProperty){
+                return commonPriceIncludedForTotal.includes(eachListItem.priceNameProperty);
+            }
+        });
+
 
     let totalPriceForEquipments: number = 0;
     seatingArrangementPriceListIncludedForSpecialTotal.forEach(function(eachListItem){
@@ -79,7 +87,9 @@ function EquipmentsPriceBreakup(props: IPropsEquipmentsPriceBreakup) {
 
     return (
         <div>
-            <Button variant="outlined" onClick={()=> setShowEquipmentsPriceBreakup(true)}>Show Price Breakup</Button>
+            <Button variant="outlined" onClick={()=> setShowEquipmentsPriceBreakup(true)}>
+                Show Price Breakup
+            </Button>
             <Modal
                 open={showEquipmentsPriceBreakup}
                 onClose={()=> setShowEquipmentsPriceBreakup(false)}
@@ -95,7 +105,10 @@ function EquipmentsPriceBreakup(props: IPropsEquipmentsPriceBreakup) {
                                     <TableCell>{totalNumberOfGuest}</TableCell>
                                 </TableRow>
                                 
-                                {(seatingArrangementPriceListTitleUsedForCounting.length > 0) && seatingArrangementPriceListTitleUsedForCounting.map(function(eachListItem: SeatingArrangementPriceList){
+                                {(seatingArrangementPriceListTitleUsedForCounting.length > 0) && 
+                                    seatingArrangementPriceListTitleUsedForCounting.map(function(
+                                        eachListItem: SeatingArrangementPriceList
+                                    ){
                                     return (
                                         <TableRow key={eachListItem.priceNameProperty}>
                                             <TableCell>{eachListItem.priceNameProperty}</TableCell>
@@ -104,7 +117,10 @@ function EquipmentsPriceBreakup(props: IPropsEquipmentsPriceBreakup) {
                                     )
                                 })}
                                 
-                                {(seatingArrangementPriceListNotIncludedForTotal.length > 0) && seatingArrangementPriceListNotIncludedForTotal.map(function(eachListItem: SeatingArrangementPriceList){
+                                {(seatingArrangementPriceListNotIncludedForTotal.length > 0) && 
+                                    seatingArrangementPriceListNotIncludedForTotal.map(function(
+                                        eachListItem: SeatingArrangementPriceList
+                                    ){
                                     return (
                                         <TableRow key={eachListItem.priceNameProperty}>
                                             <TableCell>{eachListItem.priceNameProperty}</TableCell>
@@ -124,7 +140,10 @@ function EquipmentsPriceBreakup(props: IPropsEquipmentsPriceBreakup) {
                         <Table aria-label="simple table">
                             <TableBody>
                                                                 
-                                {(seatingArrangementPriceListIncludedForSpecialTotal.length > 0) && seatingArrangementPriceListIncludedForSpecialTotal.map(function(eachListItem: SeatingArrangementPriceList){
+                                {(seatingArrangementPriceListIncludedForSpecialTotal.length > 0) && 
+                                    seatingArrangementPriceListIncludedForSpecialTotal.map(function(
+                                        eachListItem: SeatingArrangementPriceList
+                                    ){
                                     return (
                                         <TableRow key={eachListItem.priceNameProperty}>
                                             <TableCell>{eachListItem.priceNameProperty}</TableCell>
@@ -135,7 +154,10 @@ function EquipmentsPriceBreakup(props: IPropsEquipmentsPriceBreakup) {
                                     )
                                 })} 
 
-                                {(seatingArrangementPriceListIncludedForCommonTotal.length > 0) && seatingArrangementPriceListIncludedForCommonTotal.map(function(eachListItem: SeatingArrangementPriceList){
+                                {(seatingArrangementPriceListIncludedForCommonTotal.length > 0) && 
+                                    seatingArrangementPriceListIncludedForCommonTotal.map(function(
+                                        eachListItem: SeatingArrangementPriceList
+                                    ){
                                     return (
                                         <TableRow key={eachListItem.priceNameProperty}>
                                             <TableCell>{eachListItem.priceNameProperty}</TableCell>

@@ -8,7 +8,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 
 import { useAppSelector, useAppDispatch } from "@/redux store/hooks";
-import { updateLoginPageCalledFrom, updateLoginRedirectPage } from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
+import { 
+    updateLoginPageCalledFrom, 
+    updateLoginRedirectPage 
+} from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
 
 import { convertToINR } from "@/functions/currency";
 import { CURRENCY_SYMBOL } from "@/constant string files/commonConstants";
@@ -17,7 +20,11 @@ import { incorrectCardDetailsErrorConstant } from "@/constant string files/incor
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 
 import { LoginUserDetails } from "@/redux store/features/Auth Features/loginUserDetailsSlice";
-import { AddMoneyToAccountApiResponse, AddTransactionAddMoneyApiResponse } from "@/interface/Hotel User Interface/hotelUsersInterfce";
+import { 
+    AddMoneyToAccountApiResponse, 
+    AddTransactionAddMoneyApiResponse 
+} from "@/interface/Hotel User Interface/hotelUsersInterfce";
+
 
 
 interface IAmountInfo{
@@ -46,7 +53,8 @@ function AddMoneyInAccountFunctionalComponent(){
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const loginUserDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
 
     useEffect(function() {
         if (loginUserDetails == null) {
@@ -170,29 +178,44 @@ function AddMoneyInAccountFunctionalComponent(){
         };
         setPaymentSuccessMessage('');
         setPaymentErrorMessage('');
-        if(cardName !== "" && cardNumber !== "" && cvvNumber !== "" && expiryMonth !== "" && expiryYear !== ""){
-            if(cardNumber.length === 19 && cvvNumber.length === 3 && Number(expiryMonth) <= 12 && expiryYear.toString().length === 4){
+        if(cardName !== "" && 
+            cardNumber !== "" && 
+            cvvNumber !== "" && 
+            expiryMonth !== "" && 
+            expiryYear !== ""
+        ){
+            if(cardNumber.length === 19 && 
+                cvvNumber.length === 3 && 
+                Number(expiryMonth) <= 12 && 
+                expiryYear.toString().length === 4
+            ){
                 try {
                     setIsPaymentProcessing(true);
                     const amountInfo: IAmountInfo = {
                         amountToBeAdded: Number(amount)
                     }
-                    const transactionResponse: Response = await fetch(`/api/account-balance-user/add-transaction-amount-add-account/${loginUserId}`, {
-                        method: 'POST',
-                        body: JSON.stringify(amountInfo),
-                        headers: {
-                            'Content-type': 'application/json; charset=UTF-8',
-                        }
-                    });
-                    const transactionData: AddTransactionAddMoneyApiResponse = await transactionResponse.json();
-                    if(transactionResponse.status === 200){
-                        const updatedAccountBalanceResponse: Response = await fetch(`/api/account-balance-user/update-account-balance/add-money-in-account/${loginUserId}`, {
-                            method: 'PATCH',
+                    const transactionResponse: Response = await fetch(
+                        `/api/account-balance-user/add-transaction-amount-add-account/${loginUserId}`, 
+                        {
+                            method: 'POST',
                             body: JSON.stringify(amountInfo),
                             headers: {
                                 'Content-type': 'application/json; charset=UTF-8',
                             }
-                        });
+                        }
+                    );
+                    const transactionData: AddTransactionAddMoneyApiResponse = await transactionResponse.json();
+                    if(transactionResponse.status === 200){
+                        const updatedAccountBalanceResponse: Response = await fetch(
+                            `/api/account-balance-user/update-account-balance/add-money-in-account/${loginUserId}`, 
+                            {
+                                method: 'PATCH',
+                                body: JSON.stringify(amountInfo),
+                                headers: {
+                                    'Content-type': 'application/json; charset=UTF-8',
+                                }
+                            }
+                        );
                         const updatedAccountBalanceData: AddMoneyToAccountApiResponse = await updatedAccountBalanceResponse.json();
                         if(updatedAccountBalanceResponse.status === 200){
                             if('message' in updatedAccountBalanceData){

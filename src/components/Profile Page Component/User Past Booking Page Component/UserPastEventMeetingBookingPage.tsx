@@ -4,22 +4,31 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+
 import { useAppSelector, useAppDispatch } from "@/redux store/hooks";
+
 import { 
     updateLoginPageCalledFrom, 
     updateLoginRedirectPage 
 } from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
+
 
 import { 
     EVENT_MEETING_ROOM_BOOKING_INFO_IS_PRESENT, 
     EVENT_MEETING_ROOM_BOOKING_INFO_IS_EMPTY 
 } from "@/constant string files/apiSuccessMessageConstants";
 
+
 import UserEventMeetingBookingComponent from "@/components/User Booking Component/UserEventMeetingBookingComponent";
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 
+
 import { LoginUserDetails } from "@/interface/Hotel User Interface/hotelUsersInterfce";
-import { EventMeetingBookingInfoForCustomer, ViewEventMeetingBookingResponseForCustomer } from "@/interface/Event Meeting Interface/viewEventMeetingBookingApiResponse";
+
+import { 
+    EventMeetingBookingInfoForCustomer, 
+    ViewEventMeetingBookingResponseForCustomer 
+} from "@/interface/Event Meeting Interface/viewEventMeetingBookingApiResponse";
 
 
 function UserPastEventMeetingBookingPageFunctionalComponent(){
@@ -27,7 +36,8 @@ function UserPastEventMeetingBookingPageFunctionalComponent(){
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const loginUserDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
 
     useEffect(function() {
         if (loginUserDetails == null) {
@@ -47,7 +57,8 @@ function UserPastEventMeetingBookingPageFunctionalComponent(){
 
     const [loadingBookingDetails, setLoadingBookingDetails] = useState<boolean>(true);
 
-    const [eventMeetingBooking, setEventMeetingBooking] = useState<null | EventMeetingBookingInfoForCustomer[]>(null);
+    const [eventMeetingBooking, setEventMeetingBooking] = 
+        useState<null | EventMeetingBookingInfoForCustomer[]>(null);
 
     useEffect(()=>{
         fetchEventMeetingBookingDb(loginUserId);
@@ -55,7 +66,9 @@ function UserPastEventMeetingBookingPageFunctionalComponent(){
 
     async function fetchEventMeetingBookingDb(loginUserId: string) {
         try {
-            const response: Response = await fetch(`/api/view-past-booking/meeting-events/${loginUserId}`);
+            const response: Response = await fetch(
+                `/api/view-past-booking/meeting-events/${loginUserId}`
+            );
             const data: ViewEventMeetingBookingResponseForCustomer = await response.json();
 
             if(response.status === 200){
@@ -65,7 +78,8 @@ function UserPastEventMeetingBookingPageFunctionalComponent(){
                         setEventMeetingBooking(eventMeetingBookingDb);
                     }
                     else if(data.message === EVENT_MEETING_ROOM_BOOKING_INFO_IS_PRESENT){
-                        const eventMeetingBookingDb: EventMeetingBookingInfoForCustomer[] | undefined = data.eventMeetingBookingInfo;
+                        const eventMeetingBookingDb: EventMeetingBookingInfoForCustomer[] | undefined = 
+                            data.eventMeetingBookingInfo;
                         if(eventMeetingBookingDb){
                             setEventMeetingBooking(eventMeetingBookingDb);
                         }
@@ -134,7 +148,9 @@ function UserPastEventMeetingBookingPageFunctionalComponent(){
                 }
 
                 {(!loadingBookingDetails && eventMeetingBooking !== null && eventMeetingBooking.length > 0) &&
-                    <UserEventMeetingBookingComponent eventMeetingBookingInfo={eventMeetingBooking} />
+                    <UserEventMeetingBookingComponent 
+                        eventMeetingBookingInfo={eventMeetingBooking} 
+                    />
                 }
             </div>
 

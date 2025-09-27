@@ -5,25 +5,32 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 
+
 import { useAppSelector, useAppDispatch } from '@/redux store/hooks';
+
 import { 
     updateLoginPageCalledFrom, 
     updateLoginRedirectPage 
 } from '@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice';
+
 import { roomBookingDateTypeConstants } from "@/constant string files/eventsMeetingRoomImportantConstants";
-import { INFORMATION_ADD_TO_CART_SUCCESSFUL } from "@/constant string files/apiSuccessMessageConstants";
 import { deleteParticularBookingFromEventMeetingCart } from "@/redux store/features/Booking Features/eventMeetingRoomBookingCartSlice";
+
+
+import { INFORMATION_ADD_TO_CART_SUCCESSFUL } from "@/constant string files/apiSuccessMessageConstants";
+
 
 import EventMeetingRoomBookingCartComponent from "@/components/Carts Component/EventMeetingRoomBookingCartComponent";
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 
+
 import { LoginUserDetails } from "@/redux store/features/Auth Features/loginUserDetailsSlice";
+import { AddEventMeetingRoomCartApiResponse } from "@/interface/Event Meeting Interface/eventMeetingCartApiResponse";
 import { 
     MultipleContinuousDatesBookingDetailsWithPriceInterface, 
     NonContinuousMultipleDatesBookingDetailsInterface, 
     SingleDateEventBookingDetailsWithPriceInterface 
 } from "@/interface/Event Meeting Interface/eventMeetingBookingInterface";
-import { AddEventMeetingRoomCartApiResponse } from "@/interface/Event Meeting Interface/eventMeetingCartApiResponse";
 
 
 function EventMeetingRoomCartComponent(){
@@ -39,9 +46,14 @@ function EventMeetingRoomCartComponentFunctionalComponent(){
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const allEventMeetingBookingCart: (NonContinuousMultipleDatesBookingDetailsInterface | MultipleContinuousDatesBookingDetailsWithPriceInterface | SingleDateEventBookingDetailsWithPriceInterface)[] = useAppSelector((reduxStore) => reduxStore.eventMeetingCartSlice.eventMeetingCart);
+    const allEventMeetingBookingCart: (
+        NonContinuousMultipleDatesBookingDetailsInterface | 
+        MultipleContinuousDatesBookingDetailsWithPriceInterface | 
+        SingleDateEventBookingDetailsWithPriceInterface
+    )[] = useAppSelector((reduxStore) => reduxStore.eventMeetingCartSlice.eventMeetingCart);
 
-    const loginUserIdDetails: LoginUserDetails | null = useAppSelector((reduxStore) => reduxStore.userSlice.loginUserDetails);
+    const loginUserIdDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore) => reduxStore.userSlice.loginUserDetails);
     
     let loginUserId: null | string = null;
     if(loginUserIdDetails != null){
@@ -63,17 +75,24 @@ function EventMeetingRoomCartComponentFunctionalComponent(){
             setInformationAddingToUserCart(true);
             if(allEventMeetingBookingCart.length > 0){
 
-                allEventMeetingBookingCart.forEach(async function(eachEventMeeting: NonContinuousMultipleDatesBookingDetailsInterface | MultipleContinuousDatesBookingDetailsWithPriceInterface | SingleDateEventBookingDetailsWithPriceInterface){
+                allEventMeetingBookingCart.forEach(async function(
+                    eachEventMeeting: 
+                        | NonContinuousMultipleDatesBookingDetailsInterface 
+                        | MultipleContinuousDatesBookingDetailsWithPriceInterface 
+                        | SingleDateEventBookingDetailsWithPriceInterface
+                ){
 
                     if(eachEventMeeting.roomBookingDateType === roomBookingDateTypeConstants.SINGLE_DATE){
                         try {
-                            const response: Response = await fetch(`/api/add-cart/meeting-events/single-date/${loginUserId}`, {
-                                method: 'POST',
-                                body: JSON.stringify(eachEventMeeting),
-                                headers: {
-                                    'Content-type': 'application/json; charset=UTF-8',
+                            const response: Response = await fetch(`/api/add-cart/meeting-events/single-date/${loginUserId}`, 
+                                {
+                                    method: 'POST',
+                                    body: JSON.stringify(eachEventMeeting),
+                                    headers: {
+                                        'Content-type': 'application/json; charset=UTF-8',
+                                    }
                                 }
-                            });
+                            );
                             const data: AddEventMeetingRoomCartApiResponse = await response.json();
                             if(response.status === 200){
                                 if('message' in data){
@@ -89,13 +108,15 @@ function EventMeetingRoomCartComponentFunctionalComponent(){
 
                     if(eachEventMeeting.roomBookingDateType === roomBookingDateTypeConstants.MULTIPLE_DATES_CONTINOUS){
                         try {
-                            const response: Response = await fetch(`/api/add-cart/meeting-events/multiple-dates-continous/${loginUserId}`, {
-                                method: 'POST',
-                                body: JSON.stringify(eachEventMeeting),
-                                headers: {
-                                    'Content-type': 'application/json; charset=UTF-8',
+                            const response: Response = await fetch(`/api/add-cart/meeting-events/multiple-dates-continous/${loginUserId}`, 
+                                {
+                                    method: 'POST',
+                                    body: JSON.stringify(eachEventMeeting),
+                                    headers: {
+                                        'Content-type': 'application/json; charset=UTF-8',
+                                    }
                                 }
-                            });
+                            );
                             const data: AddEventMeetingRoomCartApiResponse = await response.json();
                             if(response.status === 200){
                                 if('message' in data){
@@ -111,13 +132,15 @@ function EventMeetingRoomCartComponentFunctionalComponent(){
 
                     if(eachEventMeeting.roomBookingDateType === roomBookingDateTypeConstants.MULTIPLE_DATES_NON_CONTINOUS){
                         try {
-                            const response: Response = await fetch(`/api/add-cart/meeting-events/multiple-dates-non-continous/${loginUserId}`, {
-                                method: 'POST',
-                                body: JSON.stringify(eachEventMeeting),
-                                headers: {
-                                    'Content-type': 'application/json; charset=UTF-8',
+                            const response: Response = await fetch(`/api/add-cart/meeting-events/multiple-dates-non-continous/${loginUserId}`, 
+                                {
+                                    method: 'POST',
+                                    body: JSON.stringify(eachEventMeeting),
+                                    headers: {
+                                        'Content-type': 'application/json; charset=UTF-8',
+                                    }
                                 }
-                            });
+                            );
                             const data: AddEventMeetingRoomCartApiResponse = await response.json();
                             if(response.status === 200){
                                 if('message' in data){

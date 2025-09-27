@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from "react";
 
+
 import { 
     DATE_BOOKED_ASCENDING, 
     DATE_BOOKED_DESCENDING,
@@ -14,10 +15,18 @@ import {
     NUMBER_OF_GUESTS_DESCENDING 
 } from "@/constant string files/bookingViewSortingConstants";
 
+
 import EachDiningBookingInfo from "@/components/User Past Current Booking Info Component/Dining Booking/EachDiningBookingInfo";
 
-import { IDiningBookingInfoForArrayForCustomer, IDiningBookingInfoForCustomer } from "@/interface/Dining Interface/viewDiningBookingApiResponse";
+
 import { ITransactionDetailsFrontend } from "@/interface/hotelCustomersInterface";
+import { DiningRestaurantTitle } from "@/interface/Dining Interface/hotelDiningConstantInterface";
+
+import { 
+    IDiningBookingInfoForArrayForCustomer, 
+    IDiningBookingInfoForCustomer 
+} from "@/interface/Dining Interface/viewDiningBookingApiResponse";
+
 
 
 interface IPropsUserDiningBookingComponent {
@@ -65,8 +74,8 @@ function UserDiningBookingComponent(props: IPropsUserDiningBookingComponent){
 
         else if(sortSelection === TITLE_ASCENDING){
             diningBookingInfo.sort(function(a,b){
-                const titleA: string = a.bookingInfo.diningRestaurantTitle;
-                const titleB: string = b.bookingInfo.diningRestaurantTitle;
+                const titleA: DiningRestaurantTitle = a.bookingInfo.diningRestaurantTitle;
+                const titleB: DiningRestaurantTitle = b.bookingInfo.diningRestaurantTitle;
                 if(titleA > titleB){
                     return 1;
                 }
@@ -78,8 +87,8 @@ function UserDiningBookingComponent(props: IPropsUserDiningBookingComponent){
         }
         else if(sortSelection === TITLE_DESCENDING){
             diningBookingInfo.sort(function(a,b){
-                const titleA: string = a.bookingInfo.diningRestaurantTitle;;
-                const titleB: string = b.bookingInfo.diningRestaurantTitle;
+                const titleA: DiningRestaurantTitle = a.bookingInfo.diningRestaurantTitle;;
+                const titleB: DiningRestaurantTitle = b.bookingInfo.diningRestaurantTitle;
                 if(titleA > titleB){
                     return -1;
                 }
@@ -173,8 +182,9 @@ function UserDiningBookingComponent(props: IPropsUserDiningBookingComponent){
             </div>
 
             {diningBookingInfo.map(function(eachDiningBookingInfo: IDiningBookingInfoForArrayForCustomer){
-                const diningBookingInfo: IDiningBookingInfoForCustomer =  eachDiningBookingInfo.bookingInfo; 
+                const diningBookingInfo: IDiningBookingInfoForCustomer = eachDiningBookingInfo.bookingInfo; 
                 const transactionDetails: ITransactionDetailsFrontend = diningBookingInfo.transactionDetails;
+                
                 return (
                     <EachDiningBookingInfo 
                         key={eachDiningBookingInfo._id}

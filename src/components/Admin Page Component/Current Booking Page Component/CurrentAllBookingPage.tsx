@@ -16,16 +16,28 @@ import {
   DINING_ROOMS_SUITES_EVENT_MEETING_BOOKING_INFO_IS_EMPTY
 } from "@/constant string files/apiSuccessMessageConstants";
 
+
 import EachAdminEventMeetingBookingInfo from "@/components/Admin Booking Information Component/Event Meeting Booking/EachAdminEventMeetingBookingInfo";
 import EachAdminDiningBookingInfo from "@/components/Admin Booking Information Component/Dining Booking/EachAdminDiningBookingInfo";
 import EachAdminRoomBookingInfo from "@/components/Admin Booking Information Component/Rooms Suites Booking/EachAdminRoomBookingInfo";
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 
+
 import { LoginUserDetails } from "@/interface/Hotel User Interface/hotelUsersInterfce";
-import { DiningRoomsSuitesEventMeetingBookingInfoForAdmin, ViewDiningRoomsSuitesEventMeetingBookingResponseForAdmin } from "@/interface/viewRoomDiningEventBookingApiResponse";
-import { IContinousMultipleDatesBookingInfoForAdmin, INonContinousMultipleDatesBookingInfoForAdmin, ISingleDateBookingInfoForAdmin } from "@/interface/Event Meeting Interface/viewEventMeetingBookingApiResponse";
 import { IRoomsSuitesBookingInfoForAdmin } from "@/interface/Rooms and Suites Interface/viewRoomSuiteBookingApiResponse";
 import { IDiningBookingInfoForAdmin } from "@/interface/Dining Interface/viewDiningBookingApiResponse";
+
+import { 
+    DiningRoomsSuitesEventMeetingBookingInfoForAdmin, 
+    ViewDiningRoomsSuitesEventMeetingBookingResponseForAdmin 
+} from "@/interface/viewRoomDiningEventBookingApiResponse";
+
+import { 
+    IContinousMultipleDatesBookingInfoForAdmin, 
+    INonContinousMultipleDatesBookingInfoForAdmin, 
+    ISingleDateBookingInfoForAdmin 
+} from "@/interface/Event Meeting Interface/viewEventMeetingBookingApiResponse";
+
 
 
 function CurrentAllBookingPage(){
@@ -42,7 +54,8 @@ function CurrentAllBookingPageFunctionalComponent(){
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const loginUserDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
 
     let loginUserId: string;
     let loginUserFullName: string;
@@ -56,7 +69,8 @@ function CurrentAllBookingPageFunctionalComponent(){
 
     useEffect(function(){
         if(loginUserDetails == null){
-            const loginPageCalledFrom = 'Admin Current Dining, Rooms Suites and Event Meeting Rooms Page';
+            const loginPageCalledFrom = 
+                'Admin Current Dining, Rooms Suites and Event Meeting Rooms Page';
             const loginRedirectPage = '/admin-home-page';
             dispatch(updateLoginPageCalledFrom(loginPageCalledFrom));
             dispatch(updateLoginRedirectPage(loginRedirectPage));
@@ -65,7 +79,8 @@ function CurrentAllBookingPageFunctionalComponent(){
         }
         if(loginUserDetails != null && 
             !loginUserDetails.emailAddress.endsWith("@royalpalace.co.in")){
-            const loginPageCalledFrom = 'Admin Current Dining, Rooms Suites and Event Meeting Rooms Page';
+            const loginPageCalledFrom = 
+                'Admin Current Dining, Rooms Suites and Event Meeting Rooms Page';
             const loginRedirectPage = '/admin-home-page';
             dispatch(updateLoginPageCalledFrom(loginPageCalledFrom));
             dispatch(updateLoginRedirectPage(loginRedirectPage));
@@ -77,11 +92,13 @@ function CurrentAllBookingPageFunctionalComponent(){
 
     const [loadingBookingDetails, setLoadingBookingDetails] = useState<boolean>(true);
 
-    const [diningRoomSuiteEventMeetingBooking, setDiningRoomSuiteEventMeetingBooking] = useState<null | DiningRoomsSuitesEventMeetingBookingInfoForAdmin[]>(null);
+    const [diningRoomSuiteEventMeetingBooking, setDiningRoomSuiteEventMeetingBooking] = 
+        useState<null | DiningRoomsSuitesEventMeetingBookingInfoForAdmin[]>(null);
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
     const BOOKINGS_PER_PAGE: number = 5;
+
 
     useEffect(function() {
         if(loginUserDetails != null && 
@@ -90,11 +107,11 @@ function CurrentAllBookingPageFunctionalComponent(){
         }
     }, []);
 
+
     async function fetchDiningRoomsSuitesEventMeetingBookingDb() {
         try {
             const response: Response = await fetch(`/api/view-current-booking`);
             const data: ViewDiningRoomsSuitesEventMeetingBookingResponseForAdmin = await response.json();
-            console.log(data);
             
             if(response.status === 200){
                 if('message' in data){
@@ -104,7 +121,9 @@ function CurrentAllBookingPageFunctionalComponent(){
                         setTotalPages(1);
                     }
                     else if(data.message === DINING_ROOMS_SUITES_EVENT_MEETING_BOOKING_INFO_IS_PRESENT){
-                        const diningRoomSuiteEventMeetingBookingDb: DiningRoomsSuitesEventMeetingBookingInfoForAdmin[] | undefined = data.diningRoomsSuitesEventMeetingBookingInfo;
+                        const diningRoomSuiteEventMeetingBookingDb: DiningRoomsSuitesEventMeetingBookingInfoForAdmin[] | undefined = 
+                            data.diningRoomsSuitesEventMeetingBookingInfo;
+                            
                         if(diningRoomSuiteEventMeetingBookingDb){
                             setDiningRoomSuiteEventMeetingBooking(diningRoomSuiteEventMeetingBookingDb);
                             const total: number = Math.ceil(diningRoomSuiteEventMeetingBookingDb.length / BOOKINGS_PER_PAGE);
@@ -138,12 +157,20 @@ function CurrentAllBookingPageFunctionalComponent(){
      // Get bookings for current page only
     const indexOfLastBooking: number = currentPage * BOOKINGS_PER_PAGE;
     const indexOfFirstBooking: number = indexOfLastBooking - BOOKINGS_PER_PAGE;
-    const currentPageBookings: DiningRoomsSuitesEventMeetingBookingInfoForAdmin[] = Array.isArray(diningRoomSuiteEventMeetingBooking) ? diningRoomSuiteEventMeetingBooking.slice(indexOfFirstBooking, indexOfLastBooking) : [];
+    const currentPageBookings: DiningRoomsSuitesEventMeetingBookingInfoForAdmin[] = 
+        Array.isArray(diningRoomSuiteEventMeetingBooking) 
+        ? diningRoomSuiteEventMeetingBooking.slice(indexOfFirstBooking, indexOfLastBooking) 
+        : [];
 
 
     return (
         <div>
-            <Image src={'/hotel photo.jpg'} alt="hotel" width={1500} height={500} />
+            <Image 
+                src={'/hotel photo.jpg'} 
+                alt="hotel" 
+                width={1500} 
+                height={500} 
+            />
 
             {/* Breadcrumb Navigation */}
             <div className="m-6 bg-[#f0f8ff] p-4">
@@ -230,12 +257,20 @@ function CurrentAllBookingPageFunctionalComponent(){
                                 diningRoomSuiteEventMeetingBooking !== null && 
                                     diningRoomSuiteEventMeetingBooking.length > 0) &&
                                         <div>
-                                            {currentPageBookings.map(function(eachBookingInfo: DiningRoomsSuitesEventMeetingBookingInfoForAdmin){
-                                                const currentBookingInfo: ISingleDateBookingInfoForAdmin | IContinousMultipleDatesBookingInfoForAdmin | INonContinousMultipleDatesBookingInfoForAdmin | IRoomsSuitesBookingInfoForAdmin | IDiningBookingInfoForAdmin = eachBookingInfo.bookingInfo; 
+                                            {currentPageBookings.map(function(
+                                                eachBookingInfo: DiningRoomsSuitesEventMeetingBookingInfoForAdmin
+                                            ){
+                                                const currentBookingInfo: 
+                                                    | ISingleDateBookingInfoForAdmin 
+                                                    | IContinousMultipleDatesBookingInfoForAdmin 
+                                                    | INonContinousMultipleDatesBookingInfoForAdmin 
+                                                    | IRoomsSuitesBookingInfoForAdmin 
+                                                    | IDiningBookingInfoForAdmin 
+                                                        = eachBookingInfo.bookingInfo; 
 
                                                 if('diningRestaurantTitle' in currentBookingInfo){
                                                     if(currentBookingInfo.diningRestaurantTitle){
-                                                        const diningBookingInfo: IDiningBookingInfoForAdmin =  currentBookingInfo; 
+                                                        const diningBookingInfo: IDiningBookingInfoForAdmin = currentBookingInfo; 
                                                         return (
                                                             <EachAdminDiningBookingInfo 
                                                                 key={eachBookingInfo._id}
@@ -247,7 +282,7 @@ function CurrentAllBookingPageFunctionalComponent(){
 
                                                 if('bookingRoomTitle' in currentBookingInfo){
                                                     if(currentBookingInfo.bookingRoomTitle){
-                                                        const roomSuitesBookingInfo: IRoomsSuitesBookingInfoForAdmin =  currentBookingInfo; 
+                                                        const roomSuitesBookingInfo: IRoomsSuitesBookingInfoForAdmin = currentBookingInfo; 
                                                         return (
                                                             <EachAdminRoomBookingInfo 
                                                                 key={eachBookingInfo._id}
@@ -259,7 +294,12 @@ function CurrentAllBookingPageFunctionalComponent(){
 
                                                 if('meetingEventsInfoTitle' in currentBookingInfo){
                                                     if(currentBookingInfo.meetingEventsInfoTitle){
-                                                        const eventMeetingBookingInfo: ISingleDateBookingInfoForAdmin | IContinousMultipleDatesBookingInfoForAdmin | INonContinousMultipleDatesBookingInfoForAdmin =  currentBookingInfo; 
+                                                        const eventMeetingBookingInfo: 
+                                                            | ISingleDateBookingInfoForAdmin 
+                                                            | IContinousMultipleDatesBookingInfoForAdmin 
+                                                            | INonContinousMultipleDatesBookingInfoForAdmin 
+                                                                = currentBookingInfo; 
+
                                                         return (
                                                             <EachAdminEventMeetingBookingInfo 
                                                                 key={eachBookingInfo._id}
@@ -273,13 +313,21 @@ function CurrentAllBookingPageFunctionalComponent(){
 
                                             {/* Pagination controls */}
                                             <div className="mt-12 text-center space-x-4">
-                                                <Button onClick={goToPrevPage} variant="contained" disabled={currentPage === 1}>
+                                                <Button 
+                                                    onClick={goToPrevPage} 
+                                                    variant="contained" 
+                                                    disabled={currentPage === 1}
+                                                >
                                                     Prev
                                                 </Button>
                                                 <span>
                                                     Page {currentPage} of {totalPages}
                                                 </span>
-                                                <Button onClick={goToNextPage} variant="contained" disabled={currentPage === totalPages}>
+                                                <Button 
+                                                    onClick={goToNextPage} 
+                                                    variant="contained" 
+                                                    disabled={currentPage === totalPages}
+                                                >
                                                     Next
                                                 </Button>
                                             </div>

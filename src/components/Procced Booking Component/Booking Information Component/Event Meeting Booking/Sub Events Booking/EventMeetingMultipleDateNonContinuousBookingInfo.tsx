@@ -10,7 +10,9 @@ interface IPropsEventMeetingMultipleDateNonContinuousBookingInfo {
 }
 
 
-function EventMeetingMultipleDateNonContinuousBookingInfo(props: IPropsEventMeetingMultipleDateNonContinuousBookingInfo){
+function EventMeetingMultipleDateNonContinuousBookingInfo(
+    props: IPropsEventMeetingMultipleDateNonContinuousBookingInfo
+){
 
     const eachEventMeetingBookingInfo: IEventMeetingRoomNonContinousMultipleDatesCartInformation = props.eachEventMeetingBookingInfo;
 
@@ -20,7 +22,8 @@ function EventMeetingMultipleDateNonContinuousBookingInfo(props: IPropsEventMeet
                 Meeting / Event Area Name: {eachEventMeetingBookingInfo.meetingEventsInfoTitle}
             </p>
             
-            {(eachEventMeetingBookingInfo.allDatesBookingInformation && Object.hasOwn(eachEventMeetingBookingInfo, 'allDatesBookingInformation')) &&
+            {(eachEventMeetingBookingInfo.allDatesBookingInformation && 
+                Object.hasOwn(eachEventMeetingBookingInfo, 'allDatesBookingInformation')) &&
                 <div className="mb-4">
                     {(eachEventMeetingBookingInfo.allDatesBookingInformation).map(function(eachBookingDate: IDateBooking){
                         return(

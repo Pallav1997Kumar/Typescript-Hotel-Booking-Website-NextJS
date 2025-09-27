@@ -1,17 +1,27 @@
 import { getCommaAndSeperatedArray } from "@/functions/array";
 import { eventMeetingTimingConstants } from "@/constant string files/eventsMeetingRoomImportantConstants";
 
-import { MultipleContinuousDatesBookingDetailsWithPriceInterface, SingleDateEventBookingDetailsWithPriceInterface } from '@/interface/Event Meeting Interface/eventMeetingBookingInterface';
+import { 
+    MultipleContinuousDatesBookingDetailsWithPriceInterface, 
+    SingleDateEventBookingDetailsWithPriceInterface 
+} from '@/interface/Event Meeting Interface/eventMeetingBookingInterface';
+import { MeetingEventBookingTime } from "@/interface/Event Meeting Interface/eventMeetingRoomConstantInterface";
+
 
 interface IPropsEventMeetingFoodServices{
-    eachEventMeetingInCart: SingleDateEventBookingDetailsWithPriceInterface | MultipleContinuousDatesBookingDetailsWithPriceInterface;
+    eachEventMeetingInCart: 
+        | SingleDateEventBookingDetailsWithPriceInterface 
+        | MultipleContinuousDatesBookingDetailsWithPriceInterface;
 }
 
 
 function EventMeetingFoodServices(props: IPropsEventMeetingFoodServices){
-    const eachEventMeetingInCart: SingleDateEventBookingDetailsWithPriceInterface | MultipleContinuousDatesBookingDetailsWithPriceInterface = props.eachEventMeetingInCart;
+    const eachEventMeetingInCart: 
+        | SingleDateEventBookingDetailsWithPriceInterface 
+        | MultipleContinuousDatesBookingDetailsWithPriceInterface = 
+            props.eachEventMeetingInCart;
 
-    const meetingEventBookingTime: string[] = eachEventMeetingInCart.meetingEventBookingTime;
+    const meetingEventBookingTime: MeetingEventBookingTime[] = eachEventMeetingInCart.meetingEventBookingTime;
     const isMorningSlotBooked: boolean = meetingEventBookingTime.includes(eventMeetingTimingConstants.MORNING_TIME);
     const isAfternoonSlotBooked: boolean = meetingEventBookingTime.includes(eventMeetingTimingConstants.AFTERNOON_TIME);
     const isEveningSlotBooked: boolean = meetingEventBookingTime.includes(eventMeetingTimingConstants.EVENING_TIME);
@@ -32,6 +42,7 @@ function EventMeetingFoodServices(props: IPropsEventMeetingFoodServices){
         midNightFoodItems = eachEventMeetingInCart.selectedMealsOnBookingDate.midNight;
     }
 
+
     function getFoodList(foodArrayList: string[]){
         const foodArray = foodArrayList.map(function(eachItem: string){
             return eachItem.split(" (")[0];
@@ -44,6 +55,7 @@ function EventMeetingFoodServices(props: IPropsEventMeetingFoodServices){
         }
     }
 
+    
     return (
         <div>
             {isMorningSlotBooked &&

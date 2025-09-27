@@ -12,16 +12,25 @@ import {
     updateLoginRedirectPage 
 } from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
 
+
 import { 
     DINING_BOOKING_INFO_IS_PRESENT, 
     DINING_BOOKING_INFO_IS_EMPTY 
 } from "@/constant string files/apiSuccessMessageConstants";
 
+
 import EachAdminDiningBookingInfo from "@/components/Admin Booking Information Component/Dining Booking/EachAdminDiningBookingInfo";
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 
-import { IDiningBookingInfoForAdmin, IDiningBookingInfoForArrayForAdmin, ViewCurrentDiningBookingResponseForAdmin } from "@/interface/Dining Interface/viewDiningBookingApiResponse";
+
 import { LoginUserDetails } from "@/interface/Hotel User Interface/hotelUsersInterfce";
+
+import { 
+    IDiningBookingInfoForAdmin, 
+    IDiningBookingInfoForArrayForAdmin, 
+    ViewCurrentDiningBookingResponseForAdmin 
+} from "@/interface/Dining Interface/viewDiningBookingApiResponse";
+
 
 
 function CurrentDiningBookingPage(){
@@ -38,7 +47,8 @@ function CurrentDiningBookingPageFunctionalComponent(){
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const loginUserDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore) => reduxStore.userSlice.loginUserDetails);
 
     let loginUserId: string;
     let loginUserFullName: string;
@@ -74,7 +84,8 @@ function CurrentDiningBookingPageFunctionalComponent(){
 
     const [loadingBookingDetails, setLoadingBookingDetails] = useState<boolean>(true);
 
-    const [diningBooking, setDiningBooking] = useState<null | IDiningBookingInfoForArrayForAdmin[]>(null);
+    const [diningBooking, setDiningBooking] = 
+        useState<null | IDiningBookingInfoForArrayForAdmin[]>(null);
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
@@ -209,13 +220,21 @@ function CurrentDiningBookingPageFunctionalComponent(){
 
                             {/* Pagination controls */}
                             <div className="mt-12 text-center space-x-4">
-                                <Button onClick={goToPrevPage} variant="contained" disabled={currentPage === 1}>
+                                <Button 
+                                    onClick={goToPrevPage} 
+                                    variant="contained" 
+                                    disabled={currentPage === 1}
+                                >
                                     Prev
                                 </Button>
                                 <span className="mx-2">
                                     Page {currentPage} of {totalPages}
                                 </span>
-                                <Button onClick={goToNextPage} variant="contained" disabled={currentPage === totalPages}>
+                                <Button 
+                                    onClick={goToNextPage} 
+                                    variant="contained" 
+                                    disabled={currentPage === totalPages}
+                                >
                                     Next
                                 </Button>
                             </div>

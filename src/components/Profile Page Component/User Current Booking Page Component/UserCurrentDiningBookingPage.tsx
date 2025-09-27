@@ -4,22 +4,32 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+
 import { useAppSelector, useAppDispatch } from "@/redux store/hooks";
+
 import { 
     updateLoginPageCalledFrom, 
     updateLoginRedirectPage 
 } from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
+
 
 import { 
     DINING_BOOKING_INFO_IS_PRESENT, 
     DINING_BOOKING_INFO_IS_EMPTY 
 } from "@/constant string files/apiSuccessMessageConstants";
 
+
 import UserDiningBookingComponent from "@/components/User Booking Component/UserDiningBookingComponent";
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 
+
 import { LoginUserDetails } from "@/interface/Hotel User Interface/hotelUsersInterfce";
-import { IDiningBookingInfoForArrayForCustomer, ViewDiningBookingResponseForCustomer } from "@/interface/Dining Interface/viewDiningBookingApiResponse";
+
+import { 
+    IDiningBookingInfoForArrayForCustomer, 
+    ViewDiningBookingResponseForCustomer 
+} from "@/interface/Dining Interface/viewDiningBookingApiResponse";
+
 
 
 function UserCurrentDiningBookingPageFunctionalComponent(){
@@ -27,7 +37,8 @@ function UserCurrentDiningBookingPageFunctionalComponent(){
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const loginUserDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
     
     useEffect(function() {
         if (loginUserDetails == null) {
@@ -47,7 +58,8 @@ function UserCurrentDiningBookingPageFunctionalComponent(){
 
     const [loadingBookingDetails, setLoadingBookingDetails] = useState<boolean>(true);
 
-    const [diningBooking, setDiningBooking] = useState<null | IDiningBookingInfoForArrayForCustomer[]>(null);
+    const [diningBooking, setDiningBooking] = 
+        useState<null | IDiningBookingInfoForArrayForCustomer[]>(null);
 
     useEffect(()=>{
         fetchDiningBookingDb(loginUserId);
@@ -56,7 +68,9 @@ function UserCurrentDiningBookingPageFunctionalComponent(){
 
     async function fetchDiningBookingDb(loginUserId: string) {
         try {
-            const response: Response = await fetch(`/api/view-current-booking/dining/${loginUserId}`);
+            const response: Response = await fetch(
+                `/api/view-current-booking/dining/${loginUserId}`
+            );
             const data: ViewDiningBookingResponseForCustomer = await response.json();
             if(response.status === 200){
                 if('message' in data){
@@ -65,7 +79,8 @@ function UserCurrentDiningBookingPageFunctionalComponent(){
                         setDiningBooking(diningBookingDb);
                     }
                     else if(data.message === DINING_BOOKING_INFO_IS_PRESENT){
-                        const diningBookingDb: IDiningBookingInfoForArrayForCustomer[] | undefined = data.diningBookingInfo;
+                        const diningBookingDb: IDiningBookingInfoForArrayForCustomer[] | undefined = 
+                            data.diningBookingInfo;
                         if(diningBookingDb){
                             setDiningBooking(diningBookingDb);
                         }

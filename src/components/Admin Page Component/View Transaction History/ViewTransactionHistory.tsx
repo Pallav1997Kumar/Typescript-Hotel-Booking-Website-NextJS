@@ -65,7 +65,7 @@ function ViewTransactionHistoryFunctionalComponent(){
     const searchParams = useSearchParams();
 
     const loginUserDetails: LoginUserDetails | null = 
-        useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+        useAppSelector((reduxStore) => reduxStore.userSlice.loginUserDetails);
 
     let loginUserId: string | undefined;
     let loginUserFullName: string | undefined;
@@ -119,7 +119,10 @@ function ViewTransactionHistoryFunctionalComponent(){
     async function fetchCurrentPageTransactionDetails(){
         try{
             setLoadingTransactionDetails(true);
-            const response: Response = await fetch(`/api/all-users-view-transaction-history?page=${currentPage}`);
+            const response: Response = await fetch(
+                `/api/all-users-view-transaction-history?page=${currentPage}`
+            );
+
             const data: AdminViewTransactionHistoryResponse = await response.json();
             console.log(data);
 
@@ -260,13 +263,27 @@ function ViewTransactionHistoryFunctionalComponent(){
                         <Table aria-label="simple table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell sx={tableHeadingStyle}>Customer Full Name</TableCell>
-                                    <TableCell sx={tableHeadingStyle}>Customer Email Address</TableCell>
-                                    <TableCell sx={tableHeadingStyle}>Transaction Date Time</TableCell>
-                                    <TableCell sx={tableHeadingStyle}>Transaction Type</TableCell>
-                                    <TableCell sx={tableHeadingStyle}>Transaction Amount</TableCell>
-                                    <TableCell sx={tableHeadingStyle}>Transaction Description</TableCell>
-                                    <TableCell sx={tableHeadingStyle}>View Customer's Full Details</TableCell>
+                                    <TableCell sx={tableHeadingStyle}>
+                                        Customer Full Name
+                                    </TableCell>
+                                    <TableCell sx={tableHeadingStyle}>
+                                        Customer Email Address
+                                    </TableCell>
+                                    <TableCell sx={tableHeadingStyle}>
+                                        Transaction Date Time
+                                    </TableCell>
+                                    <TableCell sx={tableHeadingStyle}>
+                                        Transaction Type
+                                    </TableCell>
+                                    <TableCell sx={tableHeadingStyle}>
+                                        Transaction Amount
+                                    </TableCell>
+                                    <TableCell sx={tableHeadingStyle}>
+                                        Transaction Description
+                                    </TableCell>
+                                    <TableCell sx={tableHeadingStyle}>
+                                        View Customer's Full Details
+                                    </TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>

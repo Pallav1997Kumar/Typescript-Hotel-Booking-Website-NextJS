@@ -6,7 +6,10 @@ import { getDateTextFromFullDate } from "@/functions/date";
 import { convertToINR } from '@/functions/currency';
 
 import { IDiningCartInformation } from '@/interface/Dining Interface/diningCartApiResponse';
-import { Dining, DiningInfoResponse } from '@/interface/Dining Interface/hotelDiningInterface';
+import { 
+    Dining, 
+    DiningInfoResponse 
+} from '@/interface/Dining Interface/hotelDiningInterface';
 
 
 interface IPropsEachDiningBookingInfo{
@@ -25,7 +28,9 @@ function EachDiningBookingInfo(props: IPropsEachDiningBookingInfo){
 
     async function fetchDiningInformation(){
         try {
-            const response: Response = await fetch('/api/hotel-booking-information/dining-information/');
+            const response: Response = await fetch(
+                '/api/hotel-booking-information/dining-information/'
+            );
             const diningInfo: DiningInfoResponse = await response.json();
             setDining(diningInfo.dining);
         } catch (error) {
@@ -33,9 +38,10 @@ function EachDiningBookingInfo(props: IPropsEachDiningBookingInfo){
         }
     }
 
-    const particularDiningBasicInfo: Dining | undefined = dining.find(function(eachDiningInHotel: Dining){
-        return (eachDiningInHotel.diningAreaTitle == eachDiningBookingInfo.diningRestaurantTitle);
-    });
+    const particularDiningBasicInfo: Dining | undefined = 
+        dining.find(function(eachDiningInHotel: Dining){
+            return (eachDiningInHotel.diningAreaTitle == eachDiningBookingInfo.diningRestaurantTitle);
+        });
 
     return (
         <div className="flex flex-row p-1 m-1 border-4 border-gray-500">
@@ -43,12 +49,12 @@ function EachDiningBookingInfo(props: IPropsEachDiningBookingInfo){
             
             <div className="w-2/5">
                 {(particularDiningBasicInfo) && 
-                <Image 
-                    src={particularDiningBasicInfo.photo} 
-                    alt='dining-image' 
-                    width={430} 
-                    height={210} 
-                />
+                    <Image 
+                        src={particularDiningBasicInfo.photo} 
+                        alt='dining-image' 
+                        width={430} 
+                        height={210} 
+                    />
                 }
             </div>
             

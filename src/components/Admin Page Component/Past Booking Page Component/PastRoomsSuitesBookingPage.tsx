@@ -5,22 +5,32 @@ import Link from 'next/link';
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useRouter } from 'next/navigation';
 
+
 import { useAppSelector, useAppDispatch } from "@/redux store/hooks";
+
 import { 
     updateLoginPageCalledFrom, 
     updateLoginRedirectPage 
 } from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
+
 
 import { 
     ROOMS_SUITES_BOOKING_INFO_IS_PRESENT, 
     ROOMS_SUITES_BOOKING_INFO_IS_EMPTY 
 } from "@/constant string files/apiSuccessMessageConstants";
 
+
 import EachAdminRoomBookingInfo from "@/components/Admin Booking Information Component/Rooms Suites Booking/EachAdminRoomBookingInfo";
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 
+
 import { LoginUserDetails } from "@/interface/Hotel User Interface/hotelUsersInterfce";
-import { IRoomsSuitesBookingInfoForAdmin, IRoomsSuitesBookingInfoForArrayForAdmin, ViewPastRoomsSuitesBookingResponseForAdmin } from "@/interface/Rooms and Suites Interface/viewRoomSuiteBookingApiResponse";
+
+import { 
+    IRoomsSuitesBookingInfoForAdmin, 
+    IRoomsSuitesBookingInfoForArrayForAdmin, 
+    ViewPastRoomsSuitesBookingResponseForAdmin 
+} from "@/interface/Rooms and Suites Interface/viewRoomSuiteBookingApiResponse";
 
 
 function PastRoomsSuitesBookingPage(){
@@ -37,7 +47,8 @@ function PastRoomsSuitesBookingPageFunctionalComponent(){
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const loginUserDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore) => reduxStore.userSlice.loginUserDetails);
 
     let loginUserId: string;
     let loginUserFullName: string;
@@ -71,7 +82,8 @@ function PastRoomsSuitesBookingPageFunctionalComponent(){
     }, [loginUserDetails, router, dispatch]);
     
 
-    const [roomSuitesBooking, setRoomSuitesBooking] = useState<null | IRoomsSuitesBookingInfoForArrayForAdmin[]>(null);
+    const [roomSuitesBooking, setRoomSuitesBooking] = 
+        useState<null | IRoomsSuitesBookingInfoForArrayForAdmin[]>(null);
 
     const [page, setPage] = useState<number>(1);
     const [hasMore, setHasMore] = useState<boolean>(true);
@@ -99,7 +111,8 @@ function PastRoomsSuitesBookingPageFunctionalComponent(){
                         setHasMore(false);
                     }
                     else if(data.message === ROOMS_SUITES_BOOKING_INFO_IS_PRESENT){
-                        const roomSuitesBookingInfo: IRoomsSuitesBookingInfoForArrayForAdmin[] | undefined = data.roomSuitesBookingInfo;
+                        const roomSuitesBookingInfo: IRoomsSuitesBookingInfoForArrayForAdmin[] | undefined = 
+                            data.roomSuitesBookingInfo;
                         if(roomSuitesBookingInfo){
                             let roomSuitesBookingDb: IRoomsSuitesBookingInfoForArrayForAdmin[] = [];
                             if(Array.isArray(roomSuitesBooking) && roomSuitesBooking.length > 0){
@@ -184,7 +197,7 @@ function PastRoomsSuitesBookingPageFunctionalComponent(){
                             }
                         >
                             {roomSuitesBooking.map(function(eachRoomSuitesBookingInfo: IRoomsSuitesBookingInfoForArrayForAdmin){
-                                const roomSuitesBookingInfo: IRoomsSuitesBookingInfoForAdmin =  eachRoomSuitesBookingInfo.bookingInfo;  
+                                const roomSuitesBookingInfo: IRoomsSuitesBookingInfoForAdmin = eachRoomSuitesBookingInfo.bookingInfo;  
                                 return (
                                     <EachAdminRoomBookingInfo 
                                         key={roomSuitesBookingInfo._id}

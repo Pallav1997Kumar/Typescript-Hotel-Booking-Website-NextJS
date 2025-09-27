@@ -1,24 +1,35 @@
 import { getCommaAndSeperatedArray } from "@/functions/array";
 import { eventMeetingTimingConstants } from "@/constant string files/eventsMeetingRoomImportantConstants";
 
-import { IEventMeetingRoomContinousMultipleDatesCartInformation, IEventMeetingRoomSingleDateCartInformation } from '@/interface/Event Meeting Interface/eventMeetingCartApiResponse';
+import { MeetingEventBookingTime } from "@/interface/Event Meeting Interface/eventMeetingRoomConstantInterface";
+import { 
+    IEventMeetingRoomContinousMultipleDatesCartInformation, 
+    IEventMeetingRoomSingleDateCartInformation 
+} from '@/interface/Event Meeting Interface/eventMeetingCartApiResponse';
+
 
 
 interface IPropsEventMeetingFoodServices {
-    eachEventMeetingBookingInfo: IEventMeetingRoomSingleDateCartInformation | IEventMeetingRoomContinousMultipleDatesCartInformation;
+    eachEventMeetingBookingInfo: (
+        IEventMeetingRoomSingleDateCartInformation | 
+        IEventMeetingRoomContinousMultipleDatesCartInformation
+    );
 }
 
 function EventMeetingFoodServices(props: IPropsEventMeetingFoodServices){
-    const eachEventMeetingBookingInfo: IEventMeetingRoomSingleDateCartInformation | IEventMeetingRoomContinousMultipleDatesCartInformation = props.eachEventMeetingBookingInfo;
+    const eachEventMeetingBookingInfo: (
+        IEventMeetingRoomSingleDateCartInformation | 
+        IEventMeetingRoomContinousMultipleDatesCartInformation
+    ) = props.eachEventMeetingBookingInfo;
 
-    const meetingEventBookingTime: ("Morning" | "Afternoon" | "Evening" | "Night" | "Mid Night")[] = eachEventMeetingBookingInfo.meetingEventBookingTime;
+    const meetingEventBookingTime: MeetingEventBookingTime[] = eachEventMeetingBookingInfo.meetingEventBookingTime;
     const isMorningSlotBooked: boolean = meetingEventBookingTime.includes(eventMeetingTimingConstants.MORNING_TIME);
     const isAfternoonSlotBooked: boolean = meetingEventBookingTime.includes(eventMeetingTimingConstants.AFTERNOON_TIME);
     const isEveningSlotBooked: boolean = meetingEventBookingTime.includes(eventMeetingTimingConstants.EVENING_TIME);
     const isNightSlotBooked: boolean = meetingEventBookingTime.includes(eventMeetingTimingConstants.NIGHT_TIME);
     const isMidNightSlotBooked: boolean = meetingEventBookingTime.includes(eventMeetingTimingConstants.MID_NIGHT_TIME);
 
-    const mealsObj = eachEventMeetingBookingInfo.selectedMealsOnBookingDate;
+    const mealsObj: Map<string, string[]> = eachEventMeetingBookingInfo.selectedMealsOnBookingDate;
     const mealsMap = new Map(Object.entries(mealsObj));
 
     const morningFoodItems: string[] = mealsMap.get("morning") ?? [];

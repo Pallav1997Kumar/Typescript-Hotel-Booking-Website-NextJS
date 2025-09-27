@@ -11,7 +11,8 @@ import { IRoomsDetailsForCart } from "@/interface/Rooms and Suites Interface/roo
 
 function RoomsBookingCartComponent() {
 
-    const allRoomBookingCart: IRoomsDetailsForCart[] = useAppSelector((reduxStore) => reduxStore.roomCartSlice.roomCart);
+    const allRoomBookingCart: IRoomsDetailsForCart[] = 
+        useAppSelector((reduxStore) => reduxStore.roomCartSlice.roomCart);
 
     
     if(allRoomBookingCart.length == 0){
@@ -35,7 +36,9 @@ function RoomsBookingCartComponent() {
 
     return (
         <div className="border border-black m-2">
-            {(allRoomBookingCart.length > 0) && allRoomBookingCart.map(function(eachRoomInCart: IRoomsDetailsForCart){
+            {(allRoomBookingCart.length > 0) && allRoomBookingCart.map(function(
+                eachRoomInCart: IRoomsDetailsForCart
+            ){
                 return(
                     <EachRoomCartComponent 
                         key={eachRoomInCart.roomCartId} 

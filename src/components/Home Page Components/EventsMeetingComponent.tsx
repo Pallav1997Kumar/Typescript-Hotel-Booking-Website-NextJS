@@ -4,7 +4,10 @@ import Link from 'next/link';
 
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary"; 
 
-import { EventMeetingRoomsInfoResponse, MeetingEventArea } from "@/interface/Event Meeting Interface/eventMeetingRoomInterface";
+import { 
+    EventMeetingRoomsInfoResponse, 
+    MeetingEventArea 
+} from "@/interface/Event Meeting Interface/eventMeetingRoomInterface";
 
 
 function EventsMeetingComponent() {
@@ -34,7 +37,12 @@ async function EventsMeetingComponentFunctionalComponent(){
                     {threeEventsRooms.map(function(eachEventRoom: MeetingEventArea){
                         return(
                             <div key={eachEventRoom.meetingEventAreaPath} className="w-full sm:w-1/3 px-2 py-2">
-                                <Image src={eachEventRoom.meetingEventAreaImage} alt="room-photo" width={375} height={300} />
+                                <Image 
+                                    src={eachEventRoom.meetingEventAreaImage} 
+                                    alt="room-photo"
+                                    width={375} 
+                                    height={300} 
+                                />
                                 <Link href={`/meetings-events/${eachEventRoom.meetingEventAreaPath}`} passHref>
                                     <h4 className="text-center text-xl font-italic mt-3 cursor-pointer hover:underline">
                                         {eachEventRoom.meetingEventAreaTitle}
@@ -53,7 +61,9 @@ async function EventsMeetingComponentFunctionalComponent(){
 
 async function fetchMeetingEventsRoomInformation(): Promise<MeetingEventArea[]>{
     try {
-        const response: Response = await fetch(`${process.env.URL}/api/hotel-booking-information/events-meeting-room-information/`);
+        const response: Response = await fetch(
+            `${process.env.URL}/api/hotel-booking-information/events-meeting-room-information/`
+        );
         const meetingEventRoomInfo: EventMeetingRoomsInfoResponse = await response.json();
         const meetingEventsRooms: MeetingEventArea[] = meetingEventRoomInfo.meetingEventsRooms;
         return meetingEventsRooms;

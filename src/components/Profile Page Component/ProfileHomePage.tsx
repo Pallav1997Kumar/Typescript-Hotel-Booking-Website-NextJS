@@ -5,7 +5,10 @@ import { useRouter } from 'next/navigation';
 
 import { LoginUserDetails, logout } from "@/redux store/features/Auth Features/loginUserDetailsSlice";
 import { useAppSelector, useAppDispatch } from "@/redux store/hooks";
-import { updateLoginPageCalledFrom, updateLoginRedirectPage } from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
+import { 
+    updateLoginPageCalledFrom, 
+    updateLoginRedirectPage 
+} from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
 
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 
@@ -17,7 +20,8 @@ function ProfileHomePageFunctionalComponent(){
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const loginUserDetails: LoginUserDetails | null = useAppSelector((reduxStore) => reduxStore.userSlice.loginUserDetails);
+    const loginUserDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore) => reduxStore.userSlice.loginUserDetails);
 
     const [redirectHandled, setRedirectHandled] = useState<Boolean>(false);
 
@@ -45,12 +49,14 @@ function ProfileHomePageFunctionalComponent(){
 
     async function logoutHandler() {
         try {
-            const response: Response = await fetch(`/api/users-authentication/customers-authenticatication/logout`, {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8',
+            const response: Response = await fetch(`/api/users-authentication/customers-authenticatication/logout`, 
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8',
+                    }
                 }
-            });
+            );
             const data: LogoutResponse = await response.json();
             if(response.status === 200){
                 const loginPageCalledFrom = 'Profile Page';

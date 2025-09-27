@@ -7,8 +7,11 @@ import { getDateTextFromOnlyDate } from "@/functions/date";
 import { convertToINR } from "@/functions/currency";
 
 import { IRoomsSuitesCartInformation } from "@/interface/Rooms and Suites Interface/roomsSuitesCartApiResponse";
-import { Room, RoomSuitesInfoResponse } from "@/interface/Rooms and Suites Interface/roomsSuitesInfoInterface";
 import { IGuestRoomDetails } from "@/interface/Rooms and Suites Interface/roomsSuitesDbModelsInterface";
+import { 
+    Room, 
+    RoomSuitesInfoResponse 
+} from "@/interface/Rooms and Suites Interface/roomsSuitesInfoInterface";
 
 
 interface IPropsEachRoomBookingInfo{
@@ -27,7 +30,9 @@ function EachRoomBookingInfo(props: IPropsEachRoomBookingInfo){
 
     async function fetchRoomsSuitesInformation(){
         try {
-            const response: Response = await fetch('/api/hotel-booking-information/room-and-suites-information/');
+            const response: Response = await fetch(
+                '/api/hotel-booking-information/room-and-suites-information/'
+            );
             const roomSuitesInfo: RoomSuitesInfoResponse = await response.json();
             setRoomsSuites(roomSuitesInfo.rooms);
         } catch (error) {
@@ -37,9 +42,10 @@ function EachRoomBookingInfo(props: IPropsEachRoomBookingInfo){
 
     const [displayGuestDetails, setDisplayGuestDetails] = useState<boolean>(false);
 
-    const particularRoomBasicInfo: Room | undefined = roomsSuites.find(function(eachRoomInHotel: Room){
-        return (eachRoomInHotel.title == eachRoomBookingInfo.bookingRoomTitle);
-    });
+    const particularRoomBasicInfo: Room | undefined = 
+        roomsSuites.find(function(eachRoomInHotel: Room){
+            return (eachRoomInHotel.title == eachRoomBookingInfo.bookingRoomTitle);
+        });
 
     return (
         <div className="flex flex-col p-1 m-1 border-4 border-gray-500">
@@ -47,7 +53,12 @@ function EachRoomBookingInfo(props: IPropsEachRoomBookingInfo){
                 
                 <div className="w-2/5">
                     {(particularRoomBasicInfo) && 
-                    <Image src={particularRoomBasicInfo.photos[0]} alt="room-image" width={400} height={200} />
+                        <Image 
+                            src={particularRoomBasicInfo.photos[0]} 
+                            alt="room-image" 
+                            width={400} 
+                            height={200} 
+                        />
                     }
                 </div>
                 
@@ -82,7 +93,10 @@ function EachRoomBookingInfo(props: IPropsEachRoomBookingInfo){
                         {convertToINR(eachRoomBookingInfo.totalPriceOfAllRooms)} 
                     </p>
                     
-                    <p onClick={()=>setDisplayGuestDetails(true)} className="mt-5 cursor-pointer hover:uppercase hover:text-blue-500">
+                    <p 
+                        onClick={()=>setDisplayGuestDetails(true)} 
+                        className="mt-5 cursor-pointer hover:uppercase hover:text-blue-500"
+                    >
                         View Guest Details
                     
                     </p>
@@ -95,7 +109,10 @@ function EachRoomBookingInfo(props: IPropsEachRoomBookingInfo){
                 <div className="flex flex-row flex-wrap p-[1%_2.5%_1%_1%] m-[0.1%] border border-dotted border-blue-500">
                     {(eachRoomBookingInfo.guestRoomsDetails).map(function(eachRoomForGuest: IGuestRoomDetails){
                         return (
-                            <div key={eachRoomForGuest.roomNo} className="p-[1%_2.5%_1%_1%] m-[0.1%] border border-dotted border-blue-500">
+                            <div 
+                                key={eachRoomForGuest.roomNo} 
+                                className="p-[1%_2.5%_1%_1%] m-[0.1%] border border-dotted border-blue-500"
+                            >
                                 <p>
                                     <span className="font-semibold">Room: </span>
                                     {eachRoomForGuest.roomNo} 

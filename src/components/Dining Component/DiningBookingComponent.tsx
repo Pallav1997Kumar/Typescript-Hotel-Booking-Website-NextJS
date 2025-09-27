@@ -9,25 +9,56 @@ import { useRouter } from 'next/navigation';
 
 import Button from '@mui/material/Button';
 
+
 import ErrorBoundary from '@/components/Error Boundary/ErrorBoundary';
+
 
 import { useAppDispatch, useAppSelector } from "@/redux store/hooks";
 import { addNewBookingToDiningCart } from "@/redux store/features/Booking Features/diningBookingCartSlice";
 import { getDiningEachDayPrice } from "@/redux store/features/Price Features/diningEachDayPriceSlice";
-import { updateLoginPageCalledFrom, updateLoginRedirectPage } from '@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice';
+import { 
+    updateLoginPageCalledFrom, 
+    updateLoginRedirectPage 
+} from '@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice';
+
 
 import { convertDateTextToDate } from "@/functions/date";
-import { diningSelectionErrorConstants } from "@/constant string files/diningSelectionErrorConstants";
-import { DINING_AVAILABLE, INFORMATION_ADD_TO_CART_SUCCESSFUL } from "@/constant string files/apiSuccessMessageConstants";
-import { BOOKING_UNAVAILABLE_LOCKED } from '@/constant string files/apiErrorMessageConstants';
 import { convertToINR } from '@/functions/currency';
+import { diningSelectionErrorConstants } from "@/constant string files/diningSelectionErrorConstants";
+import { BOOKING_UNAVAILABLE_LOCKED } from '@/constant string files/apiErrorMessageConstants';
+import { 
+    DINING_AVAILABLE, 
+    INFORMATION_ADD_TO_CART_SUCCESSFUL 
+} from "@/constant string files/apiSuccessMessageConstants";
 
-import { Dining, DiningTiming, PriceList } from '@/interface/Dining Interface/hotelDiningInterface';
+
 import { LoginUserDetails } from '@/redux store/features/Auth Features/loginUserDetailsSlice';
-import { DiningWithDate, DateDetails, FoodCategoryDetails, DiningEachDayInfoRespone } from '@/interface/Dining Interface/eachDayDiningInfoInterface';
-import { TableBookingCountDetails, DiningBookingDetails, DiningDetailsForCart } from '@/interface/Dining Interface/diningBookingInterface';
 import { AddDiningCartApiResponse } from '@/interface/Dining Interface/diningCartApiResponse';
 import { DiningAvailabilityCheckApiResponse } from '@/interface/Dining Interface/diningAvailabilityCheckApiResponse';
+
+import { 
+    DiningWithDate, 
+    DateDetails, 
+    FoodCategoryDetails, 
+    DiningEachDayInfoRespone 
+} from '@/interface/Dining Interface/eachDayDiningInfoInterface';
+
+import { 
+    TableBookingCountDetails, 
+    DiningBookingDetails, 
+    DiningDetailsForCart 
+} from '@/interface/Dining Interface/diningBookingInterface';
+
+import { 
+    Dining, 
+    DiningTiming, 
+    PriceList 
+} from '@/interface/Dining Interface/hotelDiningInterface';
+
+import { 
+    DiningRestaurantTitle, 
+    MealType
+} from '@/interface/Dining Interface/hotelDiningConstantInterface';
 
 
 interface TableCountState {
@@ -78,22 +109,28 @@ function DiningBookingComponentFunctionalComponent(props: IPropsDiningBookingCom
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const loginUserIdDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserIdDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore) => reduxStore.userSlice.loginUserDetails);
 
-    const [diningTableCountState, diningTableCountDispatch] = useReducer(diningTableCounterReducer, initialDiningTableCount);
+    const [diningTableCountState, diningTableCountDispatch] = 
+        useReducer(diningTableCounterReducer, initialDiningTableCount);
+
     const tableCountTwoPerson: number = diningTableCountState.twoPersonTableCount;
     const tableCountFourPerson: number = diningTableCountState.fourPersonTableCount;
     const tableCountSixPerson: number = diningTableCountState.sixPersonTableCount;
+
 
     useEffect(()=>{
         dispatch(getDiningEachDayPrice());
         fetchDiningEachDayData();
     },[]);
 
+
     const diningRestaurantInfo: Dining = props.diningRestaurantInfo;
-    const diningRestaurantTitle: string = diningRestaurantInfo.diningAreaTitle;
+    const diningRestaurantTitle: DiningRestaurantTitle = diningRestaurantInfo.diningAreaTitle;
     const diningPath: string = diningRestaurantInfo.diningPath;
 
+    
     const [diningEachDayInfo, setDiningEachDayInfo] = useState<DiningWithDate | null>(null);
     // console.log(diningEachDayInfo)
 
@@ -110,6 +147,7 @@ function DiningBookingComponentFunctionalComponent(props: IPropsDiningBookingCom
         }
         return '9999-12-31';
     }, [diningEachDayInfo]);
+    
     if(diningBookingLastDateString == null){
         throw new Error("Null value of diningBookingLastDateString");
     }
@@ -117,7 +155,7 @@ function DiningBookingComponentFunctionalComponent(props: IPropsDiningBookingCom
 
     const [tableBookingDate, setTableBookingDate] = useState<Date>(today);
     const [noOfGuests, setNoOfGuests] = useState<number>(1);
-    const [mealType, setMealType] = useState<string>("");
+    const [mealType, setMealType] = useState<MealType | "">("");
     const [tableBookingTime, setTableBookingTime] = useState<string>('');
 
     const [showValidateBlock, setShowValidateBlock] = useState<boolean>(true);
@@ -127,7 +165,9 @@ function DiningBookingComponentFunctionalComponent(props: IPropsDiningBookingCom
     const [showAddCartBlock, setAddCartBlock] = useState<boolean>(false);
     const [addedToCart, setAddedToCart] = useState<boolean>(false);
     const [isDataSavingToCart, setIsDataSavingToCart] = useState<boolean>(false);
-    const [bookingDetailsForCart, setBookingDetailsForCart] = useState<DiningBookingDetails | null>(null);
+    const [bookingDetailsForCart, setBookingDetailsForCart] = 
+        useState<DiningBookingDetails | null>(null);
+
 
     // let priceForBooking = 0;
     // if(bookingDetailsForCart != null && diningEachDayInfo != null){
@@ -140,26 +180,33 @@ function DiningBookingComponentFunctionalComponent(props: IPropsDiningBookingCom
         return 0;
     }, [diningEachDayInfo, bookingDetailsForCart]);
 
+
     // const mealTypeTimeDetails = (diningRestaurantInfo.timing).find(function(element){
     //     return (element.foodCategory === mealType)
     // });
     const mealTypeTimeDetails: DiningTiming | undefined = useMemo(function(){
-        const specificMealTimeDetails = (diningRestaurantInfo.timing).find(function(element: DiningTiming){
-            return (element.foodCategory === mealType)
-        });
+        const specificMealTimeDetails = 
+            (diningRestaurantInfo.timing).find(function(element: DiningTiming){
+                return (element.foodCategory === mealType)
+            });
         return specificMealTimeDetails;
     }, [mealType]);
 
 
     async function fetchDiningEachDayData(): Promise<void>{
         try{
-            const response: Response = await fetch('/api/hotel-booking-information/dining-information/each-day-information/');
+            const response: Response = await fetch(
+                '/api/hotel-booking-information/dining-information/each-day-information/'
+            );
             const data: DiningEachDayInfoRespone = await response.json(); 
             const allDiningInfo = data.diningWithDate;
-            const specificDiningInfoEachDay: DiningWithDate | undefined = fetchSpecificDiningEachDayData(allDiningInfo, diningRestaurantTitle);
+            const specificDiningInfoEachDay: DiningWithDate | undefined = 
+                fetchSpecificDiningEachDayData(allDiningInfo, diningRestaurantTitle);
+
             if(!specificDiningInfoEachDay){
                 throw new Error("Missing specificDiningInfoEachDay");
             }
+
             setDiningEachDayInfo(specificDiningInfoEachDay);
         }
         catch(error){
@@ -167,10 +214,14 @@ function DiningBookingComponentFunctionalComponent(props: IPropsDiningBookingCom
         }
     }
 
-    function fetchSpecificDiningEachDayData(allDiningInfo: DiningWithDate[], diningTitle: string): DiningWithDate | undefined{
-        const specificDiningInfo: DiningWithDate | undefined = allDiningInfo.find(function(eachDining: DiningWithDate){
-            return (eachDining.diningTitle == diningTitle);
-        });
+    function fetchSpecificDiningEachDayData(
+        allDiningInfo: DiningWithDate[], 
+        diningTitle: string
+    ): DiningWithDate | undefined{
+        const specificDiningInfo: DiningWithDate | undefined = 
+            allDiningInfo.find(function(eachDining: DiningWithDate){
+                return (eachDining.diningTitle == diningTitle);
+            });
         return specificDiningInfo;
     }
 
@@ -181,14 +232,14 @@ function DiningBookingComponentFunctionalComponent(props: IPropsDiningBookingCom
             return null;
         }
         dateDetailsForDining.sort(function(d1, d2){
-            const date1 = new Date(d1.date).getTime();
-            const date2 = new Date(d2.date).getTime();
+            const date1: number = new Date(d1.date).getTime();
+            const date2: number = new Date(d2.date).getTime();
             return date2 - date1;
         });
 
         let lastDate: string | null;
         if (dateDetailsForDining[0] && dateDetailsForDining[0].date) {
-            const latestDate = new Date(dateDetailsForDining[0].date);
+            const latestDate: Date = new Date(dateDetailsForDining[0].date);
             lastDate = latestDate.toISOString().split("T")[0];
         } else {
             lastDate = null;
@@ -211,11 +262,18 @@ function DiningBookingComponentFunctionalComponent(props: IPropsDiningBookingCom
     
 
 
-    function tableIncrementDecrementCounter(tableType: 'twoPersonTableCount' | 'fourPersonTableCount' | 'sixPersonTableCount', counterButtonType: 'Increment' | 'Decrement'){
+    function tableIncrementDecrementCounter(
+        tableType: 'twoPersonTableCount' | 'fourPersonTableCount' | 'sixPersonTableCount', 
+        counterButtonType: 'Increment' | 'Decrement'
+    ){
         diningTableCountDispatch({ type: counterButtonType, payload: { tableType } });
     }
 
-    function getTableBookingPriceForCart(diningInfoEachDay: DiningWithDate, bookingDetails: DiningBookingDetails): number {
+    
+    function getTableBookingPriceForCart(
+        diningInfoEachDay: DiningWithDate, 
+        bookingDetails: DiningBookingDetails
+    ): number {
         let tableBookingDateString: string;
     
         // Always convert Date to string, then use convertDateTextToDate
@@ -225,24 +283,28 @@ function DiningBookingComponentFunctionalComponent(props: IPropsDiningBookingCom
             tableBookingDateString = convertDateTextToDate(bookingDetails.tableBookingDate);
         }
     
-        const mealBookingType = bookingDetails.mealType;
+        const mealBookingType: MealType = bookingDetails.mealType;
     
-        const twoPersonTableCount = bookingDetails.tableBookingCountDetails.tableCountTwoPerson;
-        const fourPersonTableCount = bookingDetails.tableBookingCountDetails.tableCountFourPerson;
-        const sixPersonTableCount = bookingDetails.tableBookingCountDetails.tableCountSixPerson;
+        const twoPersonTableCount: number = bookingDetails.tableBookingCountDetails.tableCountTwoPerson;
+        const fourPersonTableCount: number = bookingDetails.tableBookingCountDetails.tableCountFourPerson;
+        const sixPersonTableCount: number = bookingDetails.tableBookingCountDetails.tableCountSixPerson;
 
-        const diningDetailsForBookingDate: DateDetails | undefined = diningInfoEachDay.dateDetails.find((eachDate: DateDetails) => {
-            const eachDateString = new Date(eachDate.date).toISOString().split("T")[0];
-            return eachDateString === tableBookingDateString;
-        });
+        const diningDetailsForBookingDate: DateDetails | undefined = 
+            diningInfoEachDay.dateDetails.find((eachDate: DateDetails) => {
+                const eachDateString = new Date(eachDate.date).toISOString().split("T")[0];
+                return eachDateString === tableBookingDateString;
+            });
     
         if (!diningDetailsForBookingDate) {
             throw new Error("Missing diningDetailsForBookingDate");
         }
     
-        const bookingFoodCategoryDetails: FoodCategoryDetails | undefined = diningDetailsForBookingDate.foodCategoryDetails.find(function(eachCategory: FoodCategoryDetails) {
-            return eachCategory.currentFoodCategory === mealBookingType;
-        });
+        const bookingFoodCategoryDetails: FoodCategoryDetails | undefined = 
+            diningDetailsForBookingDate.foodCategoryDetails.find(function(
+                eachCategory: FoodCategoryDetails
+            ) {
+                return eachCategory.currentFoodCategory === mealBookingType;
+            });
     
         if (!bookingFoodCategoryDetails) {
             throw new Error("Missing bookingFoodCategoryDetails");
@@ -250,11 +312,17 @@ function DiningBookingComponentFunctionalComponent(props: IPropsDiningBookingCom
     
         const priceListOnBookingDateCategory: PriceList = bookingFoodCategoryDetails.currentFoodCategoryPriceList;
         
-        const totalPriceForTwo: number = priceListOnBookingDateCategory.priceEachTableForTwoPerson * twoPersonTableCount;
-        const totalPriceForFour: number = priceListOnBookingDateCategory.priceEachTableForFourPerson * fourPersonTableCount;
-        const totalPriceForSix: number = priceListOnBookingDateCategory.priceEachTableForSixPerson * sixPersonTableCount;
+        const totalPriceForTwo: number = 
+            priceListOnBookingDateCategory.priceEachTableForTwoPerson * twoPersonTableCount;
+
+        const totalPriceForFour: number = 
+            priceListOnBookingDateCategory.priceEachTableForFourPerson * fourPersonTableCount;
+
+        const totalPriceForSix: number = 
+            priceListOnBookingDateCategory.priceEachTableForSixPerson * sixPersonTableCount;
         
         const totalPrice: number = totalPriceForTwo + totalPriceForFour + totalPriceForSix;
+
         return totalPrice;
     }
     
@@ -263,7 +331,9 @@ function DiningBookingComponentFunctionalComponent(props: IPropsDiningBookingCom
     async function validateClickHandlerFunction(){
         setIsDiningSlotAvailable(false);
         setDiningSlotUnavailableMessage('');
-        const maxGuestForTableSelection = (2 * tableCountTwoPerson) + (4 * tableCountFourPerson) + (6 * tableCountSixPerson);
+        const maxGuestForTableSelection = 
+            (2 * tableCountTwoPerson) + (4 * tableCountFourPerson) + (6 * tableCountSixPerson);
+
         if(tableBookingDate != null && noOfGuests >= 1 && mealType != '' && tableBookingTime !=''){
             if(maxGuestForTableSelection >= noOfGuests){
                 setValidateErrorMessgae('');
@@ -284,13 +354,16 @@ function DiningBookingComponentFunctionalComponent(props: IPropsDiningBookingCom
                 }
                 setBookingDetailsForCart(bookingDetails);
                 try {
-                    const response: Response = await fetch(`/api/add-cart-availability-check/dining/`, {
-                        method: 'POST',
-                        body: JSON.stringify(bookingDetails),
-                        headers: {
-                            'Content-type': 'application/json; charset=UTF-8',
+                    const response: Response = await fetch(
+                        `/api/add-cart-availability-check/dining/`, 
+                        {
+                            method: 'POST',
+                            body: JSON.stringify(bookingDetails),
+                            headers: {
+                                'Content-type': 'application/json; charset=UTF-8',
+                            }
                         }
-                    });
+                    );
                     const data: DiningAvailabilityCheckApiResponse = await response.json();
                     if('message' in data){
                         if(data.message === DINING_AVAILABLE){
@@ -302,7 +375,9 @@ function DiningBookingComponentFunctionalComponent(props: IPropsDiningBookingCom
                         if(data.errorMessage != ''){
                             let errorMessage = data.errorMessage;
                             if(data.errorMessage === `${BOOKING_UNAVAILABLE_LOCKED.DINING_TABLE_UNAVAILABLE}.`){
-                                errorMessage = errorMessage + ` Available slots are for 2 person -> ${data.availableTableCountTwoPerson} tables, 4 person -> ${data.availableTableCountFourPerson} tables, 6 person -> ${data.availableTableCountSixPerson} tables`;
+                                errorMessage = 
+                                    errorMessage + 
+                                    ` Available slots are for 2 person -> ${data.availableTableCountTwoPerson} tables, 4 person -> ${data.availableTableCountFourPerson} tables, 6 person -> ${data.availableTableCountSixPerson} tables`;
                             }
                             setDiningSlotUnavailableMessage(errorMessage);
                         }
@@ -363,18 +438,34 @@ function DiningBookingComponentFunctionalComponent(props: IPropsDiningBookingCom
         }
     }
 
-    const validateClickHandler = useCallback(validateClickHandlerFunction, [tableBookingDate, noOfGuests, mealType, tableBookingTime, tableCountTwoPerson, tableCountFourPerson, tableCountSixPerson]);
+    const validateClickHandler = useCallback(
+        validateClickHandlerFunction, 
+        [
+            tableBookingDate, 
+            noOfGuests, 
+            mealType, 
+            tableBookingTime, 
+            tableCountTwoPerson, 
+            tableCountFourPerson, 
+            tableCountSixPerson
+        ]
+    );
 
     
     function addCartClickHandlerFunction() {
         if (bookingDetailsForCart != null) {
-            const diningBookingDetails = JSON.parse(JSON.stringify(bookingDetailsForCart)) as DiningBookingDetails;
+            const diningBookingDetails = JSON.parse(
+                JSON.stringify(bookingDetailsForCart)
+            ) as DiningBookingDetails;
+
             const tableBookDate: string | Date = bookingDetailsForCart.tableBookingDate;
             if(typeof tableBookDate == "string"){
-                diningBookingDetails.tableBookingDate = convertDateTextToDate(tableBookDate).toString();
+                diningBookingDetails.tableBookingDate = 
+                    convertDateTextToDate(tableBookDate).toString();
             }
             else if(tableBookDate instanceof Date){
-                diningBookingDetails.tableBookingDate = convertDateTextToDate(tableBookDate.toISOString()).toString();
+                diningBookingDetails.tableBookingDate = 
+                    convertDateTextToDate(tableBookDate.toISOString()).toString();
             }
             
             const diningDetailsForCart: DiningDetailsForCart = {
@@ -400,13 +491,16 @@ function DiningBookingComponentFunctionalComponent(props: IPropsDiningBookingCom
                 throw new Error("Null value of loginUserIdDetails");
             }
             const loginUserId: string = loginUserIdDetails.userId;
-            const response: Response = await fetch(`/api/add-cart/dining/${loginUserId}`, {
-                method: 'POST',
-                body: JSON.stringify(diningDetailsForCart),
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8',
+            const response: Response = await fetch(
+                `/api/add-cart/dining/${loginUserId}`, 
+                {
+                    method: 'POST',
+                    body: JSON.stringify(diningDetailsForCart),
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8',
+                    }
                 }
-            });
+            );
             const data: AddDiningCartApiResponse = await response.json();
             if(response.status === 200){
                 if('message' in data){
@@ -423,7 +517,14 @@ function DiningBookingComponentFunctionalComponent(props: IPropsDiningBookingCom
         }
     }
 
-    const addCartClickHandler = useCallback(addCartClickHandlerFunction, [dispatch, bookingDetailsForCart, priceForBooking]);
+    const addCartClickHandler = useCallback(
+        addCartClickHandlerFunction, 
+        [
+            dispatch, 
+            bookingDetailsForCart, 
+            priceForBooking
+        ]
+    );
 
     function loginButtonClickHandler(event: React.MouseEvent<HTMLButtonElement>){
         event.preventDefault();
@@ -471,16 +572,19 @@ function DiningBookingComponentFunctionalComponent(props: IPropsDiningBookingCom
                     <div className="pt-[2%] pb-[0.7%] font-[Segoe UI] text-[rgb(78,78,78)] text-[1.1rem]">
                         Select Meal Type: 
                     </div>
-                    <select id="meal-type" onChange={(event)=> setMealType(event.target.value)}>
+                    <select 
+                        id="meal-type" 
+                        onChange={(event)=> setMealType(event.target.value as "" | MealType)}
+                    >
                         <option value="">Please Select</option>
-                        {(diningRestaurantInfo.timing).map(function(eachTime){
+                        {(diningRestaurantInfo.timing).map(function(eachTime: DiningTiming){
                             return (
-                            <option key={eachTime.foodCategory} 
-                                className="capitalize"
-                                value={eachTime.foodCategory}
-                            >
-                                {eachTime.foodCategory}
-                            </option>
+                                <option key={eachTime.foodCategory} 
+                                    className="capitalize"
+                                    value={eachTime.foodCategory}
+                                >
+                                    {eachTime.foodCategory}
+                                </option>
                             )
                         })}
                     </select>
@@ -492,7 +596,7 @@ function DiningBookingComponentFunctionalComponent(props: IPropsDiningBookingCom
                             Select Meal Time: 
                         </div>
                         <div className="flex flex-col">
-                        {(mealTypeTimeDetails.foodSlotTime).map(function(eachTime){
+                        {(mealTypeTimeDetails.foodSlotTime).map(function(eachTime: string){
                                 return (
                                     <div key={eachTime} className="m-[0.1%] h-[10%] w-[30%]">
                                         <input
@@ -596,7 +700,9 @@ function DiningBookingComponentFunctionalComponent(props: IPropsDiningBookingCom
                 
                 {showValidateBlock &&
                     <div className="mt-[2%] flex flex-col items-center justify-center">
-                        <Button onClick={validateClickHandler} variant="contained">Validate</Button>
+                        <Button onClick={validateClickHandler} variant="contained">
+                            Validate
+                        </Button>
                         {(validateErrorMessgae != '') &&
                         <p className="m-[1%] text-red-600 font-bold bg-[whitesmoke] p-[1%]">
                             {validateErrorMessgae}
@@ -658,7 +764,9 @@ function DiningBookingComponentFunctionalComponent(props: IPropsDiningBookingCom
 
             {(loginUserIdDetails === null) &&
                 <div className="mt-[4.5%] mb-[2.5%] flex items-center justify-center">
-                    <Button onClick={loginButtonClickHandler} variant="contained">Proceed to Login</Button>
+                    <Button onClick={loginButtonClickHandler} variant="contained">
+                        Proceed to Login
+                    </Button>
                 </div>
             }
         </div>

@@ -5,22 +5,31 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import InfiniteScroll from "react-infinite-scroll-component";
 
+
 import { useAppSelector, useAppDispatch } from "@/redux store/hooks";
 import { 
     updateLoginPageCalledFrom, 
     updateLoginRedirectPage 
 } from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
 
+
 import { 
     DINING_BOOKING_INFO_IS_PRESENT, 
     DINING_BOOKING_INFO_IS_EMPTY 
 } from "@/constant string files/apiSuccessMessageConstants";
 
+
 import EachAdminDiningBookingInfo from "@/components/Admin Booking Information Component/Dining Booking/EachAdminDiningBookingInfo";
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 
+
 import { LoginUserDetails } from "@/interface/Hotel User Interface/hotelUsersInterfce";
-import { IDiningBookingInfoForAdmin, IDiningBookingInfoForArrayForAdmin, ViewPastDiningBookingResponseForAdmin } from "@/interface/Dining Interface/viewDiningBookingApiResponse";
+
+import { 
+    IDiningBookingInfoForAdmin, 
+    IDiningBookingInfoForArrayForAdmin, 
+    ViewPastDiningBookingResponseForAdmin 
+} from "@/interface/Dining Interface/viewDiningBookingApiResponse";
 
 
 function PastDiningBookingPage(){
@@ -37,7 +46,8 @@ function PastDiningBookingPageFunctionalComponent(){
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const loginUserDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore) => reduxStore.userSlice.loginUserDetails);
 
     let loginUserId: string;
     let loginUserFullName: string;
@@ -70,7 +80,8 @@ function PastDiningBookingPageFunctionalComponent(){
     }, [loginUserDetails, router, dispatch]);
 
 
-    const [diningBooking, setDiningBooking] = useState<null | IDiningBookingInfoForArrayForAdmin[]>(null);
+    const [diningBooking, setDiningBooking] = 
+        useState<null | IDiningBookingInfoForArrayForAdmin[]>(null);
 
     const [page, setPage] = useState<number>(1);
     const [hasMore, setHasMore] = useState<boolean>(true);
@@ -98,7 +109,9 @@ function PastDiningBookingPageFunctionalComponent(){
                         setHasMore(false);
                     }
                     else if(data.message === DINING_BOOKING_INFO_IS_PRESENT){
-                        const diningBookingInfo: IDiningBookingInfoForArrayForAdmin[] | undefined = data.diningBookingInfo;
+                        const diningBookingInfo: IDiningBookingInfoForArrayForAdmin[] | undefined = 
+                            data.diningBookingInfo;
+                            
                         if(diningBookingInfo){
                             let diningBookingDb: IDiningBookingInfoForArrayForAdmin[] = [];
                             if(Array.isArray(diningBooking) && diningBooking.length > 0){

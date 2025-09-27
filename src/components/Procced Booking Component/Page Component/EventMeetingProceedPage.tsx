@@ -3,23 +3,43 @@ import React, { useState, useEffect } from "react";
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
+
 import Button from '@mui/material/Button';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 
+
 import { useAppSelector, useAppDispatch } from '@/redux store/hooks';
 import { resetEventMeetingBookingInfo } from "@/redux store/features/Booking Information/eventMeetingBookingInfoSlice";
+
 
 import { convertToINR } from "@/functions/currency";
 import { EVENT_AND_MEETING_ROOMS_BOOKING_PROCESS_SUCCESSFUL } from "@/constant string files/apiSuccessMessageConstants";
 
+
 import EventMeetingBookingInfo from "@/components/Procced Booking Component/Booking Information Component/Event Meeting Booking/EventMeetingBookingInfo";
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 
+
 import { LoginUserDetails } from "@/redux store/features/Auth Features/loginUserDetailsSlice";
-import { ILoginUserDetails, LoginUserApiResponse } from "@/interface/Hotel User Interface/hotelUsersInterfce";
-import { IViewMultipleContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse, IViewMultipleNonContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse, IViewSingleDateEventMeetingRoomCartByCartIdSuccessApiResponse } from "@/interface/Event Meeting Interface/eventMeetingCartApiResponse";
-import { EventMeetingBookingApiResponse, IEventMeetingBookingErrorApiResponse, IEventMeetingBookingSuccessApiResponse } from "@/interface/Event Meeting Interface/eventMeetingBookingApiResponse";
+
+import { 
+    ILoginUserDetails, 
+    LoginUserApiResponse 
+} from "@/interface/Hotel User Interface/hotelUsersInterfce";
+
+import { 
+    IViewMultipleContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse, 
+    IViewMultipleNonContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse, 
+    IViewSingleDateEventMeetingRoomCartByCartIdSuccessApiResponse 
+} from "@/interface/Event Meeting Interface/eventMeetingCartApiResponse";
+
+import { 
+    EventMeetingBookingApiResponse, 
+    IEventMeetingBookingErrorApiResponse, 
+    IEventMeetingBookingSuccessApiResponse 
+} from "@/interface/Event Meeting Interface/eventMeetingBookingApiResponse";
+
 
 
 function EventMeetingProceedPage() {
@@ -35,7 +55,8 @@ function EventMeetingProceedPageFunctionalComponent(){
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const loginUserDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
     
     if(loginUserDetails === null){
         throw new Error("loginUserDetails is null");
@@ -43,7 +64,11 @@ function EventMeetingProceedPageFunctionalComponent(){
     
     const loginUserId: string = loginUserDetails.userId;
 
-    const allEventMeetingBookingInfo: (IViewSingleDateEventMeetingRoomCartByCartIdSuccessApiResponse | IViewMultipleContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse | IViewMultipleNonContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse)[] = useAppSelector((reduxStore) => reduxStore.eventMeetingBookingInfoSlice.eventMeetingBookingInfo);
+    const allEventMeetingBookingInfo: (
+        IViewSingleDateEventMeetingRoomCartByCartIdSuccessApiResponse | 
+        IViewMultipleContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse | 
+        IViewMultipleNonContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse
+    )[] = useAppSelector((reduxStore) => reduxStore.eventMeetingBookingInfoSlice.eventMeetingBookingInfo);
 
     useEffect(()=>{
         fetchLoginUsersDetailsDb(loginUserId);
@@ -63,7 +88,14 @@ function EventMeetingProceedPageFunctionalComponent(){
     //     return total + (eachEventMeetingBookingInfo.cartInfo.totalPriceEventMeetingRoom || eachEventMeetingBookingInfo.cartInfo.totalPriceOfAllDates || 0);
     // }, 0);
 
-    const eventMeetingBookingAmount: number = allEventMeetingBookingInfo.reduce(function (total: number, eachEventMeetingBookingInfo: IViewSingleDateEventMeetingRoomCartByCartIdSuccessApiResponse | IViewMultipleContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse | IViewMultipleNonContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse) {
+    const eventMeetingBookingAmount: number = allEventMeetingBookingInfo.reduce(function (
+        total: number, 
+        eachEventMeetingBookingInfo: (
+            IViewSingleDateEventMeetingRoomCartByCartIdSuccessApiResponse | 
+            IViewMultipleContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse | 
+            IViewMultipleNonContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse
+        )
+    ) {
         let price: number = 0;
         if ('totalPriceEventMeetingRoom' in eachEventMeetingBookingInfo.cartInfo) {
             price = eachEventMeetingBookingInfo.cartInfo.totalPriceEventMeetingRoom || 0;
@@ -96,25 +128,34 @@ function EventMeetingProceedPageFunctionalComponent(){
     }
 
 
-    function isSuccessResponse(data: EventMeetingBookingApiResponse): data is IEventMeetingBookingSuccessApiResponse {
+    function isSuccessResponse(
+        data: EventMeetingBookingApiResponse
+    ): data is IEventMeetingBookingSuccessApiResponse {
         return 'message' in data;
     }
 
-    function isErrorResponse(data: EventMeetingBookingApiResponse): data is IEventMeetingBookingErrorApiResponse {
+
+    function isErrorResponse(
+        data: EventMeetingBookingApiResponse
+    ): data is IEventMeetingBookingErrorApiResponse {
         return 'errorMessage' in data;
     }
 
+    
     async function payEventMeetingBookingAmount(){
         setBookingErrorMessage('');
         try{
             setPerformingPayment(true);
-            const response: Response = await fetch('/api/booking-bulk-activities/events-meeting-booking-activities/', {
-                method: 'POST',
-                body: JSON.stringify(allEventMeetingBookingInfo),
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8',
+            const response: Response = await fetch(
+                '/api/booking-bulk-activities/events-meeting-booking-activities/', 
+                {
+                    method: 'POST',
+                    body: JSON.stringify(allEventMeetingBookingInfo),
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8',
+                    }
                 }
-            });
+            );
             const data: EventMeetingBookingApiResponse = await response.json();
             if(response.status === 200 && isSuccessResponse(data)){
                 if('message' in data){

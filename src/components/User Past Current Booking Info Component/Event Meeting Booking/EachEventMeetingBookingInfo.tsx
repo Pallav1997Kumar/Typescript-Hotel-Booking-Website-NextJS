@@ -8,31 +8,55 @@ import EventMeetingSingleDateBookingInfo from "./Sub Events Booking/EventMeeting
 import EventMeetingMultipleDateContinuousBookingInfo from "./Sub Events Booking/EventMeetingMultipleDateContinuousBookingInfo";
 import EventMeetingMultipleDateNonContinuousBookingInfo from "./Sub Events Booking/EventMeetingMultipleDateNonContinuousBookingInfo";
 
-import { IContinousMultipleDatesBookingInfoForCustomer, INonContinousMultipleDatesBookingInfoForCustomer, ISingleDateBookingInfoForCustomer } from '@/interface/Event Meeting Interface/viewEventMeetingBookingApiResponse';
+
 import { ITransactionDetailsFrontend } from '@/interface/hotelCustomersInterface';
-import { EventMeetingRoomsInfoResponse, MeetingEventArea } from '@/interface/Event Meeting Interface/eventMeetingRoomInterface';
+
+import { 
+    IContinousMultipleDatesBookingInfoForCustomer, 
+    INonContinousMultipleDatesBookingInfoForCustomer, 
+    ISingleDateBookingInfoForCustomer 
+} from '@/interface/Event Meeting Interface/viewEventMeetingBookingApiResponse';
+
+import { 
+    EventMeetingRoomsInfoResponse, 
+    MeetingEventArea 
+} from '@/interface/Event Meeting Interface/eventMeetingRoomInterface';
 
 
 interface IPropsEachEventMeetingBookingInfo {
-    eachEventMeetingBookingInfo: ISingleDateBookingInfoForCustomer | IContinousMultipleDatesBookingInfoForCustomer | INonContinousMultipleDatesBookingInfoForCustomer;
+    eachEventMeetingBookingInfo: (
+        | ISingleDateBookingInfoForCustomer | 
+        IContinousMultipleDatesBookingInfoForCustomer | 
+        INonContinousMultipleDatesBookingInfoForCustomer
+    );
     transactionDetails: ITransactionDetailsFrontend;
 }
 
 
 function EachEventMeetingBookingInfo(props: IPropsEachEventMeetingBookingInfo){
 
-    const eachEventMeetingBookingInfo: ISingleDateBookingInfoForCustomer | IContinousMultipleDatesBookingInfoForCustomer | INonContinousMultipleDatesBookingInfoForCustomer = props.eachEventMeetingBookingInfo;
+    const eachEventMeetingBookingInfo: (
+        | ISingleDateBookingInfoForCustomer 
+        | IContinousMultipleDatesBookingInfoForCustomer 
+        | INonContinousMultipleDatesBookingInfoForCustomer
+    ) = props.eachEventMeetingBookingInfo;
+
     const transactionDetails: ITransactionDetailsFrontend = props.transactionDetails;
+
 
     useEffect(()=>{
         fetchMeetingEventsRoomInformation();
     }, []);
 
+
     const [meetingEventsRooms, setMeetingEventsRooms] = useState<MeetingEventArea[]>([]);
+
 
     async function fetchMeetingEventsRoomInformation(): Promise<void> {
         try {
-            const response: Response = await fetch('/api/hotel-booking-information/events-meeting-room-information/');
+            const response: Response = await fetch(
+                '/api/hotel-booking-information/events-meeting-room-information/'
+            );
             const meetingEventRoomInfo: EventMeetingRoomsInfoResponse = await response.json();
             const meetingEventRoomInformation: MeetingEventArea[] = meetingEventRoomInfo.meetingEventsRooms;
             setMeetingEventsRooms(meetingEventRoomInformation);
@@ -41,16 +65,23 @@ function EachEventMeetingBookingInfo(props: IPropsEachEventMeetingBookingInfo){
         }
     }
 
-    const particularEventMeetingBasicInfo: MeetingEventArea | undefined = meetingEventsRooms.find(function(eachEventMeetingInHotel: MeetingEventArea){
-        return (eachEventMeetingInHotel.meetingEventAreaTitle == eachEventMeetingBookingInfo.meetingEventsInfoTitle);
-    });
+
+    const particularEventMeetingBasicInfo: MeetingEventArea | undefined = 
+        meetingEventsRooms.find(function(eachEventMeetingInHotel: MeetingEventArea){
+            return (eachEventMeetingInHotel.meetingEventAreaTitle == eachEventMeetingBookingInfo.meetingEventsInfoTitle);
+        });
 
     return (
         <div className="flex flex-row p-1 m-1 border-4 border-gray-500">
             
             <div className="w-2/5">
                 {(particularEventMeetingBasicInfo != null) &&
-                    <Image src={particularEventMeetingBasicInfo.meetingEventAreaImage} alt='meeting-event' width={430} height={210} />
+                    <Image 
+                        src={particularEventMeetingBasicInfo.meetingEventAreaImage} 
+                        alt='meeting-event' 
+                        width={430} 
+                        height={210} 
+                    />
                 }
             </div>
             

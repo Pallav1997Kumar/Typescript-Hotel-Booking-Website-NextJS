@@ -4,32 +4,52 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+
 import { useAppSelector, useAppDispatch } from "@/redux store/hooks";
+
 import { 
     updateLoginPageCalledFrom, 
     updateLoginRedirectPage 
 } from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
 
+
 import { 
     DINING_BOOKING_INFO_IS_PRESENT, 
     DINING_BOOKING_INFO_IS_EMPTY 
 } from "@/constant string files/apiSuccessMessageConstants";
+
 import { 
     ROOMS_SUITES_BOOKING_INFO_IS_PRESENT, 
     ROOMS_SUITES_BOOKING_INFO_IS_EMPTY 
 } from "@/constant string files/apiSuccessMessageConstants";
+
 import { 
     EVENT_MEETING_ROOM_BOOKING_INFO_IS_PRESENT, 
     EVENT_MEETING_ROOM_BOOKING_INFO_IS_EMPTY 
 } from "@/constant string files/apiSuccessMessageConstants";
 
+
 import UserAllBookingComponent from "@/components/User Booking Component/UserAllBookingComponent";
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 
+
 import { LoginUserDetails } from "@/interface/Hotel User Interface/hotelUsersInterfce";
-import { EventMeetingBookingInfoForCustomer, ViewEventMeetingBookingResponseForCustomer } from "@/interface/Event Meeting Interface/viewEventMeetingBookingApiResponse";
-import { IDiningBookingInfoForArrayForCustomer, ViewDiningBookingResponseForCustomer } from "@/interface/Dining Interface/viewDiningBookingApiResponse";
-import { IRoomsSuitesBookingInfoForArrayForCustomer, ViewRoomsSuitesBookingResponseForCustomer } from "@/interface/Rooms and Suites Interface/viewRoomSuiteBookingApiResponse";
+
+import { 
+    EventMeetingBookingInfoForCustomer, 
+    ViewEventMeetingBookingResponseForCustomer 
+} from "@/interface/Event Meeting Interface/viewEventMeetingBookingApiResponse";
+
+import { 
+    IDiningBookingInfoForArrayForCustomer, 
+    ViewDiningBookingResponseForCustomer 
+} from "@/interface/Dining Interface/viewDiningBookingApiResponse";
+
+import { 
+    IRoomsSuitesBookingInfoForArrayForCustomer, 
+    ViewRoomsSuitesBookingResponseForCustomer 
+} from "@/interface/Rooms and Suites Interface/viewRoomSuiteBookingApiResponse";
+
 
 
 function UserPastAllBookingPageFunctionalComponent(){
@@ -37,7 +57,8 @@ function UserPastAllBookingPageFunctionalComponent(){
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const loginUserDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
 
     useEffect(function() {
         if (loginUserDetails == null) {
@@ -57,9 +78,12 @@ function UserPastAllBookingPageFunctionalComponent(){
 
     const [loadingBookingDetails, setLoadingBookingDetails] = useState<boolean>(true);
 
-    const [roomSuitesBooking, setRoomSuitesBooking] = useState<null | IRoomsSuitesBookingInfoForArrayForCustomer[]>(null);
-    const [diningBooking, setDiningBooking] = useState<null | IDiningBookingInfoForArrayForCustomer[]>(null);
-    const [eventMeetingBooking, setEventMeetingBooking] = useState<null | EventMeetingBookingInfoForCustomer[]>(null);
+    const [roomSuitesBooking, setRoomSuitesBooking] = 
+        useState<null | IRoomsSuitesBookingInfoForArrayForCustomer[]>(null);
+    const [diningBooking, setDiningBooking] = 
+        useState<null | IDiningBookingInfoForArrayForCustomer[]>(null);
+    const [eventMeetingBooking, setEventMeetingBooking] = 
+        useState<null | EventMeetingBookingInfoForCustomer[]>(null);
 
 
     useEffect(()=>{
@@ -67,10 +91,18 @@ function UserPastAllBookingPageFunctionalComponent(){
     }, []);
 
 
-    let allBookingInfo: (IRoomsSuitesBookingInfoForArrayForCustomer | IDiningBookingInfoForArrayForCustomer | EventMeetingBookingInfoForCustomer)[] | null = null;
+    let allBookingInfo: (
+        IRoomsSuitesBookingInfoForArrayForCustomer | 
+        IDiningBookingInfoForArrayForCustomer | 
+        EventMeetingBookingInfoForCustomer
+    )[] | null = null;
 
     if(roomSuitesBooking != null && diningBooking != null && eventMeetingBooking != null){
-        allBookingInfo = [...roomSuitesBooking, ...diningBooking, ...eventMeetingBooking];
+        allBookingInfo = [
+            ...roomSuitesBooking, 
+            ...diningBooking, 
+            ...eventMeetingBooking
+        ];
     }
 
 
@@ -90,7 +122,9 @@ function UserPastAllBookingPageFunctionalComponent(){
 
     async function fetchRoomSuiteBookingDb(loginUserId: string) {
         try {
-            const response: Response = await fetch(`/api/view-past-booking/rooms-suites/${loginUserId}`);
+            const response: Response = await fetch(
+                `/api/view-past-booking/rooms-suites/${loginUserId}`
+            );
             const data: ViewRoomsSuitesBookingResponseForCustomer = await response.json();
             
             if(response.status === 200){
@@ -100,7 +134,8 @@ function UserPastAllBookingPageFunctionalComponent(){
                         setRoomSuitesBooking(roomSuitesBookingDb);
                     }
                     else if(data.message === ROOMS_SUITES_BOOKING_INFO_IS_PRESENT){
-                        const roomSuitesBookingDb: IRoomsSuitesBookingInfoForArrayForCustomer[] | undefined = data.roomSuitesBookingInfo;
+                        const roomSuitesBookingDb: IRoomsSuitesBookingInfoForArrayForCustomer[] | undefined = 
+                            data.roomSuitesBookingInfo;
                         if(roomSuitesBookingDb){
                             setRoomSuitesBooking(roomSuitesBookingDb);
                         }
@@ -114,7 +149,9 @@ function UserPastAllBookingPageFunctionalComponent(){
 
     async function fetchDiningBookingDb(loginUserId: string) {
         try {
-            const response: Response = await fetch(`/api/view-past-booking/dining/${loginUserId}`);
+            const response: Response = await fetch(
+                `/api/view-past-booking/dining/${loginUserId}`
+            );
             const data: ViewDiningBookingResponseForCustomer = await response.json();
             if(response.status === 200){
                 if('message' in data){
@@ -123,7 +160,8 @@ function UserPastAllBookingPageFunctionalComponent(){
                         setDiningBooking(diningBookingDb);
                     }
                     else if(data.message === DINING_BOOKING_INFO_IS_PRESENT){
-                        const diningBookingDb: IDiningBookingInfoForArrayForCustomer[] | undefined = data.diningBookingInfo;
+                        const diningBookingDb: IDiningBookingInfoForArrayForCustomer[] | undefined = 
+                            data.diningBookingInfo;
                         if(diningBookingDb) {
                             setDiningBooking(diningBookingDb);
                         }
@@ -137,7 +175,9 @@ function UserPastAllBookingPageFunctionalComponent(){
 
     async function fetchEventMeetingBookingDb(loginUserId: string) {
         try {
-            const response: Response = await fetch(`/api/view-past-booking/meeting-events/${loginUserId}`);
+            const response: Response = await fetch(
+                `/api/view-past-booking/meeting-events/${loginUserId}`
+            );
             const data: ViewEventMeetingBookingResponseForCustomer = await response.json();
             if(response.status === 200){
                 if('message' in data){
@@ -146,7 +186,8 @@ function UserPastAllBookingPageFunctionalComponent(){
                         setEventMeetingBooking(eventMeetingBookingDb);
                     }
                     else if(data.message === EVENT_MEETING_ROOM_BOOKING_INFO_IS_PRESENT){
-                        const eventMeetingBookingDb: EventMeetingBookingInfoForCustomer[] | undefined = data.eventMeetingBookingInfo;
+                        const eventMeetingBookingDb: EventMeetingBookingInfoForCustomer[] | undefined = 
+                            data.eventMeetingBookingInfo;
                         if(eventMeetingBookingDb){
                             setEventMeetingBooking(eventMeetingBookingDb);
                         }

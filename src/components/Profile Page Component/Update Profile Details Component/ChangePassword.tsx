@@ -7,7 +7,10 @@ import Link from 'next/link';
 import Button from '@mui/material/Button';
 
 import { useAppSelector, useAppDispatch } from "@/redux store/hooks";
-import { updateLoginPageCalledFrom, updateLoginRedirectPage } from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
+import { 
+    updateLoginPageCalledFrom, 
+    updateLoginRedirectPage 
+} from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
 
 import InputAreaForEditInfo from "@/components/Input Area/InputAreaForEditInfo";
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
@@ -30,7 +33,8 @@ interface IUserInfo {
 
 function ChangePasswordFunctionalComponent(){
 
-    const loginUserDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
 
     const dispatch = useAppDispatch();
     const router = useRouter();
@@ -139,13 +143,16 @@ function ChangePasswordFunctionalComponent(){
         }
 
         try{
-            const response: Response = await fetch(`/api/users-authentication/customers-authenticatication/update-password-information/${loginUserId}`, {
-                method: 'PATCH',
-                body: JSON.stringify(userInfo),
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8',
+            const response: Response = await fetch(
+                `/api/users-authentication/customers-authenticatication/update-password-information/${loginUserId}`, 
+                {
+                    method: 'PATCH',
+                    body: JSON.stringify(userInfo),
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8',
+                    }
                 }
-            });
+            );
             const data: UpdateUserApiResponse = await response.json();
             if(response.status === 200){
                 if('message' in data){

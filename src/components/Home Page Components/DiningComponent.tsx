@@ -4,7 +4,10 @@ import Link from 'next/link';
 
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 
-import { Dining, DiningInfoResponse } from "@/interface/Dining Interface/hotelDiningInterface";
+import { 
+    Dining, 
+    DiningInfoResponse 
+} from "@/interface/Dining Interface/hotelDiningInterface";
 
 
 function DiningComponent() {
@@ -34,7 +37,13 @@ async function DiningComponentFunctionalComponent(){
                     {threeDining.map(function(eachDining: Dining){
                         return(
                             <div key={eachDining.diningPath} className="w-full sm:w-1/3 px-2 py-2">
-                                <Image src={eachDining.photo} alt="room-photo" width={375} height={300}  className="object-cover" />
+                                <Image 
+                                    src={eachDining.photo} 
+                                    alt="room-photo" 
+                                    width={375} 
+                                    height={300}  
+                                    className="object-cover" 
+                                />
                                 <Link href={`/dining/${eachDining.diningPath}`} passHref>
                                     <h4 className="text-center text-xl font-italic mt-3 cursor-pointer hover:underline">
                                         {eachDining.diningAreaTitle}
@@ -53,7 +62,9 @@ async function DiningComponentFunctionalComponent(){
 
 async function fetchDiningInformation(): Promise<Dining[]>{
     try {
-        const response: Response = await fetch(`${process.env.URL}/api/hotel-booking-information/dining-information/`);
+        const response: Response = await fetch(
+            `${process.env.URL}/api/hotel-booking-information/dining-information/`
+        );
         const diningInfo: DiningInfoResponse = await response.json();
         const dining: Dining[] = diningInfo.dining;
         return dining;

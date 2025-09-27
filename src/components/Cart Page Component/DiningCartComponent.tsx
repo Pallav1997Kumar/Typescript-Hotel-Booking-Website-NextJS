@@ -11,6 +11,7 @@ import {
     updateLoginRedirectPage 
 } from '@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice';
 import { deleteParticularBookingFromDiningCart } from '@/redux store/features/Booking Features/diningBookingCartSlice';
+
 import { INFORMATION_ADD_TO_CART_SUCCESSFUL } from "@/constant string files/apiSuccessMessageConstants";
 
 import DiningBookingCartComponent from "@/components/Carts Component/DiningBookingCartComponent";
@@ -34,9 +35,11 @@ function DiningCartComponentFunctionalComponent(){
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const allDiningBookingCart: DiningDetailsForCart[] = useAppSelector((reduxStore) => reduxStore.diningCartSlice.diningCart);
+    const allDiningBookingCart: DiningDetailsForCart[] = 
+        useAppSelector((reduxStore) => reduxStore.diningCartSlice.diningCart);
 
-    const loginUserIdDetails: LoginUserDetails | null = useAppSelector((reduxStore) => reduxStore.userSlice.loginUserDetails);
+    const loginUserIdDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore) => reduxStore.userSlice.loginUserDetails);
     
     let loginUserId: null | string = null;
     if(loginUserIdDetails != null){
@@ -59,13 +62,15 @@ function DiningCartComponentFunctionalComponent(){
             if(allDiningBookingCart.length > 0){
                 allDiningBookingCart.forEach(async function(eachDiningCart){
                     try {
-                        const response: Response = await fetch(`/api/add-cart/dining/${loginUserId}`, {
-                            method: 'POST',
-                            body: JSON.stringify(eachDiningCart),
-                            headers: {
-                                'Content-type': 'application/json; charset=UTF-8',
+                        const response: Response = await fetch(`/api/add-cart/dining/${loginUserId}`, 
+                            {
+                                method: 'POST',
+                                body: JSON.stringify(eachDiningCart),
+                                headers: {
+                                    'Content-type': 'application/json; charset=UTF-8',
+                                }
                             }
-                        });
+                        );
                         const data: AddDiningCartApiResponse = await response.json();
                         if(response.status === 200){
                             if('message' in data){

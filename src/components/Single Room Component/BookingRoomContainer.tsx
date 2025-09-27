@@ -1,8 +1,9 @@
 "use client"
 import React, { useState, useEffect, useReducer, useMemo, useCallback } from "react";
+import { useRouter } from 'next/navigation';
+
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import { useRouter } from 'next/navigation';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -13,23 +14,39 @@ import GuestRoomSection from "./GuestRoomSection";
 import BookingPriceDetails from "./BookingPriceDetails";
 import ErrorBoundary from '@/components/Error Boundary/ErrorBoundary';
 
-import { getOnlyDate, getOnlyMonth, getOnlyYear, getOnlyDay, nextDay } from "@/functions/date";
-import { convertDateTextToDate } from "@/functions/date";
-import { getAllElementsInArrayFormatFromStartToEndOfNumber } from "@/functions/array";
 import { useAppDispatch, useAppSelector } from "@/redux store/hooks";
 import { addNewBookingToRoomCart } from "@/redux store/features/Booking Features/roomBookingCartSlice";
 import { getRoomsSuitesEachDayPrice } from "@/redux store/features/Price Features/roomsSuitesEachDayPriceSlice";
-import { updateLoginPageCalledFrom, updateLoginRedirectPage } from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
+import { 
+    updateLoginPageCalledFrom, 
+    updateLoginRedirectPage 
+} from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
+
+import { getOnlyDate, getOnlyMonth, getOnlyYear, getOnlyDay, nextDay } from "@/functions/date";
+import { convertDateTextToDate } from "@/functions/date";
+import { getAllElementsInArrayFormatFromStartToEndOfNumber } from "@/functions/array";
 import { roomsSuitesSelectionErrorConstants } from "@/constant string files/roomsSuitesSelectionErrorConstants";
 import { INFORMATION_ADD_TO_CART_SUCCESSFUL } from "@/constant string files/apiSuccessMessageConstants";
 import { roomCounterConstant } from "@/constant string files/roomsImportantConstants";
 
 import { Room } from '@/interface/Rooms and Suites Interface/roomsSuitesInfoInterface';
 import { LoginUserDetails } from '@/redux store/features/Auth Features/loginUserDetailsSlice';
-import { RoomWithDateDetails, DateDetail, RoomSuitesEachDayInfoRespone } from "@/interface/Rooms and Suites Interface/eachDayRoomSuitesInfoInterface";
-import { ParticularRoomInfoInterface, RoomsSuitesBookingDetailsInterface, IRoomsDetailsForCart } from "@/interface/Rooms and Suites Interface/roomsSuitesBookingInterface";
 import { AddRoomsSuitesToCartApiResponse } from "@/interface/Rooms and Suites Interface/roomsSuitesCartApiResponse";
 import { RoomsSuitesAvailabilityCheckApiResponse } from "@/interface/Rooms and Suites Interface/roomsSuitesAvailabilityCheckApiResponse";
+import { RoomsSuitesTitle } from "@/interface/Rooms and Suites Interface/roomsSuitesConstantInterface";
+
+import { 
+    RoomWithDateDetails, 
+    DateDetail, 
+    RoomSuitesEachDayInfoRespone 
+} from "@/interface/Rooms and Suites Interface/eachDayRoomSuitesInfoInterface";
+
+import { 
+    ParticularRoomInfoInterface, 
+    RoomsSuitesBookingDetailsInterface, 
+    IRoomsDetailsForCart 
+} from "@/interface/Rooms and Suites Interface/roomsSuitesBookingInterface";
+
 
 
 const modalBoxStyle = {
@@ -89,7 +106,8 @@ function BookingRoomContainerFunctionalComponent(props: IPropsBookingRoomContain
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const loginUserIdDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserIdDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
 
     useEffect(()=>{
         dispatch(getRoomsSuitesEachDayPrice());
@@ -99,7 +117,7 @@ function BookingRoomContainerFunctionalComponent(props: IPropsBookingRoomContain
     const [roomsWithDateInformation, setRoomsWithDateInformation] = useState<RoomWithDateDetails | null>(null);
 
     const roomInfo: Room = props.roomInfo;
-    const roomTitle: string = roomInfo.title;
+    const roomTitle: RoomsSuitesTitle = roomInfo.title;
     const roomPath: string = roomInfo.path;
 
     const todayDate: string = new Date().toISOString().split("T")[0];
@@ -122,14 +140,19 @@ function BookingRoomContainerFunctionalComponent(props: IPropsBookingRoomContain
     //     totalGuestCount = totalGuestCount + guestRoomsDetails[i].total;
     // }
 
-    const totalGuestCount: number = useMemo(function(){
-        const initialTotalGuestCount = 0;
-        const totalNoOfGuest = guestRoomsDetails.reduce(function(accumulator, currValue){
-            const currentRoomGuest = currValue.total;
-            return accumulator + currentRoomGuest;
-        },initialTotalGuestCount);
-        return totalNoOfGuest;
-    },[guestRoomsDetails]);
+    const totalGuestCount: number = useMemo(
+        function(){
+            const initialTotalGuestCount = 0;
+            const totalNoOfGuest: number = guestRoomsDetails.reduce(function(
+                accumulator: number, currValue: ParticularRoomInfoInterface
+            ){
+                const currentRoomGuest = currValue.total;
+                return accumulator + currentRoomGuest;
+            },initialTotalGuestCount);
+            return totalNoOfGuest;
+        },
+        [guestRoomsDetails]
+    );
 
 
     let startingPriceOfRoom: null | number = null;
@@ -160,16 +183,22 @@ function BookingRoomContainerFunctionalComponent(props: IPropsBookingRoomContain
     //     roomsArray.push(i);
     // }
 
-    const roomsArray: number[] = useMemo(function(){
-        const arrayOfRoomsNumber: number[] = getAllElementsInArrayFormatFromStartToEndOfNumber(roomsCount);
-        return arrayOfRoomsNumber;
-    }, [roomsCount]);
+    const roomsArray: number[] = useMemo(
+        function(){
+            const arrayOfRoomsNumber: number[] = 
+                getAllElementsInArrayFormatFromStartToEndOfNumber(roomsCount);
+            return arrayOfRoomsNumber;
+        }, 
+        [roomsCount]
+    );
 
     const [totalPriceOfAllRooms, setTotalPrice] = useState<number>(0);
 
+    
     function getTotalPriceOfRoom(totalPriceOfAllRooms: number): void {
         setTotalPrice(totalPriceOfAllRooms);
     }
+
 
     function loginButtonClickHandler(event: React.MouseEvent<HTMLButtonElement>): void{
         event.preventDefault();
@@ -180,14 +209,18 @@ function BookingRoomContainerFunctionalComponent(props: IPropsBookingRoomContain
         router.push('/login');
     }
 
+
     async function fetchRoomsSuitesEachDayData(): Promise<void>{
         try{
-            const response: Response = await fetch('/api/hotel-booking-information/room-and-suites-information/each-day-information/');
+            const response: Response = await fetch(
+                '/api/hotel-booking-information/room-and-suites-information/each-day-information/'
+            );
             const data: RoomSuitesEachDayInfoRespone = await response.json();
             const allRoomsWithDate: RoomWithDateDetails[] = data.roomsWithDate;
-            const particularRoomEachDayInfo: RoomWithDateDetails | undefined = allRoomsWithDate.find(function(eachRoomWithDate: RoomWithDateDetails){
-                return eachRoomWithDate.roomTitle == roomTitle
-            });
+            const particularRoomEachDayInfo: RoomWithDateDetails | undefined = 
+                allRoomsWithDate.find(function(eachRoomWithDate: RoomWithDateDetails){
+                    return eachRoomWithDate.roomTitle == roomTitle
+                });
             if(!particularRoomEachDayInfo){
                 throw new Error("Missing particularRoomEachDayInfo");
             }
@@ -198,12 +231,14 @@ function BookingRoomContainerFunctionalComponent(props: IPropsBookingRoomContain
         }
     }
 
+
     function getRoomStartingPrice(dateDetailsOfParticularRoom: DateDetail[]): number {
         dateDetailsOfParticularRoom.sort((a,b) => a.price - b.price);
         const minimumPriceDateDetails: DateDetail = dateDetailsOfParticularRoom[0];
         const minimumPrice: number = minimumPriceDateDetails.price;
         return minimumPrice;
     }
+
 
     function getRoomBookingLastDate(dateDetailsOfRoom: DateDetail[]): string{
         dateDetailsOfRoom.sort(function(d1, d2){
@@ -216,13 +251,16 @@ function BookingRoomContainerFunctionalComponent(props: IPropsBookingRoomContain
         return lastDate;
     }
 
+
     function clickCheckIn(event: React.MouseEvent<HTMLDivElement>) {
         setShowCheckinCalender(!showCheckinCalender);
     }
 
+
     function clickCheckOut(event: React.MouseEvent<HTMLDivElement>) {
         setShowCheckoutCalender(!showCheckoutCalender); 
     }
+
 
     function checkinChangeHandlerFunction(value: Value, _event: React.MouseEvent<HTMLButtonElement>): void{
         const selectedDate: Date = Array.isArray(value) ? value[0]! : value!;
@@ -231,7 +269,10 @@ function BookingRoomContainerFunctionalComponent(props: IPropsBookingRoomContain
         setCheckoutDate(nextDay(new Date(selectedDate)));
     }
 
-    const checkinChangeHandler = useCallback(checkinChangeHandlerFunction, [showCheckinCalender]);
+    const checkinChangeHandler = useCallback(
+        checkinChangeHandlerFunction, 
+        [showCheckinCalender]
+    );
 
 
     function checkoutChangeHandlerFunction(value: Value, _event: React.MouseEvent<HTMLButtonElement>): void{
@@ -240,7 +281,10 @@ function BookingRoomContainerFunctionalComponent(props: IPropsBookingRoomContain
         setShowCheckoutCalender(!showCheckoutCalender); 
     }
 
-    const checkoutChangeHandler = useCallback(checkoutChangeHandlerFunction, [showCheckoutCalender]);
+    const checkoutChangeHandler = useCallback(
+        checkoutChangeHandlerFunction, 
+        [showCheckoutCalender]
+    );
 
 
     function increaseRoomHandler(){
@@ -253,13 +297,15 @@ function BookingRoomContainerFunctionalComponent(props: IPropsBookingRoomContain
 
 
     function getGuestData(guestRoomData: ParticularRoomInfoInterface): void {
-        const isSameRoomNoPresent: boolean = guestRoomsDetails.some(function(eachRoom: ParticularRoomInfoInterface){
-            return (eachRoom.roomNo == guestRoomData.roomNo);
-        });
-        if(isSameRoomNoPresent){
-            const oldGuestRoomDetails: ParticularRoomInfoInterface[] = guestRoomsDetails.filter(function(eachRoom){
-                return (eachRoom.roomNo != guestRoomData.roomNo);
+        const isSameRoomNoPresent: boolean = 
+            guestRoomsDetails.some(function(eachRoom: ParticularRoomInfoInterface){
+                return (eachRoom.roomNo == guestRoomData.roomNo);
             });
+        if(isSameRoomNoPresent){
+            const oldGuestRoomDetails: ParticularRoomInfoInterface[] = 
+                guestRoomsDetails.filter(function(eachRoom){
+                    return (eachRoom.roomNo != guestRoomData.roomNo);
+                });
             setGuestRoomsDetails([...oldGuestRoomDetails, guestRoomData]);
         }
         else{
@@ -297,13 +343,16 @@ function BookingRoomContainerFunctionalComponent(props: IPropsBookingRoomContain
         }
         else{
             try {
-                const response: Response = await fetch(`/api/add-cart-availability-check/rooms-suites`, {
-                    method: 'POST',
-                    body: JSON.stringify(bookingDetails),
-                    headers: {
-                        'Content-type': 'application/json; charset=UTF-8',
+                const response: Response = await fetch(
+                    `/api/add-cart-availability-check/rooms-suites`, 
+                    {
+                        method: 'POST',
+                        body: JSON.stringify(bookingDetails),
+                        headers: {
+                            'Content-type': 'application/json; charset=UTF-8',
+                        }
                     }
-                });
+                );
                 const data: RoomsSuitesAvailabilityCheckApiResponse = await response.json();
                 if(response.status === 200){
                     setShowError('');
@@ -325,7 +374,16 @@ function BookingRoomContainerFunctionalComponent(props: IPropsBookingRoomContain
         setIsViewAvailabilityButtonDisabled(false);
     }
 
-    const viewAvalabilityHandler = useCallback(viewAvalabilityHandlerFunction, [checkinDate, checkoutDate, roomsCount, noOfGuests, guestRoomsDetails]);
+    const viewAvalabilityHandler = useCallback(
+        viewAvalabilityHandlerFunction, 
+        [
+            checkinDate, 
+            checkoutDate, 
+            roomsCount, 
+            noOfGuests, 
+            guestRoomsDetails
+        ]
+    );
 
 
     function addCartHandlerFunction() {
@@ -368,13 +426,16 @@ function BookingRoomContainerFunctionalComponent(props: IPropsBookingRoomContain
         try {
             if(loginUserIdDetails){
                const loginUserId: string = loginUserIdDetails.userId;
-                const response: Response = await fetch(`/api/add-cart/rooms-suites/${loginUserId}`, {
-                    method: 'POST',
-                    body: JSON.stringify(roomsDetailsForCart),
-                    headers: {
-                        'Content-type': 'application/json; charset=UTF-8',
+                const response: Response = await fetch(
+                    `/api/add-cart/rooms-suites/${loginUserId}`, 
+                    {
+                        method: 'POST',
+                        body: JSON.stringify(roomsDetailsForCart),
+                        headers: {
+                            'Content-type': 'application/json; charset=UTF-8',
+                        }
                     }
-                });
+                );
                 const data: AddRoomsSuitesToCartApiResponse = await response.json();
                 if(response.status === 200){
                     if('message' in data){
@@ -392,7 +453,14 @@ function BookingRoomContainerFunctionalComponent(props: IPropsBookingRoomContain
         }
     }
 
-    const addCartHandler = useCallback(addCartHandlerFunction, [dispatch, roomsDetailsAddedToCart, totalPriceOfAllRooms]);
+    const addCartHandler = useCallback(
+        addCartHandlerFunction, 
+        [
+            dispatch, 
+            roomsDetailsAddedToCart, 
+            totalPriceOfAllRooms
+        ]
+    );
    
     
     
@@ -480,9 +548,10 @@ function BookingRoomContainerFunctionalComponent(props: IPropsBookingRoomContain
                                 <Typography id="modal-modal-description" component="div">
                                     <div className="w-full">
                                         {roomsArray.map(function(element: number){
-                                            const roomGuestDetails: ParticularRoomInfoInterface | undefined = guestRoomsDetails.find(function(eachRoom: ParticularRoomInfoInterface){
-                                                return (eachRoom.roomNo == element);
-                                            });
+                                            const roomGuestDetails: ParticularRoomInfoInterface | undefined = 
+                                                guestRoomsDetails.find(function(eachRoom: ParticularRoomInfoInterface){
+                                                    return (eachRoom.roomNo == element);
+                                                });
                                             return (
                                                 <GuestRoomSection 
                                                     key={element} 

@@ -14,13 +14,16 @@ function DiningBookingInfo(props: IPropsDiningBookingInfo){
 
     return (
         <div className="border border-black m-1">
-            {(allDiningBookingInfo.length > 0) && allDiningBookingInfo.map(function(eachDiningBookingInfo: IViewDiningCartByCartIdSuccessApiResponse){
-                return (
-                    <EachDiningBookingInfo
-                        key={eachDiningBookingInfo.cartInfo._id} 
-                        eachDiningBookingInfo={eachDiningBookingInfo.cartInfo} 
-                    />
-                )
+            {(allDiningBookingInfo.length > 0) && 
+                allDiningBookingInfo.map(function(
+                    eachDiningBookingInfo: IViewDiningCartByCartIdSuccessApiResponse
+                ){
+                    return (
+                        <EachDiningBookingInfo
+                            key={eachDiningBookingInfo.cartInfo._id} 
+                            eachDiningBookingInfo={eachDiningBookingInfo.cartInfo} 
+                        />
+                    )
             })}
         </div>
     );

@@ -3,12 +3,18 @@ import React, { useState, useEffect } from "react";
 import Button from '@mui/material/Button';
 
 import { guestTitleConstant } from "@/constant string files/roomsImportantConstants";
-import { Room, GuestCount, RoomGuestInfoResponse } from "@/interface/Rooms and Suites Interface/roomsSuitesGuestInfoInterface";
+
+import { RoomsSuitesTitle } from "@/interface/Rooms and Suites Interface/roomsSuitesConstantInterface";
+import { 
+    Room, 
+    GuestCount, 
+    RoomGuestInfoResponse 
+} from "@/interface/Rooms and Suites Interface/roomsSuitesGuestInfoInterface";
 
 
 interface IPropsGuestRoomSection{
     roomNo: number;
-    roomTitle: string;
+    roomTitle: RoomsSuitesTitle;
     onGetGuestDataParticularRoom: (data: ParticularRoomInfoInterface) => void;
     roomGuestDetails: ParticularRoomInfoInterface | undefined;
 }
@@ -24,7 +30,7 @@ interface ParticularRoomInfoInterface {
 export default function GuestRoomSection(props: IPropsGuestRoomSection){
     const roomNo: number = props.roomNo;
     const roomGuestDetails: ParticularRoomInfoInterface | undefined = props.roomGuestDetails;
-    const roomTitle: string = props.roomTitle;
+    const roomTitle: RoomsSuitesTitle = props.roomTitle;
 
     useEffect(()=>{
         fetchRoomGuestInfo();
@@ -68,7 +74,9 @@ export default function GuestRoomSection(props: IPropsGuestRoomSection){
 
     async function fetchRoomGuestInfo(){
         try{
-            const response: Response = await fetch('/api/hotel-booking-information/room-and-suites-information/hotel-rooms-guest-count/');
+            const response: Response = await fetch(
+                '/api/hotel-booking-information/room-and-suites-information/hotel-rooms-guest-count/'
+            );
             const data: RoomGuestInfoResponse = await response.json();
             const allRoomsData: Room[] = data.roomsGuestInfo;
             const guestDetails: GuestCount[] = fetchSpecificRoomGuestInfo(allRoomsData,roomTitle);
@@ -80,9 +88,10 @@ export default function GuestRoomSection(props: IPropsGuestRoomSection){
     }
 
     function fetchSpecificRoomGuestInfo(allRoomsInfo: Room[], titleOfRoom: string): GuestCount[]{
-        const specificRoomInfo: Room | undefined = allRoomsInfo.find(function(eachRoom: Room){
-            return eachRoom.title == titleOfRoom;
-        });
+        const specificRoomInfo: Room | undefined = 
+            allRoomsInfo.find(function(eachRoom: Room){
+                return eachRoom.title == titleOfRoom;
+            });
         if(!specificRoomInfo){
             throw new Error("specificRoomInfo is missing");
         }

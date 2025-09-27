@@ -57,7 +57,13 @@ function EventMeetingSingleDateCartComponent(props: IPropsEventMeetingSingleDate
             
             <p className="font-sans mb-2 capitalize">
                 <span className="font-semibold">Meeting / Event Booking Date: </span>
-                {getDateTextFromFullDate(typeof eachEventMeetingInCart.meetingEventBookingDate === 'string' ? eachEventMeetingInCart.meetingEventBookingDate : eachEventMeetingInCart.meetingEventBookingDate.toISOString())}
+                {
+                    getDateTextFromFullDate(
+                        typeof eachEventMeetingInCart.meetingEventBookingDate === 'string' 
+                        ? eachEventMeetingInCart.meetingEventBookingDate 
+                        : eachEventMeetingInCart.meetingEventBookingDate.toISOString()
+                    )
+                }
             </p>
             
             {(eachEventMeetingInCart.meetingEventBookingTime.length > 1) &&
@@ -101,14 +107,18 @@ function EventMeetingSingleDateCartComponent(props: IPropsEventMeetingSingleDate
             
                 {(eachEventMeetingInCart.wantFoodServices == wantFoodServiceConstants.WANT_FOOD_SERVICE_YES) &&
                 <div className="ml-4">
-                    <Button onClick={()=>setViewFoodItems(true)} variant="outlined">View Food Items</Button>
+                    <Button onClick={()=>setViewFoodItems(true)} variant="outlined">
+                        View Food Items
+                    </Button>
                     <Modal
                         open={viewFoodItems}
                         onClose={()=>setViewFoodItems(false)}
                     >
                         <Box sx={boxStyle}>
                             <EventMeetingFoodServices eachEventMeetingInCart={eachEventMeetingInCart} />
-                            <Button  onClick={()=>setViewFoodItems(false)} variant="contained">Ok</Button>
+                            <Button  onClick={()=>setViewFoodItems(false)} variant="contained">
+                                Ok
+                            </Button>
                         </Box>
                     </Modal>
                 </div>

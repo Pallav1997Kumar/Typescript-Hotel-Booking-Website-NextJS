@@ -1,18 +1,25 @@
 import { getCommaAndSeperatedArray } from "@/functions/array";
 import { eventMeetingTimingConstants } from "@/constant string files/eventsMeetingRoomImportantConstants";
 
-import { IContinousMultipleDatesBookingInfoForCustomer, ISingleDateBookingInfoForCustomer } from '@/interface/Event Meeting Interface/viewEventMeetingBookingApiResponse';
+import { 
+    IContinousMultipleDatesBookingInfoForCustomer, 
+    ISingleDateBookingInfoForCustomer 
+} from '@/interface/Event Meeting Interface/viewEventMeetingBookingApiResponse';
+import { MeetingEventBookingTime } from "@/interface/Event Meeting Interface/eventMeetingRoomConstantInterface";
 
 
 interface IPropsEventMeetingFoodServices {
-    eachEventMeetingBookingInfo: ISingleDateBookingInfoForCustomer | IContinousMultipleDatesBookingInfoForCustomer;
+    eachEventMeetingBookingInfo: (
+        | ISingleDateBookingInfoForCustomer 
+        | IContinousMultipleDatesBookingInfoForCustomer
+    );
 }
 
 
 function EventMeetingFoodServices(props: IPropsEventMeetingFoodServices){
     const eachEventMeetingBookingInfo: ISingleDateBookingInfoForCustomer | IContinousMultipleDatesBookingInfoForCustomer = props.eachEventMeetingBookingInfo;
     
-    const meetingEventBookingTime: ("Morning" | "Afternoon" | "Evening" | "Night" | "Mid Night")[] = eachEventMeetingBookingInfo.meetingEventBookingTime;
+    const meetingEventBookingTime: MeetingEventBookingTime[] = eachEventMeetingBookingInfo.meetingEventBookingTime;
     const isMorningSlotBooked: boolean = meetingEventBookingTime.includes(eventMeetingTimingConstants.MORNING_TIME);
     const isAfternoonSlotBooked: boolean = meetingEventBookingTime.includes(eventMeetingTimingConstants.AFTERNOON_TIME);
     const isEveningSlotBooked: boolean = meetingEventBookingTime.includes(eventMeetingTimingConstants.EVENING_TIME);

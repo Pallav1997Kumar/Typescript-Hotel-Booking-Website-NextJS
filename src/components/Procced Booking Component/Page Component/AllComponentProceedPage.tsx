@@ -3,33 +3,58 @@ import React, { useState, useEffect } from "react";
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
+
 import Button from '@mui/material/Button';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
+
 
 import { useAppSelector, useAppDispatch } from '@/redux store/hooks';
 import { resetDiningBookingInfo } from "@/redux store/features/Booking Information/diningBookingInfoSlice";
 import { resetEventMeetingBookingInfo } from "@/redux store/features/Booking Information/eventMeetingBookingInfoSlice";
 import { resetRoomSuiteBookingInfo } from "@/redux store/features/Booking Information/roomSuiteBookingInfoSlice";
 
+
 import { convertToINR } from "@/functions/currency";
 import { ROOMS_SUITES_DINING_EVENT_MEETING_ROOM_BOOKING_PROCESS_SUCCESSFUL } from "@/constant string files/apiSuccessMessageConstants";
+
 
 import DiningBookingInfo from "@/components/Procced Booking Component/Booking Information Component/Dining Booking/DiningBookingInfo";
 import RoomSuitesBookingInfo from "@/components/Procced Booking Component/Booking Information Component/Rooms Suites Booking/RoomSuitesBookingInfo";
 import EventMeetingBookingInfo from "@/components/Procced Booking Component/Booking Information Component/Event Meeting Booking/EventMeetingBookingInfo";
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 
-import { ILoginUserDetails, LoginUserApiResponse, LoginUserDetails } from "@/interface/Hotel User Interface/hotelUsersInterfce";
+
 import { IViewDiningCartByCartIdSuccessApiResponse } from "@/interface/Dining Interface/diningCartApiResponse";
 import { IViewRoomsSuitesCartByCartIdSuccessApiResponse } from "@/interface/Rooms and Suites Interface/roomsSuitesCartApiResponse";
-import { IViewMultipleContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse, IViewMultipleNonContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse, IViewSingleDateEventMeetingRoomCartByCartIdSuccessApiResponse } from "@/interface/Event Meeting Interface/eventMeetingCartApiResponse";
-import { DiningRoomEventBookingApiResponse, IDiningRoomEventBookingErrorApiResponse, IDiningRoomEventBookingSuccessApiResponse } from "@/interface/diningRoomEventBookingApiResponse";
+
+import { 
+    ILoginUserDetails, 
+    LoginUserApiResponse, 
+    LoginUserDetails 
+} from "@/interface/Hotel User Interface/hotelUsersInterfce";
+
+import { 
+    IViewMultipleContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse, 
+    IViewMultipleNonContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse, 
+    IViewSingleDateEventMeetingRoomCartByCartIdSuccessApiResponse 
+} from "@/interface/Event Meeting Interface/eventMeetingCartApiResponse";
+
+import { 
+    DiningRoomEventBookingApiResponse, 
+    IDiningRoomEventBookingErrorApiResponse, 
+    IDiningRoomEventBookingSuccessApiResponse 
+} from "@/interface/diningRoomEventBookingApiResponse";
+
 
 
 interface IAllComponentBookingInfo {
     allDiningBookingInfo: IViewDiningCartByCartIdSuccessApiResponse[];
-    allEventMeetingBookingInfo: (IViewSingleDateEventMeetingRoomCartByCartIdSuccessApiResponse | IViewMultipleContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse | IViewMultipleNonContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse)[];
+    allEventMeetingBookingInfo: (
+        IViewSingleDateEventMeetingRoomCartByCartIdSuccessApiResponse | 
+        IViewMultipleContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse | 
+        IViewMultipleNonContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse
+    )[];
     allRoomSuiteBookingInfo: IViewRoomsSuitesCartByCartIdSuccessApiResponse[];
 }
 
@@ -47,7 +72,8 @@ function AllComponentProceedPageFunctionalComponent(){
     const dispatch = useAppDispatch();
     const router = useRouter();
     
-    const loginUserDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
     
     if(loginUserDetails === null){
         throw new Error("loginUserDetails is null");
@@ -55,9 +81,18 @@ function AllComponentProceedPageFunctionalComponent(){
     
     const loginUserId: string = loginUserDetails.userId;
 
-    const allDiningBookingInfo: IViewDiningCartByCartIdSuccessApiResponse[] = useAppSelector((reduxStore) => reduxStore.diningBookingInfoSlice.diningBookingInfo);
-    const allEventMeetingBookingInfo: (IViewSingleDateEventMeetingRoomCartByCartIdSuccessApiResponse | IViewMultipleContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse | IViewMultipleNonContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse)[] = useAppSelector((reduxStore) => reduxStore.eventMeetingBookingInfoSlice.eventMeetingBookingInfo);
-    const allRoomSuiteBookingInfo: IViewRoomsSuitesCartByCartIdSuccessApiResponse[] = useAppSelector((reduxStore) => reduxStore.roomSuiteBookingInfoSlice.roomSuiteBookingInfo);
+    const allDiningBookingInfo: IViewDiningCartByCartIdSuccessApiResponse[] = 
+        useAppSelector((reduxStore) => reduxStore.diningBookingInfoSlice.diningBookingInfo);
+
+    const allEventMeetingBookingInfo: (
+        IViewSingleDateEventMeetingRoomCartByCartIdSuccessApiResponse | 
+        IViewMultipleContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse | 
+        IViewMultipleNonContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse
+    )[] = useAppSelector((reduxStore) => reduxStore.eventMeetingBookingInfoSlice.eventMeetingBookingInfo);
+    
+    const allRoomSuiteBookingInfo: IViewRoomsSuitesCartByCartIdSuccessApiResponse[] = 
+        useAppSelector((reduxStore) => reduxStore.roomSuiteBookingInfoSlice.roomSuiteBookingInfo);
+
 
     useEffect(()=>{
         fetchLoginUsersDetailsDb(loginUserId);
@@ -78,12 +113,22 @@ function AllComponentProceedPageFunctionalComponent(){
     let roomsSuitesBookingAmount: number = 0;
 
     if(allDiningBookingInfo.length > 0){
-        diningBookingAmount = allDiningBookingInfo.reduce(function(total: number, eachDiningBookingInfo: IViewDiningCartByCartIdSuccessApiResponse) {
+        diningBookingAmount = allDiningBookingInfo.reduce(function(
+            total: number, 
+            eachDiningBookingInfo: IViewDiningCartByCartIdSuccessApiResponse
+        ) {
             return total + eachDiningBookingInfo.cartInfo.priceForBooking;
         }, 0);
     }
     if(allEventMeetingBookingInfo.length > 0){
-        eventMeetingBookingAmount = allEventMeetingBookingInfo.reduce(function (total: number, eachEventMeetingBookingInfo: IViewSingleDateEventMeetingRoomCartByCartIdSuccessApiResponse | IViewMultipleContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse | IViewMultipleNonContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse) {
+        eventMeetingBookingAmount = allEventMeetingBookingInfo.reduce(function (
+            total: number, 
+            eachEventMeetingBookingInfo: (
+                IViewSingleDateEventMeetingRoomCartByCartIdSuccessApiResponse | 
+                IViewMultipleContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse | 
+                IViewMultipleNonContinousDatesEventMeetingRoomCartByCartIdSuccessApiResponse
+            )
+        ) {
             let price: number = 0;
             if ('totalPriceEventMeetingRoom' in eachEventMeetingBookingInfo.cartInfo) {
                 price = eachEventMeetingBookingInfo.cartInfo.totalPriceEventMeetingRoom || 0;
@@ -94,17 +139,23 @@ function AllComponentProceedPageFunctionalComponent(){
         }, 0);
     }
     if(allRoomSuiteBookingInfo.length > 0){
-        roomsSuitesBookingAmount = allRoomSuiteBookingInfo.reduce(function(total: number, eachRoomSuiteBookingInfo: IViewRoomsSuitesCartByCartIdSuccessApiResponse){
+        roomsSuitesBookingAmount = allRoomSuiteBookingInfo.reduce(function(
+            total: number, 
+            eachRoomSuiteBookingInfo: IViewRoomsSuitesCartByCartIdSuccessApiResponse
+        ){
             return total + eachRoomSuiteBookingInfo.cartInfo.totalPriceOfAllRooms;
         }, 0);
     }
 
-    const allComponentTotalBookingAmount = diningBookingAmount + eventMeetingBookingAmount + roomsSuitesBookingAmount;
+    const allComponentTotalBookingAmount: number = 
+        diningBookingAmount + eventMeetingBookingAmount + roomsSuitesBookingAmount;
 
 
     async function fetchLoginUsersDetailsDb(loginUserId: string) {
         try {
-            const response = await fetch(`/api/users-authentication/customers-authenticatication/login-user-information/${loginUserId}`);
+            const response = await fetch(
+                `/api/users-authentication/customers-authenticatication/login-user-information/${loginUserId}`
+            );
             const data: LoginUserApiResponse = await response.json();
             if(response.status == 200){
                 if('loginUserDetails' in data){
@@ -122,13 +173,19 @@ function AllComponentProceedPageFunctionalComponent(){
     }
 
 
-    function isSuccessResponse(data: DiningRoomEventBookingApiResponse): data is IDiningRoomEventBookingSuccessApiResponse {
+    function isSuccessResponse(
+        data: DiningRoomEventBookingApiResponse
+    ): data is IDiningRoomEventBookingSuccessApiResponse {
         return 'message' in data;
     }
 
-    function isErrorResponse(data: DiningRoomEventBookingApiResponse): data is IDiningRoomEventBookingErrorApiResponse {
+
+    function isErrorResponse(
+        data: DiningRoomEventBookingApiResponse
+    ): data is IDiningRoomEventBookingErrorApiResponse {
         return 'errorMessage' in data;
     }
+
 
     async function payAllComponentTotalBookingAmount(){
         try{
@@ -139,13 +196,16 @@ function AllComponentProceedPageFunctionalComponent(){
                 allRoomSuiteBookingInfo
             }
             setPerformingPayment(true);
-            const response: Response = await fetch('/api/booking-bulk-activities/all-types-booking-activities/', {
-                method: 'POST',
-                body: JSON.stringify(allComponentBookingInfo),
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8',
+            const response: Response = await fetch(
+                '/api/booking-bulk-activities/all-types-booking-activities/', 
+                {
+                    method: 'POST',
+                    body: JSON.stringify(allComponentBookingInfo),
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8',
+                    }
                 }
-            });
+            );
             const data: DiningRoomEventBookingApiResponse = await response.json();
             if(response.status === 200 && isSuccessResponse(data)){
                 if('message' in data){
@@ -181,15 +241,21 @@ function AllComponentProceedPageFunctionalComponent(){
             </div>
 
             <div className="flex items-center justify-center mb-8">
-                {((allDiningBookingInfo.length > 0 || allRoomSuiteBookingInfo.length > 0 || allEventMeetingBookingInfo.length > 0) && loginCustomerInfo !== null) &&
-                    <Button onClick={()=>setShowPaymentContainer(true)} variant="contained">
-                        Proceed For Booking
-                    </Button>
+                {((allDiningBookingInfo.length > 0 || 
+                    allRoomSuiteBookingInfo.length > 0 || 
+                    allEventMeetingBookingInfo.length > 0) && 
+                    loginCustomerInfo !== null) &&
+                        <Button onClick={()=>setShowPaymentContainer(true)} variant="contained">
+                            Proceed For Booking
+                        </Button>
                 }
-                {((allDiningBookingInfo.length == 0 && allRoomSuiteBookingInfo.length == 0 && allEventMeetingBookingInfo.length == 0) || loginCustomerInfo == null) &&
-                    <Button disabled variant="contained">
-                        Proceed For Booking
-                    </Button>
+                {((allDiningBookingInfo.length == 0 && 
+                    allRoomSuiteBookingInfo.length == 0 && 
+                    allEventMeetingBookingInfo.length == 0) || 
+                    loginCustomerInfo == null) &&
+                        <Button disabled variant="contained">
+                            Proceed For Booking
+                        </Button>
                 }
             </div>
 

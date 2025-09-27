@@ -3,23 +3,38 @@ import React, { useState, useEffect } from "react";
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
+
 import Button from '@mui/material/Button';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 
+
 import { useAppSelector, useAppDispatch } from '@/redux store/hooks';
 import { resetRoomSuiteBookingInfo } from "@/redux store/features/Booking Information/roomSuiteBookingInfoSlice";
+
 
 import { convertToINR } from "@/functions/currency";
 import { ROOMS_SUITES_BOOKING_PROCESS_SUCCESSFUL } from "@/constant string files/apiSuccessMessageConstants";
 
+
 import RoomSuitesBookingInfo from "@/components/Procced Booking Component/Booking Information Component/Rooms Suites Booking/RoomSuitesBookingInfo";
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 
+
 import { LoginUserDetails } from "@/redux store/features/Auth Features/loginUserDetailsSlice";
-import { ILoginUserDetails, LoginUserApiResponse } from "@/interface/Hotel User Interface/hotelUsersInterfce";
-import { IRoomsSuitesCartInformation, IViewRoomsSuitesCartByCartIdSuccessApiResponse } from "@/interface/Rooms and Suites Interface/roomsSuitesCartApiResponse";
-import { IRoomsSuitesBookingErrorApiResponse, IRoomsSuitesBookingSuccessApiResponse, RoomsSuitesBookingApiResponse } from "@/interface/Rooms and Suites Interface/roomsSuitesBookingApiResponse";
+import { IViewRoomsSuitesCartByCartIdSuccessApiResponse } from "@/interface/Rooms and Suites Interface/roomsSuitesCartApiResponse";
+
+import { 
+    ILoginUserDetails, 
+    LoginUserApiResponse 
+} from "@/interface/Hotel User Interface/hotelUsersInterfce";
+
+import { 
+    IRoomsSuitesBookingErrorApiResponse, 
+    IRoomsSuitesBookingSuccessApiResponse, 
+    RoomsSuitesBookingApiResponse 
+} from "@/interface/Rooms and Suites Interface/roomsSuitesBookingApiResponse";
+
 
 
 function RoomsSuitesProceedPage() {
@@ -35,7 +50,8 @@ function RoomsSuitesProceedPageFunctionalComponent(){
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const loginUserDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
     
     if(loginUserDetails === null){
         throw new Error("loginUserDetails is null");
@@ -43,7 +59,8 @@ function RoomsSuitesProceedPageFunctionalComponent(){
 
     const loginUserId: string = loginUserDetails.userId;
 
-    const allRoomSuiteBookingInfo: IViewRoomsSuitesCartByCartIdSuccessApiResponse[] = useAppSelector((reduxStore) => reduxStore.roomSuiteBookingInfoSlice.roomSuiteBookingInfo);
+    const allRoomSuiteBookingInfo: IViewRoomsSuitesCartByCartIdSuccessApiResponse[] = 
+        useAppSelector((reduxStore) => reduxStore.roomSuiteBookingInfoSlice.roomSuiteBookingInfo);
 
     useEffect(()=>{
         fetchLoginUsersDetailsDb(loginUserId);
@@ -59,14 +76,19 @@ function RoomsSuitesProceedPageFunctionalComponent(){
         customerAccountBalance = loginCustomerInfo.accountBalance
     }
 
-    const roomsSuitesBookingAmount: number = allRoomSuiteBookingInfo.reduce(function(total: number, eachRoomSuiteBookingInfo: IViewRoomsSuitesCartByCartIdSuccessApiResponse){
+    const roomsSuitesBookingAmount: number = allRoomSuiteBookingInfo.reduce(function(
+        total: number, 
+        eachRoomSuiteBookingInfo: IViewRoomsSuitesCartByCartIdSuccessApiResponse
+    ){
         return total + eachRoomSuiteBookingInfo.cartInfo.totalPriceOfAllRooms;
     }, 0);
 
 
     async function fetchLoginUsersDetailsDb(loginUserId: string) {
         try {
-            const response: Response = await fetch(`/api/users-authentication/customers-authenticatication/login-user-information/${loginUserId}`);
+            const response: Response = await fetch(
+                `/api/users-authentication/customers-authenticatication/login-user-information/${loginUserId}`
+            );
             const data: LoginUserApiResponse = await response.json();
             if(response.status == 200){
                 if('loginUserDetails' in data){
@@ -84,25 +106,34 @@ function RoomsSuitesProceedPageFunctionalComponent(){
     }
 
 
-    function isSuccessResponse(data: RoomsSuitesBookingApiResponse): data is IRoomsSuitesBookingSuccessApiResponse {
+    function isSuccessResponse(
+        data: RoomsSuitesBookingApiResponse
+    ): data is IRoomsSuitesBookingSuccessApiResponse {
         return 'message' in data;
     }
 
-    function isErrorResponse(data: RoomsSuitesBookingApiResponse): data is IRoomsSuitesBookingErrorApiResponse {
+
+    function isErrorResponse(
+        data: RoomsSuitesBookingApiResponse
+    ): data is IRoomsSuitesBookingErrorApiResponse {
         return 'errorMessage' in data;
     }
+
 
     async function payRoomsSuitesBookingAmount(){
         try{
             setBookingErrorMessage('');
             setPerformingPayment(true);
-            const response: Response = await fetch('/api/booking-bulk-activities/rooms-suites-booking-activities/', {
-                method: 'POST',
-                body: JSON.stringify(allRoomSuiteBookingInfo),
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8',
+            const response: Response = await fetch(
+                '/api/booking-bulk-activities/rooms-suites-booking-activities/', 
+                {
+                    method: 'POST',
+                    body: JSON.stringify(allRoomSuiteBookingInfo),
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8',
+                    }
                 }
-            });
+            );
             const data: RoomsSuitesBookingApiResponse = await response.json();
             if(response.status === 200 && isSuccessResponse(data)){
                 if('message' in data){

@@ -1,7 +1,9 @@
 'use client'
 import React, { useState } from "react";
 
+
 import { roomBookingDateTypeConstants } from "@/constant string files/eventsMeetingRoomImportantConstants";
+
 import { 
     DATE_BOOKED_ASCENDING, 
     DATE_BOOKED_DESCENDING,
@@ -15,10 +17,21 @@ import {
     NUMBER_OF_GUESTS_DESCENDING 
 } from "@/constant string files/bookingViewSortingConstants";
 
+
 import EachEventMeetingBookingInfo from "@/components/User Past Current Booking Info Component/Event Meeting Booking/EachEventMeetingBookingInfo";
 
-import { EventMeetingBookingInfoForCustomer, IContinousMultipleDatesBookingInfoForCustomer, IDateBooking, INonContinousMultipleDatesBookingInfoForCustomer, ISingleDateBookingInfoForCustomer } from "@/interface/Event Meeting Interface/viewEventMeetingBookingApiResponse";
+
 import { ITransactionDetailsFrontend } from "@/interface/hotelCustomersInterface";
+import { MeetingEventsRoomTitle } from "@/interface/Event Meeting Interface/eventMeetingRoomConstantInterface";
+
+import { 
+    EventMeetingBookingInfoForCustomer, 
+    IContinousMultipleDatesBookingInfoForCustomer, 
+    IDateBooking, 
+    INonContinousMultipleDatesBookingInfoForCustomer, 
+    ISingleDateBookingInfoForCustomer 
+} from "@/interface/Event Meeting Interface/viewEventMeetingBookingApiResponse";
+
 
 
 interface IPropsUserEventMeetingBookingComponent {
@@ -66,8 +79,8 @@ function UserEventMeetingBookingComponent(props: IPropsUserEventMeetingBookingCo
 
         else if(sortSelection === TITLE_ASCENDING){
             eventMeetingBookingInfo.sort(function(a,b){
-                const titleA: string = a.bookingInfo.meetingEventsInfoTitle;
-                const titleB: string = b.bookingInfo.meetingEventsInfoTitle;
+                const titleA: MeetingEventsRoomTitle = a.bookingInfo.meetingEventsInfoTitle;
+                const titleB: MeetingEventsRoomTitle = b.bookingInfo.meetingEventsInfoTitle;
                 if(titleA > titleB){
                     return 1;
                 }
@@ -79,8 +92,8 @@ function UserEventMeetingBookingComponent(props: IPropsUserEventMeetingBookingCo
         }
         else if(sortSelection === TITLE_DESCENDING){
             eventMeetingBookingInfo.sort(function(a,b){
-                const titleA: string = a.bookingInfo.meetingEventsInfoTitle;;
-                const titleB: string = b.bookingInfo.meetingEventsInfoTitle;
+                const titleA: MeetingEventsRoomTitle = a.bookingInfo.meetingEventsInfoTitle;;
+                const titleB: MeetingEventsRoomTitle = b.bookingInfo.meetingEventsInfoTitle;
                 if(titleA > titleB){
                     return -1;
                 }
@@ -148,10 +161,18 @@ function UserEventMeetingBookingComponent(props: IPropsUserEventMeetingBookingCo
     }
 
 
-    function getBookingDateForSorting(bookingInformation: EventMeetingBookingInfoForCustomer): Date {
-        const bookingInfo: ISingleDateBookingInfoForCustomer | IContinousMultipleDatesBookingInfoForCustomer | INonContinousMultipleDatesBookingInfoForCustomer = bookingInformation.bookingInfo;
+    function getBookingDateForSorting(
+        bookingInformation: EventMeetingBookingInfoForCustomer
+    ): Date {
+        const bookingInfo: (
+            ISingleDateBookingInfoForCustomer | 
+            IContinousMultipleDatesBookingInfoForCustomer | 
+            INonContinousMultipleDatesBookingInfoForCustomer
+        ) = bookingInformation.bookingInfo;
+        
         if(bookingInfo.meetingEventsInfoTitle &&
-            Object.hasOwn(bookingInfo, 'meetingEventsInfoTitle')){
+            Object.hasOwn(bookingInfo, 'meetingEventsInfoTitle')
+        ){
             if (bookingInfo.roomBookingDateType === roomBookingDateTypeConstants.SINGLE_DATE) {
                 return new Date(bookingInfo.meetingEventBookingDate);
             }
@@ -163,7 +184,7 @@ function UserEventMeetingBookingComponent(props: IPropsUserEventMeetingBookingCo
                     return new Date(dateInfo.meetingEventBookingDate);
                 });
                 if(dates.length > 0){
-                    return new Date(Math.max(...dates.map(function(eachDate){
+                    return new Date(Math.max(...dates.map(function(eachDate: Date){
                         return eachDate.getTime();
                     })));
                 }
@@ -173,10 +194,18 @@ function UserEventMeetingBookingComponent(props: IPropsUserEventMeetingBookingCo
     }
 
 
-    function getTotalPriceForSorting(bookingInformation: EventMeetingBookingInfoForCustomer): number {
-        const bookingInfo: ISingleDateBookingInfoForCustomer | IContinousMultipleDatesBookingInfoForCustomer | INonContinousMultipleDatesBookingInfoForCustomer = bookingInformation.bookingInfo;
+    function getTotalPriceForSorting(
+        bookingInformation: EventMeetingBookingInfoForCustomer
+    ): number {
+        const bookingInfo: (
+            ISingleDateBookingInfoForCustomer | 
+            IContinousMultipleDatesBookingInfoForCustomer | 
+            INonContinousMultipleDatesBookingInfoForCustomer
+        ) = bookingInformation.bookingInfo;
+        
         if(bookingInfo.meetingEventsInfoTitle &&
-            Object.hasOwn(bookingInfo, 'meetingEventsInfoTitle')){
+            Object.hasOwn(bookingInfo, 'meetingEventsInfoTitle')
+        ){
             if (bookingInfo.roomBookingDateType === roomBookingDateTypeConstants.SINGLE_DATE) {
                 return bookingInfo.totalPriceEventMeetingRoom;
             }
@@ -191,8 +220,15 @@ function UserEventMeetingBookingComponent(props: IPropsUserEventMeetingBookingCo
     }
 
 
-    function getNumberOfGuestsForSorting(bookingInformation: EventMeetingBookingInfoForCustomer): number {
-        const bookingInfo: ISingleDateBookingInfoForCustomer | IContinousMultipleDatesBookingInfoForCustomer | INonContinousMultipleDatesBookingInfoForCustomer = bookingInformation.bookingInfo;
+    function getNumberOfGuestsForSorting(
+        bookingInformation: EventMeetingBookingInfoForCustomer
+    ): number {
+        const bookingInfo: (
+            ISingleDateBookingInfoForCustomer | 
+            IContinousMultipleDatesBookingInfoForCustomer | 
+            INonContinousMultipleDatesBookingInfoForCustomer
+        ) = bookingInformation.bookingInfo;
+    
         if(bookingInfo.meetingEventsInfoTitle &&
             Object.hasOwn(bookingInfo, 'meetingEventsInfoTitle')){
             if (bookingInfo.roomBookingDateType === roomBookingDateTypeConstants.SINGLE_DATE) {
@@ -238,7 +274,12 @@ function UserEventMeetingBookingComponent(props: IPropsUserEventMeetingBookingCo
             </div>
 
             {eventMeetingBookingInfo.map(function(eachEventMeetingRoomBookingInfo: EventMeetingBookingInfoForCustomer){
-                const eventMeetingBookingInfo: ISingleDateBookingInfoForCustomer | IContinousMultipleDatesBookingInfoForCustomer | INonContinousMultipleDatesBookingInfoForCustomer =  eachEventMeetingRoomBookingInfo.bookingInfo; 
+                const eventMeetingBookingInfo: (
+                    ISingleDateBookingInfoForCustomer | 
+                    IContinousMultipleDatesBookingInfoForCustomer | 
+                    INonContinousMultipleDatesBookingInfoForCustomer
+                ) =  eachEventMeetingRoomBookingInfo.bookingInfo; 
+                
                 const transactionDetails: ITransactionDetailsFrontend = eventMeetingBookingInfo.transactionDetails;
                 return (
                     <EachEventMeetingBookingInfo 

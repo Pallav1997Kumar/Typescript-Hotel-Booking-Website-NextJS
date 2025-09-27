@@ -7,7 +7,11 @@ import { convertToINR } from "@/functions/currency";
 
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 
-import { RoomWithDateDetails, DateDetail, RoomSuitesEachDayInfoRespone } from "@/interface/Rooms and Suites Interface/eachDayRoomSuitesInfoInterface";
+import { 
+    RoomWithDateDetails, 
+    DateDetail, 
+    RoomSuitesEachDayInfoRespone 
+} from "@/interface/Rooms and Suites Interface/eachDayRoomSuitesInfoInterface";
 
 
 interface RoomsProps {
@@ -64,7 +68,13 @@ async function RoomsFunctionalComponent(props: RoomsProps){
         <React.Fragment>
             <div className="m-5 bg-[#e6ffff] flex flex-row">
                 <div className="p-4  w-3/7">
-                    <Image src={coverPhoto} alt="room-cover-image" width={500} height={300} className="w-[500px] h-[300px] object-cover" />
+                    <Image 
+                        src={coverPhoto} 
+                        alt="room-cover-image" 
+                        width={500} 
+                        height={300} 
+                        className="w-[500px] h-[300px] object-cover" 
+                    />
                 </div>
 
                 <div className="p-6 flex flex-col justify-between w-4/7">
@@ -97,12 +107,15 @@ async function RoomsFunctionalComponent(props: RoomsProps){
 
 async function fetchRoomsSuitesEachDayData(title: string): Promise<RoomWithDateDetails | undefined>{
     try{
-        const response: Response = await fetch(`${process.env.URL}/api/hotel-booking-information/room-and-suites-information/each-day-information/`);
+        const response: Response = await fetch(
+            `${process.env.URL}/api/hotel-booking-information/room-and-suites-information/each-day-information/`
+        );
         const data: RoomSuitesEachDayInfoRespone = await response.json();
         const allRoomsWithDate: RoomWithDateDetails[] = data.roomsWithDate;
-        const particularRoomEachDayInfo: RoomWithDateDetails | undefined = allRoomsWithDate.find(function(eachRoomWithDate: RoomWithDateDetails){
-            return eachRoomWithDate.roomTitle == title
-        });
+        const particularRoomEachDayInfo: RoomWithDateDetails | undefined = 
+            allRoomsWithDate.find(function(eachRoomWithDate: RoomWithDateDetails){
+                return eachRoomWithDate.roomTitle == title
+            });
         if(!particularRoomEachDayInfo){
             throw new Error("particularRoomEachDayInfo is missing");
         }

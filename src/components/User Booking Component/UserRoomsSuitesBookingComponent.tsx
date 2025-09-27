@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from "react";
 
+
 import { 
     DATE_BOOKED_ASCENDING, 
     DATE_BOOKED_DESCENDING,
@@ -14,10 +15,18 @@ import {
     NUMBER_OF_GUESTS_DESCENDING 
 } from "@/constant string files/bookingViewSortingConstants";
 
+
 import EachRoomBookingInfo from "@/components/User Past Current Booking Info Component/Rooms Suites Booking/EachRoomBookingInfo"
 
-import { IRoomsSuitesBookingInfoForArrayForCustomer, IRoomsSuitesBookingInfoForCustomer } from "@/interface/Rooms and Suites Interface/viewRoomSuiteBookingApiResponse";
+
 import { ITransactionDetailsFrontend } from "@/interface/hotelCustomersInterface";
+import { RoomsSuitesTitle } from "@/interface/Rooms and Suites Interface/roomsSuitesConstantInterface";
+
+import { 
+    IRoomsSuitesBookingInfoForArrayForCustomer, 
+    IRoomsSuitesBookingInfoForCustomer 
+} from "@/interface/Rooms and Suites Interface/viewRoomSuiteBookingApiResponse";
+
 
 
 interface IPropsUserRoomsSuitesBookingComponent {
@@ -65,8 +74,8 @@ function UserRoomsSuitesBookingComponent(props: IPropsUserRoomsSuitesBookingComp
 
         else if(sortSelection === TITLE_ASCENDING){
             roomSuitesBookingInfo.sort(function(a,b){
-                const titleA: string = a.bookingInfo.bookingRoomTitle;
-                const titleB: string = b.bookingInfo.bookingRoomTitle;
+                const titleA: RoomsSuitesTitle = a.bookingInfo.bookingRoomTitle;
+                const titleB: RoomsSuitesTitle = b.bookingInfo.bookingRoomTitle;
                 if(titleA > titleB){
                     return 1;
                 }
@@ -78,8 +87,8 @@ function UserRoomsSuitesBookingComponent(props: IPropsUserRoomsSuitesBookingComp
         }
         else if(sortSelection === TITLE_DESCENDING){
             roomSuitesBookingInfo.sort(function(a,b){
-                const titleA: string = a.bookingInfo.bookingRoomTitle;;
-                const titleB: string = b.bookingInfo.bookingRoomTitle;
+                const titleA: RoomsSuitesTitle = a.bookingInfo.bookingRoomTitle;;
+                const titleB: RoomsSuitesTitle = b.bookingInfo.bookingRoomTitle;
                 if(titleA > titleB){
                     return -1;
                 }

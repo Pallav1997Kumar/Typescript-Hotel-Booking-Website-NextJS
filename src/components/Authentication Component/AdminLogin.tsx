@@ -30,8 +30,12 @@ interface LoginInput {
 function AdminLoginFunctionalComponent(){
     const router = useRouter();
 
-    const loginPageCalledFrom: string | null = useAppSelector((reduxStore)=> reduxStore.loginPageCalledFromSliceName.loginPageCalledFrom);
-    const loginRedirectPage: string = useAppSelector((reduxStore)=> reduxStore.loginPageCalledFromSliceName.loginRedirectPage);
+    const loginPageCalledFrom: string | null = 
+        useAppSelector((reduxStore) => reduxStore.loginPageCalledFromSliceName.loginPageCalledFrom);
+
+    const loginRedirectPage: string = 
+        useAppSelector((reduxStore) => reduxStore.loginPageCalledFromSliceName.loginRedirectPage);
+
 
     const dispatch = useAppDispatch();
 
@@ -82,15 +86,25 @@ function AdminLoginFunctionalComponent(){
         return isButtonDisabled;
     }
 
+
     // Type Guard to check if it's a SuccessLoginResponse
-    function isSuccessLoginResponse(data: ISuccessAdminLoginResponse | IErrorAdminLoginResponse): data is ISuccessAdminLoginResponse {
+    function isSuccessLoginResponse(
+        data: ISuccessAdminLoginResponse | IErrorAdminLoginResponse
+    ): data is ISuccessAdminLoginResponse {
         return (data as ISuccessAdminLoginResponse).loginUserDetails !== undefined;
     }
 
+
     // Type Guard to check if it's an ErrorResponse
-    function isErrorResponse(data: ISuccessAdminLoginResponse | IErrorAdminLoginResponse): data is IErrorAdminLoginResponse {
-        return (data as IErrorAdminLoginResponse).errorMessage !== undefined || (data as IErrorAdminLoginResponse).error !== undefined;
+    function isErrorResponse(
+        data: ISuccessAdminLoginResponse | IErrorAdminLoginResponse
+    ): data is IErrorAdminLoginResponse {
+        return (
+            (data as IErrorAdminLoginResponse).errorMessage !== undefined 
+            || (data as IErrorAdminLoginResponse).error !== undefined
+            );
     }
+
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>){
         event.preventDefault();
@@ -100,16 +114,20 @@ function AdminLoginFunctionalComponent(){
         };
         setLoginErrorMessage('');
         setLoginProcessing(true);
-        console.log(loginInputData);
+
         try {
-            const response: Response = await fetch('api/users-authentication/admin-authentication/login', {
-                method: 'POST',
-                body: JSON.stringify(loginInputData),
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8',
-                },
-                credentials: 'include'
-            });
+            const response: Response = await fetch(
+                'api/users-authentication/admin-authentication/login', 
+                {
+                    method: 'POST',
+                    body: JSON.stringify(loginInputData),
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8',
+                    },
+                    credentials: 'include'
+                }
+            );
+
             const data: AdminLoginResponse = await response.json();
             if(response.status === 404){
                 if(isErrorResponse(data)){
@@ -202,7 +220,12 @@ function AdminLoginFunctionalComponent(){
             </div>
 
             <div className="w-2/5">
-                <Image src={'/hotel-kolkata.jpg'} alt="hotel" width={500} height={350} />
+                <Image 
+                    src={'/hotel-kolkata.jpg'} 
+                    alt="hotel" 
+                    width={500} 
+                    height={350} 
+                />
             </div>
         </div>
     );

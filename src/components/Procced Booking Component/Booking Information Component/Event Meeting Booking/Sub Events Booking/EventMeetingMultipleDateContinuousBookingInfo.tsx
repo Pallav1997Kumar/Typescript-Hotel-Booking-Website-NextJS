@@ -33,7 +33,9 @@ const boxStyle = {
 }
 
 
-function EventMeetingMultipleDateContinuousBookingInfo(props: IPropsEventMeetingMultipleDateContinuousBookingInfo){
+function EventMeetingMultipleDateContinuousBookingInfo(
+    props: IPropsEventMeetingMultipleDateContinuousBookingInfo
+){
 
     const eachEventMeetingBookingInfo: IEventMeetingRoomContinousMultipleDatesCartInformation = props.eachEventMeetingBookingInfo;
 

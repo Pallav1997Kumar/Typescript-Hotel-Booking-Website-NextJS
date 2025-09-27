@@ -13,7 +13,10 @@ function RoomSuitesBookingInfo(props: IPropsRoomSuitesBookingInfo){
 
     return (
         <div>
-            {(allRoomSuiteBookingInfo.length > 0) && allRoomSuiteBookingInfo.map(function(eachRoomBookingInfo: IViewRoomsSuitesCartByCartIdSuccessApiResponse){
+            {(allRoomSuiteBookingInfo.length > 0) && 
+                allRoomSuiteBookingInfo.map(function(
+                    eachRoomBookingInfo: IViewRoomsSuitesCartByCartIdSuccessApiResponse
+                ){
                 return(
                     <EachRoomBookingInfo
                         key={eachRoomBookingInfo.cartInfo._id}

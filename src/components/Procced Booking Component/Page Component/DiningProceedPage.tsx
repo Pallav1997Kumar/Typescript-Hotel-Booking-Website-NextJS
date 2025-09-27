@@ -3,23 +3,38 @@ import React, { useState, useEffect } from "react";
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
+
 import Button from '@mui/material/Button';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 
+
 import { useAppSelector, useAppDispatch } from '@/redux store/hooks';
 import { resetDiningBookingInfo } from "@/redux store/features/Booking Information/diningBookingInfoSlice";
+
 
 import { convertToINR } from "@/functions/currency";
 import { DINING_BOOKING_PROCESS_SUCCESSFUL } from "@/constant string files/apiSuccessMessageConstants";
 
+
 import DiningBookingInfo from "@/components/Procced Booking Component/Booking Information Component/Dining Booking/DiningBookingInfo"
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 
-import { LoginUserDetails } from "@/redux store/features/Auth Features/loginUserDetailsSlice";
-import { ILoginUserDetails, LoginUserApiResponse } from "@/interface/Hotel User Interface/hotelUsersInterfce";
+
 import { IViewDiningCartByCartIdSuccessApiResponse } from "@/interface/Dining Interface/diningCartApiResponse";
-import { DiningBookingApiResponse, IDiningBookingErrorApiResponse, IDiningBookingSuccessApiResponse } from "@/interface/Dining Interface/diningBookingApiResponse";
+import { LoginUserDetails } from "@/redux store/features/Auth Features/loginUserDetailsSlice";
+
+import { 
+    ILoginUserDetails, 
+    LoginUserApiResponse 
+} from "@/interface/Hotel User Interface/hotelUsersInterfce";
+
+import { 
+    DiningBookingApiResponse, 
+    IDiningBookingErrorApiResponse, 
+    IDiningBookingSuccessApiResponse 
+} from "@/interface/Dining Interface/diningBookingApiResponse";
+
 
 
 function DiningProceedPage() {
@@ -35,7 +50,8 @@ function DiningProceedPageFunctionalComponent(){
     const dispatch = useAppDispatch();
     const router = useRouter();
     
-    const loginUserDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
 
     if(loginUserDetails === null){
         throw new Error("loginUserDetails is null");
@@ -43,9 +59,8 @@ function DiningProceedPageFunctionalComponent(){
 
     const loginUserId: string = loginUserDetails.userId;
 
-    const allDiningBookingInfo: IViewDiningCartByCartIdSuccessApiResponse[] = useAppSelector((reduxStore) => reduxStore.diningBookingInfoSlice.diningBookingInfo);
-
-    console.log(allDiningBookingInfo);
+    const allDiningBookingInfo: IViewDiningCartByCartIdSuccessApiResponse[] = 
+        useAppSelector((reduxStore) => reduxStore.diningBookingInfoSlice.diningBookingInfo);
     
 
     useEffect(()=>{
@@ -57,7 +72,10 @@ function DiningProceedPageFunctionalComponent(){
     const [performingPayment, setPerformingPayment] = useState<boolean>(false);
     const [bookingErrorMessage, setBookingErrorMessage] = useState<string>('');
 
-    const diningBookingAmount: number = allDiningBookingInfo.reduce(function(total: number, eachDiningBookingInfo: IViewDiningCartByCartIdSuccessApiResponse) {
+    const diningBookingAmount: number = allDiningBookingInfo.reduce(function(
+        total: number, 
+        eachDiningBookingInfo: IViewDiningCartByCartIdSuccessApiResponse
+    ) {
         return total + eachDiningBookingInfo.cartInfo.priceForBooking;
     }, 0);
 
@@ -75,7 +93,9 @@ function DiningProceedPageFunctionalComponent(){
 
     async function fetchLoginUsersDetailsDb(loginUserId: string) {
         try {
-            const response: Response = await fetch(`/api/users-authentication/customers-authenticatication/login-user-information/${loginUserId}`);
+            const response: Response = await fetch(
+                `/api/users-authentication/customers-authenticatication/login-user-information/${loginUserId}`
+            );
             const data: LoginUserApiResponse = await response.json();
             if(response.status == 200){
                 if('loginUserDetails' in data){
@@ -93,25 +113,34 @@ function DiningProceedPageFunctionalComponent(){
     }
 
 
-    function isSuccessResponse(data: DiningBookingApiResponse): data is IDiningBookingSuccessApiResponse {
+    function isSuccessResponse(
+        data: DiningBookingApiResponse
+    ): data is IDiningBookingSuccessApiResponse {
         return 'message' in data;
     }
 
-    function isErrorResponse(data: DiningBookingApiResponse): data is IDiningBookingErrorApiResponse {
+
+    function isErrorResponse(
+        data: DiningBookingApiResponse
+    ): data is IDiningBookingErrorApiResponse {
         return 'errorMessage' in data;
     }
+
 
     async function payDiningBookingAmount(){
         try{
             setBookingErrorMessage('');
             setPerformingPayment(true);
-            const response: Response = await fetch('/api/booking-bulk-activities/dining-booking-activities/', {
-                method: 'POST',
-                body: JSON.stringify(allDiningBookingInfo),
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8',
+            const response: Response = await fetch(
+                '/api/booking-bulk-activities/dining-booking-activities/', 
+                {
+                    method: 'POST',
+                    body: JSON.stringify(allDiningBookingInfo),
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8',
+                    }
                 }
-            });
+            );
             const data: DiningBookingApiResponse = await response.json();
             if(response.status === 200 && isSuccessResponse(data)){
                 if('message' in data){

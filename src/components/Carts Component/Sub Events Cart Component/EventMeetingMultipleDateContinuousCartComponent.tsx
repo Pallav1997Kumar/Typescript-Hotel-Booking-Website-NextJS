@@ -35,9 +35,12 @@ interface IPropsEventMeetingMultipleDateContinuousCartComponent{
 }
 
 
-function EventMeetingMultipleDateContinuousCartComponent(props: IPropsEventMeetingMultipleDateContinuousCartComponent){
+function EventMeetingMultipleDateContinuousCartComponent(
+    props: IPropsEventMeetingMultipleDateContinuousCartComponent
+){
 
     const eachEventMeetingInCart: MultipleContinuousDatesBookingDetailsWithPriceInterface = props.eachEventMeetingInCart;
+    
     const [viewFoodItems, setViewFoodItems] = useState<boolean>(false);
     const dispatch = useAppDispatch();
 
@@ -55,12 +58,24 @@ function EventMeetingMultipleDateContinuousCartComponent(props: IPropsEventMeeti
             
             <p className="font-sans mb-2 capitalize">
                 <span className="font-semibold">Meeting / Event Start Booking Date: </span>
-                {getDateTextFromFullDate(typeof eachEventMeetingInCart.meetingEventStartBookingDate === 'string' ? eachEventMeetingInCart.meetingEventStartBookingDate : eachEventMeetingInCart.meetingEventStartBookingDate.toISOString())}
+                {
+                    getDateTextFromFullDate(
+                        typeof eachEventMeetingInCart.meetingEventStartBookingDate === 'string' 
+                        ? eachEventMeetingInCart.meetingEventStartBookingDate 
+                        : eachEventMeetingInCart.meetingEventStartBookingDate.toISOString()
+                    )
+                }
             </p>
             
             <p className="font-sans mb-2 capitalize">
                 <span className="font-semibold">Meeting / Event End Booking Date: </span>
-                {getDateTextFromFullDate(typeof eachEventMeetingInCart.meetingEventEndBookingDate === 'string' ? eachEventMeetingInCart.meetingEventEndBookingDate : eachEventMeetingInCart.meetingEventEndBookingDate.toISOString())}
+                {
+                    getDateTextFromFullDate(
+                        typeof eachEventMeetingInCart.meetingEventEndBookingDate === 'string' 
+                        ? eachEventMeetingInCart.meetingEventEndBookingDate 
+                        : eachEventMeetingInCart.meetingEventEndBookingDate.toISOString()
+                    )
+                }
             </p>
             
             {(eachEventMeetingInCart.meetingEventBookingTime.length > 1) &&
@@ -98,7 +113,10 @@ function EventMeetingMultipleDateContinuousCartComponent(props: IPropsEventMeeti
             </p>
             
             <div className="flex flex-row justify-center items-center mr-12">
-                <Button onClick={()=>removeCartHandler(eachEventMeetingInCart.eventCartId)} variant="contained">
+                <Button 
+                    onClick={()=>removeCartHandler(eachEventMeetingInCart.eventCartId)} 
+                    variant="contained"
+                >
                     Remove From Cart
                 </Button>
                 
@@ -111,7 +129,9 @@ function EventMeetingMultipleDateContinuousCartComponent(props: IPropsEventMeeti
                     >
                         <Box sx={boxStyle}>
                             <EventMeetingFoodServices eachEventMeetingInCart={eachEventMeetingInCart} />
-                            <Button  onClick={()=>setViewFoodItems(false)} variant="contained">Ok</Button>
+                            <Button onClick={()=>setViewFoodItems(false)} variant="contained">
+                                Ok
+                            </Button>
                         </Box>
                     </Modal>
                 </div>

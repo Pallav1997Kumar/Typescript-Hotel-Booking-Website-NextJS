@@ -5,21 +5,33 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
+
 import { useAppSelector, useAppDispatch } from "@/redux store/hooks";
 import { 
     updateLoginPageCalledFrom, 
     updateLoginRedirectPage 
 } from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
 
+
 import { 
     EVENT_MEETING_ROOM_BOOKING_INFO_IS_PRESENT, 
     EVENT_MEETING_ROOM_BOOKING_INFO_IS_EMPTY 
 } from "@/constant string files/apiSuccessMessageConstants";
 
+
 import EachAdminEventMeetingBookingInfo from "@/components/Admin Booking Information Component/Event Meeting Booking/EachAdminEventMeetingBookingInfo";
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
+
+
 import { LoginUserDetails } from "@/interface/Hotel User Interface/hotelUsersInterfce";
-import { EventMeetingBookingInfoForAdmin, IContinousMultipleDatesBookingInfoForAdmin, INonContinousMultipleDatesBookingInfoForAdmin, ISingleDateBookingInfoForAdmin, ViewEventMeetingBookingResponseForAdmin } from "@/interface/Event Meeting Interface/viewEventMeetingBookingApiResponse";
+
+import { 
+    EventMeetingBookingInfoForAdmin, 
+    IContinousMultipleDatesBookingInfoForAdmin, 
+    INonContinousMultipleDatesBookingInfoForAdmin, 
+    ISingleDateBookingInfoForAdmin, 
+    ViewEventMeetingBookingResponseForAdmin 
+} from "@/interface/Event Meeting Interface/viewEventMeetingBookingApiResponse";
 
 
 
@@ -37,7 +49,8 @@ function PastEventMeetingBookingPageFunctionalComponent(){
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const loginUserDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
 
     let loginUserId: string;
     let loginUserFullName: string;
@@ -70,9 +83,12 @@ function PastEventMeetingBookingPageFunctionalComponent(){
         }
     }, [loginUserDetails, router, dispatch]);
 
-    const [eventMeetingBooking, setEventMeetingBooking] = useState<null | EventMeetingBookingInfoForAdmin[]>(null);
+    const [eventMeetingBooking, setEventMeetingBooking] = 
+        useState<null | EventMeetingBookingInfoForAdmin[]>(null);
 
-    const [displayedEventMeetingBookings, setDisplayedEventMeetingBookings] = useState<EventMeetingBookingInfoForAdmin[]>([]); 
+    const [displayedEventMeetingBookings, setDisplayedEventMeetingBookings] = 
+        useState<EventMeetingBookingInfoForAdmin[]>([]); 
+
     const [hasMore, setHasMore] = useState<boolean>(true);
     const chunkSize: number = 5;
     const [nextIndex, setNextIndex] = useState<number>(0);
@@ -99,7 +115,9 @@ function PastEventMeetingBookingPageFunctionalComponent(){
                         setHasMore(false);
                     }
                     else if(data.message === EVENT_MEETING_ROOM_BOOKING_INFO_IS_PRESENT){
-                        const eventMeetingBookingDb: EventMeetingBookingInfoForAdmin[] | undefined = data.eventMeetingBookingInfo;
+                        const eventMeetingBookingDb: EventMeetingBookingInfoForAdmin[] | undefined = 
+                            data.eventMeetingBookingInfo;
+
                         if(eventMeetingBookingDb){
                             setEventMeetingBooking(eventMeetingBookingDb);
                             loadMoreEventMeetingBooking(eventMeetingBookingDb, 0);
@@ -113,25 +131,36 @@ function PastEventMeetingBookingPageFunctionalComponent(){
     }
 
 
-    function loadMoreEventMeetingBooking(eventMeetingBookingInfo: EventMeetingBookingInfoForAdmin[], startIndex: number){
+    function loadMoreEventMeetingBooking(
+        eventMeetingBookingInfo: EventMeetingBookingInfoForAdmin[], startIndex: number
+    ){
         const endIndex: number = startIndex + chunkSize;
-        const nextChunkEventMeetingInfo: EventMeetingBookingInfoForAdmin[] = eventMeetingBookingInfo.slice(startIndex, endIndex);
 
-        setDisplayedEventMeetingBookings(function(previousDisplayedEventMeeting: EventMeetingBookingInfoForAdmin[]){
+        const nextChunkEventMeetingInfo: EventMeetingBookingInfoForAdmin[] = 
+            eventMeetingBookingInfo.slice(startIndex, endIndex);
+
+        setDisplayedEventMeetingBookings(function(
+            previousDisplayedEventMeeting: EventMeetingBookingInfoForAdmin[]
+        ){
             //return [...previousDisplayedEventMeeting, ...nextChunkEventMeetingInfo];
             const existingIds: Set<String> = new Set<String>();
+
             for (let i = 0; i < previousDisplayedEventMeeting.length; i++) {
                 existingIds.add(previousDisplayedEventMeeting[i].bookingInfo._id);
             }
 
             const filteredChunkEventMeetingInfo: EventMeetingBookingInfoForAdmin[] = [];
+            
             for (let i = 0; i < nextChunkEventMeetingInfo.length; i++) {
                 const item: EventMeetingBookingInfoForAdmin = nextChunkEventMeetingInfo[i];
                 if (!existingIds.has(item.bookingInfo._id)) {
                     filteredChunkEventMeetingInfo.push(item);
                 }
             }
-            return [...previousDisplayedEventMeeting, ...filteredChunkEventMeetingInfo];
+            return [
+                ...previousDisplayedEventMeeting, 
+                ...filteredChunkEventMeetingInfo
+            ];
         });
         setNextIndex(endIndex);
 
@@ -202,7 +231,11 @@ function PastEventMeetingBookingPageFunctionalComponent(){
                             }
                         >
                             {displayedEventMeetingBookings.map(function(eachEventMeetingRoomBookingInfo: EventMeetingBookingInfoForAdmin){
-                                const eventMeetingBookingInfo: ISingleDateBookingInfoForAdmin | IContinousMultipleDatesBookingInfoForAdmin | INonContinousMultipleDatesBookingInfoForAdmin =  eachEventMeetingRoomBookingInfo.bookingInfo; 
+                                const eventMeetingBookingInfo: 
+                                    | ISingleDateBookingInfoForAdmin 
+                                    | IContinousMultipleDatesBookingInfoForAdmin 
+                                    | INonContinousMultipleDatesBookingInfoForAdmin 
+                                        = eachEventMeetingRoomBookingInfo.bookingInfo; 
                                 return (
                                     <EachAdminEventMeetingBookingInfo 
                                         key={eventMeetingBookingInfo._id}

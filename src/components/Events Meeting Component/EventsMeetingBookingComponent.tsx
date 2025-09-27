@@ -10,9 +10,12 @@ import { useAppDispatch } from "@/redux store/hooks";
 import { getEventsFoodPrice } from "@/redux store/features/Price Features/Event Meeting Features/eachDayFoodPriceSlice";
 import { getEventsEachDayPrice } from "@/redux store/features/Price Features/Event Meeting Features/eachDayInformationSlice";
 import { getEventsSeatingArrangementPrice } from "@/redux store/features/Price Features/Event Meeting Features/eachDaySeatingArrangementSlice";
+
 import { roomBookingDateTypeConstants } from "@/constant string files/eventsMeetingRoomImportantConstants";
 
 import { IPropsEventsMeetingBookingComponent } from '@/interface/Event Meeting Interface/eventMeetingBookingInterface';
+import { MeetingEventsRoomTitle } from '@/interface/Event Meeting Interface/eventMeetingRoomConstantInterface';
+import { MeetingEventAreaSeatingCapacity } from '@/interface/Event Meeting Interface/eventMeetingRoomInterface';
 
 
 function EventsMeetingBookingComponent(props: IPropsEventsMeetingBookingComponent) {
@@ -28,12 +31,14 @@ function EventsMeetingBookingComponent(props: IPropsEventsMeetingBookingComponen
 }
 
 
-function EventsMeetingBookingComponentFunctionalComponent(props: IPropsEventsMeetingBookingComponent) {
-    const meetingEventsInfoTitle = props.meetingEventsInfoTitle;
-    const meetingEventsSeatingInfo = props.meetingEventsSeatingInfo;
-    const meetingEventAreaPath = props.meetingEventAreaPath;
+function EventsMeetingBookingComponentFunctionalComponent(
+    props: IPropsEventsMeetingBookingComponent
+) {
+    const meetingEventsInfoTitle: MeetingEventsRoomTitle = props.meetingEventsInfoTitle;
+    const meetingEventsSeatingInfo: MeetingEventAreaSeatingCapacity[] = props.meetingEventsSeatingInfo;
+    const meetingEventAreaPath: string = props.meetingEventAreaPath;
 
-    const [roomBookingDateType, setRoomBookingDateType] = useState("");
+    const [roomBookingDateType, setRoomBookingDateType] = useState<string>("");
 
     const dispatch = useAppDispatch();
 

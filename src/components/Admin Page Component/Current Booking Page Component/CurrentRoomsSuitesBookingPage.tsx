@@ -6,22 +6,31 @@ import { useRouter } from 'next/navigation';
 
 import Button from '@mui/material/Button';
 
+
 import { useAppSelector, useAppDispatch } from "@/redux store/hooks";
 import { 
     updateLoginPageCalledFrom, 
     updateLoginRedirectPage 
 } from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
 
+
 import { 
     ROOMS_SUITES_BOOKING_INFO_IS_PRESENT, 
     ROOMS_SUITES_BOOKING_INFO_IS_EMPTY 
 } from "@/constant string files/apiSuccessMessageConstants";
 
+
 import EachAdminRoomBookingInfo from "@/components/Admin Booking Information Component/Rooms Suites Booking/EachAdminRoomBookingInfo";
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 
+
 import { LoginUserDetails } from "@/interface/Hotel User Interface/hotelUsersInterfce";
-import { IRoomsSuitesBookingInfoForAdmin, IRoomsSuitesBookingInfoForArrayForAdmin, ViewCurrentRoomsSuitesBookingResponseForAdmin } from "@/interface/Rooms and Suites Interface/viewRoomSuiteBookingApiResponse";
+
+import { 
+    IRoomsSuitesBookingInfoForAdmin, 
+    IRoomsSuitesBookingInfoForArrayForAdmin, 
+    ViewCurrentRoomsSuitesBookingResponseForAdmin 
+} from "@/interface/Rooms and Suites Interface/viewRoomSuiteBookingApiResponse";
 
 
 function CurrentRoomsSuitesBookingPage(){
@@ -38,7 +47,8 @@ function CurrentRoomsSuitesBookingPageFunctionalComponent(){
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const loginUserDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore) => reduxStore.userSlice.loginUserDetails);
 
     let loginUserId: string;
     let loginUserFullName: string;
@@ -74,7 +84,8 @@ function CurrentRoomsSuitesBookingPageFunctionalComponent(){
 
     const [loadingBookingDetails, setLoadingBookingDetails] = useState<boolean>(true);
 
-    const [roomSuitesBooking, setRoomSuitesBooking] = useState<null | IRoomsSuitesBookingInfoForArrayForAdmin[]>(null);
+    const [roomSuitesBooking, setRoomSuitesBooking] = 
+        useState<null | IRoomsSuitesBookingInfoForArrayForAdmin[]>(null);
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
@@ -100,7 +111,9 @@ function CurrentRoomsSuitesBookingPageFunctionalComponent(){
                         setTotalPages(1);
                     }
                     else if(data.message === ROOMS_SUITES_BOOKING_INFO_IS_PRESENT){
-                        const roomSuitesBookingDb: IRoomsSuitesBookingInfoForArrayForAdmin[] | undefined = data.roomSuitesBookingInfo;
+                        const roomSuitesBookingDb: IRoomsSuitesBookingInfoForArrayForAdmin[] | undefined = 
+                            data.roomSuitesBookingInfo;
+
                         if(roomSuitesBookingDb){
                             setRoomSuitesBooking(roomSuitesBookingDb);
                         }
@@ -135,7 +148,12 @@ function CurrentRoomsSuitesBookingPageFunctionalComponent(){
 
     return (
         <div>
-            <Image src={'/hotel photo.jpg'} alt="hotel" width={1500} height={500} />
+            <Image 
+                src={'/hotel photo.jpg'} 
+                alt="hotel" 
+                width={1500} 
+                height={500} 
+            />
 
             {/* Breadcrumb Navigation */}
             <div className="m-6 bg-[#f0f8ff] p-4">
@@ -209,13 +227,21 @@ function CurrentRoomsSuitesBookingPageFunctionalComponent(){
 
                             {/* Pagination controls */}
                             <div className="mt-12 text-center space-x-4">
-                                <Button onClick={goToPrevPage} variant="contained" disabled={currentPage === 1}>
+                                <Button 
+                                    onClick={goToPrevPage} 
+                                    variant="contained" 
+                                    disabled={currentPage === 1}
+                                >
                                     Prev
                                 </Button>
                                 <span className="mx-2">
                                     Page {currentPage} of {totalPages}
                                 </span>
-                                <Button onClick={goToNextPage} variant="contained" disabled={currentPage === totalPages}>
+                                <Button 
+                                    onClick={goToNextPage} 
+                                    variant="contained" 
+                                    disabled={currentPage === totalPages}
+                                >
                                     Next
                                 </Button>
                             </div>

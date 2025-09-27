@@ -1,5 +1,6 @@
 'use client'
 import React, { useState } from 'react';
+
 import Button from '@mui/material/Button';
 import DatePicker from 'react-date-picker';
 import 'react-date-picker/dist/DatePicker.css';
@@ -7,24 +8,49 @@ import 'react-calendar/dist/Calendar.css';
 
 import { useAppSelector } from "@/redux store/hooks";
 
+
 import { convertDateTextToDate } from "@/functions/date";
 import { multipleNonContinousDatesEventsMeetingSelectionErrorConstants } from "@/constant string files/eventsMeetingSelectionErrorConstants";
-import { wantFoodServiceConstants, eventMeetingTimingConstants } from "@/constant string files/eventsMeetingRoomImportantConstants";
+import { 
+    wantFoodServiceConstants, 
+    eventMeetingTimingConstants 
+} from "@/constant string files/eventsMeetingRoomImportantConstants";
+
 
 import EventMeetingBookingsDetailsConfirmation from '@/components/Events Meeting Component/Common Components/EventMeetingBookingsDetailsConfirmation';
 import PriceDetailsEachDate from "./PriceDetailsEachDate";
 
-import { FoodServicePricePerGuest, MeetingEventAreaSeatingCapacity } from '@/interface/Event Meeting Interface/eventMeetingRoomInterface';
-import { DateDetailsForFoodPrice, EventTimingDetailsForFoodPrice } from '@/interface/Event Meeting Interface/eachDayEventMeetingInfoInterface';
-import { NonContinuousMultipleDatesBookingDetailsWithDateNumberInterface, NonContinuousMultipleDatesDateBookingDetailsWithPrice, SelectedMealsType } from '@/interface/Event Meeting Interface/eventMeetingBookingInterface';
+
 import { HotelEventMeetingRoomAvailabilityCheckApiResponse } from '@/interface/Event Meeting Interface/eventMeetingRoomAvailabilityCheckApiResponse';
+
+import { 
+    FoodServicePricePerGuest, 
+    MeetingEventAreaSeatingCapacity 
+} from '@/interface/Event Meeting Interface/eventMeetingRoomInterface';
+
+import { 
+    DateDetailsForFoodPrice, 
+    EventTimingDetailsForFoodPrice 
+} from '@/interface/Event Meeting Interface/eachDayEventMeetingInfoInterface';
+
+import { 
+    NonContinuousMultipleDatesBookingDetailsWithDateNumberInterface, 
+    NonContinuousMultipleDatesDateBookingDetailsWithPrice, 
+    SelectedMealsType 
+} from '@/interface/Event Meeting Interface/eventMeetingBookingInterface';
+
+import { 
+    MeetingEventBookingTime,
+    MeetingEventSeatingArrangement,
+    MeetingEventsRoomTitle 
+} from '@/interface/Event Meeting Interface/eventMeetingRoomConstantInterface';
 
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 interface IPropsEachDateBookingComponent{
-    meetingEventsInfoTitle: string;
+    meetingEventsInfoTitle: MeetingEventsRoomTitle;
     meetingEventsSeatingInfo: MeetingEventAreaSeatingCapacity[];
     dateNumber: number;
     onGetRoomBookingInfo: (dateBookingDetailsWithPrice: NonContinuousMultipleDatesDateBookingDetailsWithPrice)=> void
@@ -35,7 +61,7 @@ function EachDateBookingComponent(props: IPropsEachDateBookingComponent){
 
     const eachDayFoodPrice = useAppSelector((reduxStore) => reduxStore.eventMeetingEachDayFoodPriceSliceName.eachDayFoodPrice);
 
-    const meetingEventsInfoTitle: string = props.meetingEventsInfoTitle;
+    const meetingEventsInfoTitle: MeetingEventsRoomTitle = props.meetingEventsInfoTitle;
     const meetingEventsSeatingInfo: MeetingEventAreaSeatingCapacity[] = props.meetingEventsSeatingInfo;
     const dateNumber: number = props.dateNumber;
 
@@ -43,8 +69,8 @@ function EachDateBookingComponent(props: IPropsEachDateBookingComponent){
     const today: Date = new Date(todayDate);
 
     const [meetingEventBookingDate, setMeetingEventBookingDate] = useState<Date>(today);
-    const [meetingEventBookingTime, setMeetingEventBookingTime] = useState<string[]>([]);
-    const [meetingEventSeatingArrangement, setMeetingEventSeatingArrangement] = useState<string>('');
+    const [meetingEventBookingTime, setMeetingEventBookingTime] = useState<MeetingEventBookingTime[]>([]);
+    const [meetingEventSeatingArrangement, setMeetingEventSeatingArrangement] = useState<MeetingEventSeatingArrangement | ''>('');
     const [maximumGuestAttending, setMaximumGuestAttending] = useState<number>(1);
     const [wantFoodServices, setWantFoodServices] = useState<string>(wantFoodServiceConstants.WANT_FOOD_SERVICE_NO);
 
@@ -67,55 +93,70 @@ function EachDateBookingComponent(props: IPropsEachDateBookingComponent){
     const [isEventMeetingRoomAvailable, setIsEventMeetingRoomAvailable] = useState<boolean>(false);
     const [eventMeetingUnavailbleMessage, setEventMeetingUnavailbleMessage] = useState<string>('');
 
-    const meetingEventDateFoodDetails = fetchDateFoodDetails(eachDayFoodPrice);
+    const meetingEventDateFoodDetails: EventTimingDetailsForFoodPrice[] = fetchDateFoodDetails(eachDayFoodPrice);
 
-    const isMidNightChecked = meetingEventBookingTime.some(function (eachTime){
+    const isMidNightChecked: boolean = meetingEventBookingTime.some(function (eachTime){
         return (eachTime === eventMeetingTimingConstants.MID_NIGHT_TIME)
     });
 
-    const isMorningChecked = meetingEventBookingTime.some(function (eachTime){
+    const isMorningChecked: boolean = meetingEventBookingTime.some(function (eachTime){
         return (eachTime === eventMeetingTimingConstants.MORNING_TIME)
     });
 
-    const isAfternoonChecked = meetingEventBookingTime.some(function (eachTime){
+    const isAfternoonChecked: boolean = meetingEventBookingTime.some(function (eachTime){
         return (eachTime === eventMeetingTimingConstants.AFTERNOON_TIME)
     });
 
-    const isEveningChecked = meetingEventBookingTime.some(function (eachTime){
+    const isEveningChecked: boolean = meetingEventBookingTime.some(function (eachTime){
         return (eachTime === eventMeetingTimingConstants.EVENING_TIME)
     });
 
-    const isNightChecked = meetingEventBookingTime.some(function (eachTime){
+    const isNightChecked: boolean = meetingEventBookingTime.some(function (eachTime){
         return (eachTime === eventMeetingTimingConstants.NIGHT_TIME)
     });
 
-    const onlyMeetingEventsSeatingInfoWhereSeatingPresent = meetingEventsSeatingInfo.filter(function(eachSeatingArrangement){
-        return (eachSeatingArrangement.meetingEventAreaSeatingCapacity != 'N/A');
-    });
+    const onlyMeetingEventsSeatingInfoWhereSeatingPresent: MeetingEventAreaSeatingCapacity[] = 
+        meetingEventsSeatingInfo.filter(function(eachSeatingArrangement){
+            return (eachSeatingArrangement.meetingEventAreaSeatingCapacity != 'N/A');
+        });
 
-    let showFoodOptions = false;
+    let showFoodOptions: boolean = false;
     if(wantFoodServices == wantFoodServiceConstants.WANT_FOOD_SERVICE_YES && meetingEventBookingDate != null && meetingEventBookingTime.length > 0){
         showFoodOptions = true;
     }
 
-    const midNightFoodArray = getFoodListOfCurrentMeal(meetingEventDateFoodDetails, eventMeetingTimingConstants.MID_NIGHT_TIME);
-    const morningFoodArray = getFoodListOfCurrentMeal(meetingEventDateFoodDetails, eventMeetingTimingConstants.MORNING_TIME);
-    const afternoonFoodArray = getFoodListOfCurrentMeal(meetingEventDateFoodDetails, eventMeetingTimingConstants.AFTERNOON_TIME);
-    const eveningFoodArray = getFoodListOfCurrentMeal(meetingEventDateFoodDetails, eventMeetingTimingConstants.EVENING_TIME);
-    const nightFoodArray = getFoodListOfCurrentMeal(meetingEventDateFoodDetails, eventMeetingTimingConstants.NIGHT_TIME);
 
-    let maximumGuestAllowedForSeatingArrangement = 0;
+    const midNightFoodArray: string[] = 
+        getFoodListOfCurrentMeal(meetingEventDateFoodDetails, eventMeetingTimingConstants.MID_NIGHT_TIME);
+    
+    const morningFoodArray: string[] = 
+        getFoodListOfCurrentMeal(meetingEventDateFoodDetails, eventMeetingTimingConstants.MORNING_TIME);
+    
+    const afternoonFoodArray: string[] = 
+        getFoodListOfCurrentMeal(meetingEventDateFoodDetails, eventMeetingTimingConstants.AFTERNOON_TIME);
+    
+    const eveningFoodArray: string[] = 
+        getFoodListOfCurrentMeal(meetingEventDateFoodDetails, eventMeetingTimingConstants.EVENING_TIME);
+    
+    const nightFoodArray: string[] = 
+        getFoodListOfCurrentMeal(meetingEventDateFoodDetails, eventMeetingTimingConstants.NIGHT_TIME);
+
+
+    let maximumGuestAllowedForSeatingArrangement: number = 0;
     if(meetingEventSeatingArrangement != ''){
-        const selectedMeetingAreaInfo = meetingEventsSeatingInfo.find(function(eachSeatingArrangement){
-            return meetingEventSeatingArrangement == eachSeatingArrangement.meetingEventAreaSeatingTitle;
-        });
+        const selectedMeetingAreaInfo: MeetingEventAreaSeatingCapacity | undefined = 
+            meetingEventsSeatingInfo.find(function(eachSeatingArrangement){
+                return meetingEventSeatingArrangement == eachSeatingArrangement.meetingEventAreaSeatingTitle;
+            });
         if(selectedMeetingAreaInfo){
             maximumGuestAllowedForSeatingArrangement = Number(selectedMeetingAreaInfo.meetingEventAreaSeatingCapacity);
         }
     }
 
 
-    function fetchDateFoodDetails(eachDayFoodPrice: DateDetailsForFoodPrice[]): EventTimingDetailsForFoodPrice[]{
+    function fetchDateFoodDetails(
+        eachDayFoodPrice: DateDetailsForFoodPrice[]
+    ): EventTimingDetailsForFoodPrice[]{
         const allDayFoodDetails: DateDetailsForFoodPrice[] = eachDayFoodPrice;
         let bookingDate: string = "";
         if(typeof meetingEventBookingDate == "string"){
@@ -124,52 +165,71 @@ function EachDateBookingComponent(props: IPropsEachDateBookingComponent){
         else if(meetingEventBookingDate instanceof Date){
             bookingDate = convertDateTextToDate(meetingEventBookingDate.toISOString()).toString();
         }
-        const bookingDateFoodDetails: DateDetailsForFoodPrice | undefined = allDayFoodDetails.find(function(eachDate: DateDetailsForFoodPrice){
-            const eachDateString: string = eachDate.date.split("T")[0];
-            return bookingDate == eachDateString;
-        });
+
+        const bookingDateFoodDetails: DateDetailsForFoodPrice | undefined = 
+            allDayFoodDetails.find(function(eachDate: DateDetailsForFoodPrice){
+                const eachDateString: string = eachDate.date.split("T")[0];
+                return bookingDate == eachDateString;
+            });
+
         if(!bookingDateFoodDetails){
             throw new Error("bookingDateFoodDetails is missing");
         }
+
         return bookingDateFoodDetails.eventTimingDetails;
         
     }
+   
     
-    function getFoodListOfCurrentMeal(foodDetailsOfDate: EventTimingDetailsForFoodPrice[], foodCategory: string): string[] {
-        const currentMealFoodDetail: EventTimingDetailsForFoodPrice | undefined = foodDetailsOfDate.find(function(eachFoodCategory: EventTimingDetailsForFoodPrice){
-            return eachFoodCategory.meetingEventCurrentTiming == foodCategory;
-        });
+    function getFoodListOfCurrentMeal(
+        foodDetailsOfDate: EventTimingDetailsForFoodPrice[], 
+        foodCategory: MeetingEventBookingTime
+    ): string[] {
+        const currentMealFoodDetail: EventTimingDetailsForFoodPrice | undefined = 
+            foodDetailsOfDate.find(function(eachFoodCategory: EventTimingDetailsForFoodPrice){
+                return eachFoodCategory.meetingEventCurrentTiming == foodCategory;
+            });
+
         if(!currentMealFoodDetail){
             throw new Error("currentMealFoodDetail is missing");
         }
+
         const currentMealFoodList:  FoodServicePricePerGuest[] = currentMealFoodDetail.meetingEventCurrentTimingFoodPrice;
-        const currentMealFoodArray: string[] = currentMealFoodList.map(function(eachFoodList: FoodServicePricePerGuest){
-            return eachFoodList.foodTitle
-        })
+        const currentMealFoodArray: string[] = 
+            currentMealFoodList.map(function(eachFoodList: FoodServicePricePerGuest){
+                return eachFoodList.foodTitle
+            })
         return currentMealFoodArray;
     }
 
 
     function meetingEventTimeChangeHandler(event: React.ChangeEvent<HTMLInputElement>) {
         const checked: boolean = event.target.checked;
-        const newClickedValue: string = event.target.value;
+        const newClickedValue: MeetingEventBookingTime = event.target.value as MeetingEventBookingTime;
         if(checked){
-            const updatedMeetingEventBookingTime: string[] = [...meetingEventBookingTime, newClickedValue]
+            const updatedMeetingEventBookingTime: MeetingEventBookingTime[] = 
+                [...meetingEventBookingTime, newClickedValue]
             setMeetingEventBookingTime(updatedMeetingEventBookingTime);
         }
         else{
-            const updatedMeetingEventBookingTime: string[] = meetingEventBookingTime.filter(function(eachTime: string){
-                return (newClickedValue !== eachTime);
-            });
+            const updatedMeetingEventBookingTime: MeetingEventBookingTime[] = 
+                meetingEventBookingTime.filter(function(eachTime: MeetingEventBookingTime){
+                    return (newClickedValue !== eachTime);
+                });
             setMeetingEventBookingTime(updatedMeetingEventBookingTime);
         }
     }
 
+
     function meetingEventSeatingArrangementChangeHandler(event: React.ChangeEvent<HTMLInputElement>) {
-        setMeetingEventSeatingArrangement(event.target.value);
+        setMeetingEventSeatingArrangement(event.target.value as MeetingEventSeatingArrangement);
     }
 
-    function mealSelectionChangeHandler(event: React.ChangeEvent<HTMLInputElement>, foodCategory: keyof SelectedMealsType) {
+
+    function mealSelectionChangeHandler(
+        event: React.ChangeEvent<HTMLInputElement>, 
+        foodCategory: keyof SelectedMealsType
+    ) {
         const value: string = event.target.value;
         const checked: boolean = event.target.checked;
         if(checked){
@@ -192,19 +252,25 @@ function EachDateBookingComponent(props: IPropsEachDateBookingComponent){
         }
     }
 
+
     function getTotalPriceOfRoom(totalPriceOfAllRooms: number){
         setTotalPriceEventMeetingRoom(totalPriceOfAllRooms);
     }
+
 
     function editDetailsClickHandler(){
         setRoomDetailsEditable(true);
         setCheckAvailabiltyBlockDisplay(true);
     }
 
+
     async function checkAvailabilityClickHandler(event: React.MouseEvent<HTMLButtonElement>){
         event.preventDefault();
         setCheckAvailabiltyBlockDisplay(false);
-        if(meetingEventBookingTime.length > 0 && meetingEventSeatingArrangement !== '' && meetingEventBookingDate != null){
+        if(meetingEventBookingTime.length > 0 && 
+            meetingEventSeatingArrangement !== '' && 
+            meetingEventBookingDate != null
+        ){
             if(maximumGuestAttending >= 1){
                 if(maximumGuestAttending > maximumGuestAllowedForSeatingArrangement){
                     setIncorrectInput(true);
@@ -224,13 +290,16 @@ function EachDateBookingComponent(props: IPropsEachDateBookingComponent){
                             wantFoodServices
                         }
                         try {
-                            const response: Response = await fetch("/api/add-cart-availability-check/event-meeting/multiple-dates-non-continous/each-date", {
-                                method: "POST",
-                                body: JSON.stringify(bookingDetails),
-                                headers: {
-                                    'Content-type': 'application/json; charset=UTF-8',
+                            const response: Response = await fetch(
+                                "/api/add-cart-availability-check/event-meeting/multiple-dates-non-continous/each-date", 
+                                {
+                                    method: "POST",
+                                    body: JSON.stringify(bookingDetails),
+                                    headers: {
+                                        'Content-type': 'application/json; charset=UTF-8',
+                                    }
                                 }
-                            });
+                            );
                             const data: HotelEventMeetingRoomAvailabilityCheckApiResponse = await response.json();
                             if(response.status === 200){
                                 setIsEventMeetingRoomAvailable(true);
@@ -247,12 +316,17 @@ function EachDateBookingComponent(props: IPropsEachDateBookingComponent){
                         }
                     }
                     else if(wantFoodServices == wantFoodServiceConstants.WANT_FOOD_SERVICE_YES){
-                        const midNightSelectedMeals = selectedMeals.midNight;
-                        const morningSelectedMeals = selectedMeals.morning;
-                        const afternoonSelectedMeals = selectedMeals.afternoon;
-                        const eveningSelectedMeals = selectedMeals.evening;
-                        const nightSelectedMeals = selectedMeals.night;
-                        if(midNightSelectedMeals.length == 0 && morningSelectedMeals.length == 0 && afternoonSelectedMeals.length == 0 && eveningSelectedMeals.length == 0 && nightSelectedMeals.length == 0){
+                        const midNightSelectedMeals: string[] = selectedMeals.midNight;
+                        const morningSelectedMeals: string[] = selectedMeals.morning;
+                        const afternoonSelectedMeals: string[] = selectedMeals.afternoon;
+                        const eveningSelectedMeals: string[] = selectedMeals.evening;
+                        const nightSelectedMeals: string[] = selectedMeals.night;
+                        if(midNightSelectedMeals.length == 0 && 
+                            morningSelectedMeals.length == 0 && 
+                            afternoonSelectedMeals.length == 0 && 
+                            eveningSelectedMeals.length == 0 && 
+                            nightSelectedMeals.length == 0
+                        ){
                             setIncorrectInput(true);
                             setIncorrectInputMessage(multipleNonContinousDatesEventsMeetingSelectionErrorConstants.SELECT_FOOD_ITEM);
                         }
@@ -270,13 +344,16 @@ function EachDateBookingComponent(props: IPropsEachDateBookingComponent){
                                 selectedMealsOnBookingDate: selectedMeals
                             }
                             try {
-                                const response: Response = await fetch("/api/add-cart-availability-check/event-meeting/multiple-dates-non-continous/each-date", {
-                                    method: "POST",
-                                    body: JSON.stringify(bookingDetails),
-                                    headers: {
-                                        'Content-type': 'application/json; charset=UTF-8',
+                                const response: Response = await fetch(
+                                    "/api/add-cart-availability-check/event-meeting/multiple-dates-non-continous/each-date", 
+                                    {
+                                        method: "POST",
+                                        body: JSON.stringify(bookingDetails),
+                                        headers: {
+                                            'Content-type': 'application/json; charset=UTF-8',
+                                        }
                                     }
-                                });
+                                );
                                 const data: HotelEventMeetingRoomAvailabilityCheckApiResponse = await response.json();
                                 if(response.status === 200){
                                     setIsEventMeetingRoomAvailable(true);
@@ -330,10 +407,12 @@ function EachDateBookingComponent(props: IPropsEachDateBookingComponent){
         }
     }
 
+
     function addToRoomListClickHandler() {   
         console.log(bookingDetailsForCart);
         setRoomDetailsEditable(false);
     }
+
 
     function continueClickHandler(){
         if(bookingDetailsForCart != null){
@@ -348,6 +427,7 @@ function EachDateBookingComponent(props: IPropsEachDateBookingComponent){
         }
     }
 
+    
     function handleChangeEventMeetingBookingDate(value: Value){
         const selectedDate: Date = Array.isArray(value) ? value[0]! : value!;
         setMeetingEventBookingDate(selectedDate);

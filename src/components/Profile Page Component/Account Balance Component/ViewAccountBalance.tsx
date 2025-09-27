@@ -12,18 +12,35 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
+
 import { useAppDispatch, useAppSelector } from "@/redux store/hooks";
-import { updateLoginPageCalledFrom, updateLoginRedirectPage } from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
+
+import { 
+    updateLoginPageCalledFrom, 
+    updateLoginRedirectPage 
+} from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
+
 
 import { utcTimeToISTConvesion } from "@/functions/date";
 import { convertToINR } from "@/functions/currency";
-import { TRANSACTION_HISTORY_FOUND, NO_TRANSACTION_HISTORY_FOUND } from "@/constant string files/apiSuccessMessageConstants";
+import { 
+    TRANSACTION_HISTORY_FOUND, 
+    NO_TRANSACTION_HISTORY_FOUND 
+} from "@/constant string files/apiSuccessMessageConstants";
+
 
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 
+
 import { LoginUserDetails } from "@/redux store/features/Auth Features/loginUserDetailsSlice";
 import { IHotelCustomerTransaction } from "@/interface/hotelCustomersInterface"; 
-import { ILoginUserDetails, LoginUserApiResponse, ViewTransactionHistoryApiResponse } from "@/interface/Hotel User Interface/hotelUsersInterfce";
+
+import { 
+    ILoginUserDetails, 
+    LoginUserApiResponse, 
+    ViewTransactionHistoryApiResponse 
+} from "@/interface/Hotel User Interface/hotelUsersInterfce";
+
 
 
 const tableHeadingStyle = {
@@ -39,7 +56,8 @@ function ViewAccountBalanceFunctionalComponent() {
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const loginUserDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
 
     useEffect(function() {
         if (loginUserDetails == null) {
@@ -75,7 +93,9 @@ function ViewAccountBalanceFunctionalComponent() {
 
     async function fetchLoginUsersDetailsDb(loginUserId: string) {
         try {
-            const response: Response = await fetch(`/api/users-authentication/customers-authenticatication/login-user-information/${loginUserId}`);
+            const response: Response = await fetch(
+                `/api/users-authentication/customers-authenticatication/login-user-information/${loginUserId}`
+            );
             const data: LoginUserApiResponse = await response.json();
             if(response.status == 200){
                 if('loginUserDetails' in data){
@@ -89,7 +109,9 @@ function ViewAccountBalanceFunctionalComponent() {
 
     async function fetchUserTransactionHistory(loginUserId: string) {
         try {
-            const response: Response = await fetch(`/api/account-balance-user/view-transaction-history/${loginUserId}`);
+            const response: Response = await fetch(
+                `/api/account-balance-user/view-transaction-history/${loginUserId}`
+            );
             const data: ViewTransactionHistoryApiResponse = await response.json();
             if(response.status === 200){
                 if('message' in data){

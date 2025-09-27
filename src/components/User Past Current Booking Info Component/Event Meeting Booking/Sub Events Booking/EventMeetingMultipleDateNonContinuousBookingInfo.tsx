@@ -32,7 +32,8 @@ function EventMeetingMultipleDateNonContinuousBookingInfo(props: IPropsEventMeet
                 </p>
             }
             
-            {(eachEventMeetingBookingInfo.allDatesBookingInformation && Object.hasOwn(eachEventMeetingBookingInfo, 'allDatesBookingInformation')) &&
+            {(eachEventMeetingBookingInfo.allDatesBookingInformation && 
+                Object.hasOwn(eachEventMeetingBookingInfo, 'allDatesBookingInformation')) &&
                 <div className="mb-4">
                     {(eachEventMeetingBookingInfo.allDatesBookingInformation).map(function(eachBookingDate: IDateBooking){
                         return(

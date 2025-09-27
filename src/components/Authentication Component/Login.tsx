@@ -8,7 +8,10 @@ import validator from "validator";
 
 import { useAppDispatch , useAppSelector} from "@/redux store/hooks";
 import { login } from "@/redux store/features/Auth Features/loginUserDetailsSlice";
-import { updateLoginPageCalledFrom, updateLoginRedirectPage  } from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
+import { 
+    updateLoginPageCalledFrom, 
+    updateLoginRedirectPage 
+} from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
 
 import InputAreaForRegisterLogin from "@/components/Input Area/InputAreaForRegisterLogin";
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
@@ -32,8 +35,12 @@ interface LoginInput {
 function LoginFunctionalComponent(){
     const router = useRouter();
 
-    const loginPageCalledFrom: string | null = useAppSelector((reduxStore)=> reduxStore.loginPageCalledFromSliceName.loginPageCalledFrom);
-    const loginRedirectPage: string = useAppSelector((reduxStore)=> reduxStore.loginPageCalledFromSliceName.loginRedirectPage);
+    const loginPageCalledFrom: string | null = 
+        useAppSelector((reduxStore)=> reduxStore.loginPageCalledFromSliceName.loginPageCalledFrom);
+
+    const loginRedirectPage: string = 
+        useAppSelector((reduxStore)=> reduxStore.loginPageCalledFromSliceName.loginRedirectPage);
+
 
     const dispatch = useAppDispatch();
 
@@ -85,13 +92,21 @@ function LoginFunctionalComponent(){
 
 
     // Type Guard to check if it's a SuccessLoginResponse
-    function isSuccessLoginResponse(data: ISuccessLoginResponse | IErrorLoginResponse): data is ISuccessLoginResponse {
+    function isSuccessLoginResponse(
+        data: ISuccessLoginResponse | IErrorLoginResponse
+    ): data is ISuccessLoginResponse {
         return (data as ISuccessLoginResponse).loginUserDetails !== undefined;
     }
 
+
     // Type Guard to check if it's an ErrorResponse
-    function isErrorResponse(data: ISuccessLoginResponse | IErrorLoginResponse): data is IErrorLoginResponse {
-        return (data as IErrorLoginResponse).errorMessage !== undefined || (data as IErrorLoginResponse).error !== undefined;
+    function isErrorResponse(
+        data: ISuccessLoginResponse | IErrorLoginResponse
+    ): data is IErrorLoginResponse {
+        return (
+            (data as IErrorLoginResponse).errorMessage !== undefined || 
+            (data as IErrorLoginResponse).error !== undefined
+        );
     }
 
 
@@ -105,14 +120,17 @@ function LoginFunctionalComponent(){
         setLoginProcessing(true);
 
         try {
-            const response: Response = await fetch('api/users-authentication/customers-authenticatication/login', {
-                method: 'POST',
-                body: JSON.stringify(loginInputData),
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8',
-                },
-                credentials: 'include'
-            });
+            const response: Response = await fetch(
+                'api/users-authentication/customers-authenticatication/login', 
+                {
+                    method: 'POST',
+                    body: JSON.stringify(loginInputData),
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8',
+                    },
+                    credentials: 'include'
+                }
+            );
             const data: LoginResponse = await response.json();
             if(response.status === 404){
                 if(isErrorResponse(data)){

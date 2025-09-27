@@ -7,14 +7,21 @@ import Link from 'next/link';
 import Button from '@mui/material/Button';
 
 import { useAppSelector, useAppDispatch } from "@/redux store/hooks";
-import { updateLoginPageCalledFrom, updateLoginRedirectPage } from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
+import { 
+    updateLoginPageCalledFrom, 
+    updateLoginRedirectPage 
+} from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
 import { updateUserDetails } from "@/redux store/features/Auth Features/loginUserDetailsSlice";
 
 import InputAreaForEditInfo from "@/components/Input Area/InputAreaForEditInfo";
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 
 import { LoginUserDetails } from "@/redux store/features/Auth Features/loginUserDetailsSlice";
-import { ILoginUserDetails, LoginUserApiResponse, UpdateUserApiResponse } from "@/interface/Hotel User Interface/hotelUsersInterfce";
+import { 
+    ILoginUserDetails, 
+    LoginUserApiResponse, 
+    UpdateUserApiResponse 
+} from "@/interface/Hotel User Interface/hotelUsersInterfce";
 
 
 interface IInputValue {
@@ -42,7 +49,8 @@ interface IUpdatedUserInfo {
 
 function UpdatePersonalInformationFunctionalComponent(){
 
-    const loginUserDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
     
     const dispatch = useAppDispatch();
     const router = useRouter();
@@ -127,7 +135,9 @@ function UpdatePersonalInformationFunctionalComponent(){
 
     async function fetchLoginUsersDetailsDb(loginUserId: string) {
         try {
-            const response: Response = await fetch(`/api/users-authentication/customers-authenticatication/login-user-information/${loginUserId}`);
+            const response: Response = await fetch(
+                `/api/users-authentication/customers-authenticatication/login-user-information/${loginUserId}`
+            );
             const data: LoginUserApiResponse = await response.json();
             if(response.status == 200){
                 if('loginUserDetails' in data){
@@ -192,13 +202,16 @@ function UpdatePersonalInformationFunctionalComponent(){
         }
         
         try {
-            const response: Response = await fetch(`/api/users-authentication/customers-authenticatication/update-basic-information/${loginUserId}`, {
-                method: 'PATCH',
-                body: JSON.stringify(updatedUserInfo),
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8',
+            const response: Response = await fetch(
+                `/api/users-authentication/customers-authenticatication/update-basic-information/${loginUserId}`, 
+                {
+                    method: 'PATCH',
+                    body: JSON.stringify(updatedUserInfo),
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8',
+                    }
                 }
-            });
+            );
             const data: UpdateUserApiResponse = await response.json();
             if(response.status === 200){
                 if('message' in data){

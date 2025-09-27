@@ -4,7 +4,10 @@ import Link from 'next/link';
 
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 
-import { Room, RoomSuitesInfoResponse } from "@/interface/Rooms and Suites Interface/roomsSuitesInfoInterface";
+import { 
+    Room, 
+    RoomSuitesInfoResponse 
+} from "@/interface/Rooms and Suites Interface/roomsSuitesInfoInterface";
 
 
 function RoomsAndSuitesComponent(){
@@ -34,7 +37,13 @@ async function RoomsAndSuitesComponentFunctionalComponent(){
                     {threeRooms.map(function(eachRoom: Room){
                         return(
                             <div key={eachRoom.path} className="w-full sm:w-1/3 px-2 py-2">
-                                <Image src={eachRoom.photos[0]} alt="room-photo" width={375} height={300} className="object-cover" />
+                                <Image 
+                                    src={eachRoom.photos[0]} 
+                                    alt="room-photo" 
+                                    width={375} 
+                                    height={300} 
+                                    className="object-cover" 
+                                />
                                 <Link href={`/rooms-suites/${eachRoom.path}`} passHref>
                                     <h4 className="text-center text-xl font-italic mt-3 cursor-pointer hover:underline">
                                         {eachRoom.title}
@@ -53,7 +62,9 @@ async function RoomsAndSuitesComponentFunctionalComponent(){
 
 async function fetchRoomsSuitesInformation(): Promise<Room[]>{
     try {
-        const response: Response = await fetch(`${process.env.URL}/api/hotel-booking-information/room-and-suites-information/`);
+        const response: Response = await fetch(
+            `${process.env.URL}/api/hotel-booking-information/room-and-suites-information/`
+        );
         const roomSuitesInfo: RoomSuitesInfoResponse = await response.json();
         const roomsSuites: Room[] = roomSuitesInfo.rooms;
         return roomsSuites;

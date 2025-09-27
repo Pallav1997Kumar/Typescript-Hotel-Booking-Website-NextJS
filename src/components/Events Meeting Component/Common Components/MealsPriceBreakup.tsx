@@ -35,12 +35,15 @@ function MealsPriceBreakup(props: IPropsMealsPriceBreakup) {
 
     let selectedMealsListWithPrice: FoodServicePricePerGuest[] | undefined;
     if(Object.hasOwn(allMealsListInformation, 'meetingEventCurrentTimingFoodPrice')){
-        const allMealsListWithPrice: FoodServicePricePerGuest[] = allMealsListInformation.meetingEventCurrentTimingFoodPrice;
-        selectedMealsListWithPrice = allMealsListWithPrice.filter(function(eachFoodItem: FoodServicePricePerGuest){
-            if(selectedMeals){
-                return selectedMeals.includes(eachFoodItem.foodTitle);
-            }
-        });
+        const allMealsListWithPrice: FoodServicePricePerGuest[] = 
+            allMealsListInformation.meetingEventCurrentTimingFoodPrice;
+
+        selectedMealsListWithPrice = 
+            allMealsListWithPrice.filter(function(eachFoodItem: FoodServicePricePerGuest){
+                if(selectedMeals){
+                    return selectedMeals.includes(eachFoodItem.foodTitle);
+                }
+            });
     }
     //console.log(selectedMealsListWithPrice);
 
@@ -80,7 +83,9 @@ function MealsPriceBreakup(props: IPropsMealsPriceBreakup) {
 
     return (
         <div>
-            <Button variant="outlined" onClick={()=> setShowFoodItemsPriceBreakup(true)}>Show Price Breakup</Button>
+            <Button variant="outlined" onClick={()=> setShowFoodItemsPriceBreakup(true)}>
+                Show Price Breakup
+            </Button>
             <Modal
                 open={showFoodItemsPriceBreakup}
                 onClose={()=> setShowFoodItemsPriceBreakup(false)}
@@ -99,7 +104,9 @@ function MealsPriceBreakup(props: IPropsMealsPriceBreakup) {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {selectedMealsListWithPrice && selectedMealsListWithPrice.map(function(eachFoodItem: FoodServicePricePerGuest){
+                                {selectedMealsListWithPrice && selectedMealsListWithPrice.map(function(
+                                    eachFoodItem: FoodServicePricePerGuest
+                                ){
                                     return (
                                         <TableRow key={eachFoodItem.foodTitle}>
                                             <TableCell>
@@ -107,7 +114,9 @@ function MealsPriceBreakup(props: IPropsMealsPriceBreakup) {
                                             </TableCell>
                                             <TableCell>{convertToINR(eachFoodItem.pricePerGuest)}</TableCell>
                                             <TableCell>{maximumGuestAttending}</TableCell>
-                                            <TableCell>{convertToINR(eachFoodItem.pricePerGuest * maximumGuestAttending)}</TableCell>
+                                            <TableCell>
+                                                {convertToINR(eachFoodItem.pricePerGuest * maximumGuestAttending)}
+                                            </TableCell>
                                         </TableRow>
                                     )
                                 })}

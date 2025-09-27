@@ -12,8 +12,15 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 
-import { calculateAgeFromDob, getDateTextFromFullDate, utcTimeToISTConvesion } from "@/functions/date";
+
+import { 
+    calculateAgeFromDob, 
+    getDateTextFromFullDate, 
+    utcTimeToISTConvesion 
+} from "@/functions/date";
+
 import { convertToINR } from "@/functions/currency";
+
 
 import { ITransactionDetailsForAdmin } from "@/interface/Hotel User Interface/hotelAdminViewTxnHistoryInterface";
 
@@ -50,14 +57,30 @@ function ViewPracticularTransactionDetails(props: IPropsViewPracticularTransacti
 
     return (
         <TableRow>
-            <TableCell sx={tableBodyStyle}>{eachTransactionDetails.customerDetails.fullName}</TableCell>
-            <TableCell sx={tableBodyStyle}>{eachTransactionDetails.customerDetails.emailAddress}</TableCell>
-            <TableCell sx={tableBodyStyle}>{utcTimeToISTConvesion(eachTransactionDetails.transactionDateTime.toString())}</TableCell>
-            <TableCell sx={tableBodyStyle}>{eachTransactionDetails.transactionType}</TableCell>
-            <TableCell sx={tableBodyStyle}>{convertToINR(eachTransactionDetails.transactionAmount)}</TableCell>
-            <TableCell sx={tableBodyStyle}>{eachTransactionDetails.transactionDescription}</TableCell>
             <TableCell sx={tableBodyStyle}>
-                <Button color="error" variant="outlined" onClick={()=>setOpenCustomerDetails(true)}>
+                {eachTransactionDetails.customerDetails.fullName}
+            </TableCell>
+            <TableCell sx={tableBodyStyle}>
+                {eachTransactionDetails.customerDetails.emailAddress}
+            </TableCell>
+            <TableCell sx={tableBodyStyle}>
+                {utcTimeToISTConvesion(eachTransactionDetails.transactionDateTime.toString())}
+            </TableCell>
+            <TableCell sx={tableBodyStyle}>
+                {eachTransactionDetails.transactionType}
+            </TableCell>
+            <TableCell sx={tableBodyStyle}>
+                {convertToINR(eachTransactionDetails.transactionAmount)}
+            </TableCell>
+            <TableCell sx={tableBodyStyle}>
+                {eachTransactionDetails.transactionDescription}
+            </TableCell>
+            <TableCell sx={tableBodyStyle}>
+                <Button 
+                    color="error" 
+                    variant="outlined" 
+                    onClick={()=>setOpenCustomerDetails(true)}
+                >
                     View Customer's Details
                 </Button>
                 <Modal
@@ -73,19 +96,27 @@ function ViewPracticularTransactionDetails(props: IPropsViewPracticularTransacti
                                     <TableBody>
                                         <TableRow>
                                             <TableCell>First Name</TableCell>
-                                            <TableCell>{eachTransactionDetails.customerDetails.firstName}</TableCell>
+                                            <TableCell>
+                                                {eachTransactionDetails.customerDetails.firstName}
+                                            </TableCell>
                                         </TableRow>
                                         <TableRow>
                                             <TableCell>Middle Name</TableCell>
-                                            <TableCell>{eachTransactionDetails.customerDetails.middleName}</TableCell>
+                                            <TableCell>
+                                                {eachTransactionDetails.customerDetails.middleName}
+                                            </TableCell>
                                         </TableRow>
                                         <TableRow>
                                             <TableCell>Last Name</TableCell>
-                                            <TableCell>{eachTransactionDetails.customerDetails.lastName}</TableCell>
+                                            <TableCell>
+                                                {eachTransactionDetails.customerDetails.lastName}
+                                            </TableCell>
                                         </TableRow>
                                         <TableRow>
                                             <TableCell>Full Name</TableCell>
-                                            <TableCell>{eachTransactionDetails.customerDetails.fullName}</TableCell>
+                                            <TableCell>
+                                                {eachTransactionDetails.customerDetails.fullName}
+                                            </TableCell>
                                         </TableRow>
                                         <TableRow>
                                             <TableCell>Gender</TableCell>
@@ -98,23 +129,33 @@ function ViewPracticularTransactionDetails(props: IPropsViewPracticularTransacti
                                         </TableRow>
                                         <TableRow>
                                             <TableCell>Date of Birth</TableCell>
-                                            <TableCell>{getDateTextFromFullDate(eachTransactionDetails.customerDetails.dateOfBirth.toString())}</TableCell>
+                                            <TableCell>
+                                                {getDateTextFromFullDate(eachTransactionDetails.customerDetails.dateOfBirth.toString())}
+                                            </TableCell>
                                         </TableRow>
                                         <TableRow>
                                             <TableCell>Age</TableCell>
-                                            <TableCell>{calculateAgeFromDob(eachTransactionDetails.customerDetails.dateOfBirth.toString())}</TableCell>
+                                            <TableCell>
+                                                {calculateAgeFromDob(eachTransactionDetails.customerDetails.dateOfBirth.toString())}
+                                            </TableCell>
                                         </TableRow>
                                         <TableRow>
                                             <TableCell>Email Address</TableCell>
-                                            <TableCell>{eachTransactionDetails.customerDetails.emailAddress}</TableCell>
+                                            <TableCell>
+                                                {eachTransactionDetails.customerDetails.emailAddress}
+                                            </TableCell>
                                         </TableRow>
                                         <TableRow>
                                             <TableCell>Contact Number</TableCell>
-                                            <TableCell>{eachTransactionDetails.customerDetails.contactNo}</TableCell>
+                                            <TableCell>
+                                                {eachTransactionDetails.customerDetails.contactNo}
+                                            </TableCell>
                                         </TableRow>
                                         <TableRow>
                                             <TableCell>Alternate Contact Number</TableCell>
-                                            <TableCell>{eachTransactionDetails.customerDetails.alternateContactNo}</TableCell>
+                                            <TableCell>
+                                                {eachTransactionDetails.customerDetails.alternateContactNo}
+                                            </TableCell>
                                         </TableRow>
                                     </TableBody>
                                 </Table>

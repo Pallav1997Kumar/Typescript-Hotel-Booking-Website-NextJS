@@ -8,10 +8,16 @@ import Box from '@mui/material/Box';
 import { getDateTextFromFullDate } from "@/functions/date";
 import { getCommaAndSeperatedArray } from "@/functions/array";
 
-import { wantFoodServiceConstants, eventMeetingTimingConstants } from "@/constant string files/eventsMeetingRoomImportantConstants";
+
+import { 
+    wantFoodServiceConstants, 
+    eventMeetingTimingConstants 
+} from "@/constant string files/eventsMeetingRoomImportantConstants";
 import { convertToINR } from '@/functions/currency';
 
+
 import { IDateBooking } from '@/interface/Event Meeting Interface/viewEventMeetingBookingApiResponse';
+import { MeetingEventBookingTime } from '@/interface/Event Meeting Interface/eventMeetingRoomConstantInterface';
 
 
 const boxStyle = {
@@ -35,7 +41,7 @@ function EventMeetingEachDayNonContinuous(props: IPropsEventMeetingEachDayNonCon
 
     const eachBookingDate: IDateBooking = props.eachBookingDate;
 
-    const meetingEventBookingTime: ("Morning" | "Afternoon" | "Evening" | "Night" | "Mid Night")[] = eachBookingDate.meetingEventBookingTime;
+    const meetingEventBookingTime: MeetingEventBookingTime[] = eachBookingDate.meetingEventBookingTime;
     const isMorningSlotBooked: boolean = meetingEventBookingTime.includes(eventMeetingTimingConstants.MORNING_TIME);
     const isAfternoonSlotBooked: boolean = meetingEventBookingTime.includes(eventMeetingTimingConstants.AFTERNOON_TIME);
     const isEveningSlotBooked: boolean = meetingEventBookingTime.includes(eventMeetingTimingConstants.EVENING_TIME);
@@ -58,6 +64,7 @@ function EventMeetingEachDayNonContinuous(props: IPropsEventMeetingEachDayNonCon
         midNightFoodItems = mealsMap.get("midNight") ?? [];
     }
 
+    
     function getFoodList(foodArrayList: string[]){
         const foodArray = foodArrayList.map(function(eachItem: string){
             return eachItem.split(" (")[0];

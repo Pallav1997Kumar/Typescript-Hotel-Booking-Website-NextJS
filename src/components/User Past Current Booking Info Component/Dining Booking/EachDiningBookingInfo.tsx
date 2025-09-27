@@ -5,9 +5,14 @@ import Image from 'next/image';
 import { getDateTextFromFullDate } from "@/functions/date";
 import { convertToINR } from '@/functions/currency';
 
+
 import { IDiningBookingInfoForCustomer } from '@/interface/Dining Interface/viewDiningBookingApiResponse';
 import { ITransactionDetailsFrontend } from '@/interface/hotelCustomersInterface';
-import { Dining, DiningInfoResponse } from '@/interface/Dining Interface/hotelDiningInterface';
+
+import { 
+    Dining, 
+    DiningInfoResponse 
+} from '@/interface/Dining Interface/hotelDiningInterface';
 
 
 interface IPropsEachDiningBookingInfo {
@@ -29,7 +34,9 @@ function EachDiningBookingInfo(props: IPropsEachDiningBookingInfo){
 
     async function fetchDiningInformation(): Promise<void>{
         try {
-            const response: Response = await fetch('/api/hotel-booking-information/dining-information/');
+            const response: Response = await fetch(
+                '/api/hotel-booking-information/dining-information/'
+            );
             const diningInfo: DiningInfoResponse = await response.json();
             const diningInfomation: Dining[] = diningInfo.dining;
             setDining(diningInfomation);
@@ -38,9 +45,10 @@ function EachDiningBookingInfo(props: IPropsEachDiningBookingInfo){
         }
     }
 
-    const particularDiningBasicInfo: Dining | undefined = dining.find(function(eachDiningInHotel: Dining){
-        return (eachDiningInHotel.diningAreaTitle == eachDiningBookingInfo.diningRestaurantTitle);
-    });
+    const particularDiningBasicInfo: Dining | undefined = 
+        dining.find(function(eachDiningInHotel: Dining){
+            return (eachDiningInHotel.diningAreaTitle == eachDiningBookingInfo.diningRestaurantTitle);
+        });
 
     return (
         <div className="flex flex-row p-4 m-4 border-4 border-gray-500">

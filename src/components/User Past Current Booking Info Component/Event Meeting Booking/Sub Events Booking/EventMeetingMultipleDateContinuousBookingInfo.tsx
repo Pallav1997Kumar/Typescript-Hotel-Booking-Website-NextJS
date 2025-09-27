@@ -35,7 +35,9 @@ interface IPropsEventMeetingMultipleDateContinuousBookingInfo {
 }
 
 
-function EventMeetingMultipleDateContinuousBookingInfo(props: IPropsEventMeetingMultipleDateContinuousBookingInfo){
+function EventMeetingMultipleDateContinuousBookingInfo(
+    props: IPropsEventMeetingMultipleDateContinuousBookingInfo
+){
 
     const eachEventMeetingBookingInfo: IContinousMultipleDatesBookingInfoForCustomer = props.eachEventMeetingBookingInfo;
     const transactionDetails: ITransactionDetailsFrontend = props.transactionDetails;

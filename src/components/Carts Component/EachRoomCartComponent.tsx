@@ -6,11 +6,21 @@ import Button from '@mui/material/Button';
 
 import { useAppDispatch } from "@/redux store/hooks";
 import { deleteParticularBookingFromRoomCart } from "@/redux store/features/Booking Features/roomBookingCartSlice";
+
+
 import { getDateTextFromOnlyDate } from "@/functions/date";
 import { convertToINR } from "@/functions/currency";
 
-import { IRoomsDetailsForCart, ParticularRoomInfoInterface } from "@/interface/Rooms and Suites Interface/roomsSuitesBookingInterface";
-import { RoomSuitesInfoResponse, Room } from "@/interface/Rooms and Suites Interface/roomsSuitesInfoInterface";
+
+import { 
+    IRoomsDetailsForCart, 
+    ParticularRoomInfoInterface 
+} from "@/interface/Rooms and Suites Interface/roomsSuitesBookingInterface";
+
+import { 
+    RoomSuitesInfoResponse, 
+    Room 
+} from "@/interface/Rooms and Suites Interface/roomsSuitesInfoInterface";
 
 
 interface IPropsEachRoomCartComponent {
@@ -30,7 +40,9 @@ function EachRoomCartComponent(props: IPropsEachRoomCartComponent){
 
     async function fetchRoomsSuitesInformation(){
         try {
-            const response: Response = await fetch('/api/hotel-booking-information/room-and-suites-information/');
+            const response: Response = await fetch(
+                '/api/hotel-booking-information/room-and-suites-information/'
+            );
             const roomSuitesInfo: RoomSuitesInfoResponse = await response.json();
             const rooms: Room[] = roomSuitesInfo.rooms
             setRoomsSuites(rooms);
@@ -41,9 +53,11 @@ function EachRoomCartComponent(props: IPropsEachRoomCartComponent){
 
     const [displayGuestDetails, setDisplayGuestDetails] = useState<boolean>(false);
     const eachRoomInCart: IRoomsDetailsForCart = props.eachRoomInCart;
-    const particularRoomBasicInfo: Room | undefined = roomsSuites.find(function(eachRoomInHotel: Room){
-        return (eachRoomInHotel.title == eachRoomInCart.roomTitle);
-    });
+
+    const particularRoomBasicInfo: Room | undefined = 
+        roomsSuites.find(function(eachRoomInHotel: Room){
+            return (eachRoomInHotel.title == eachRoomInCart.roomTitle);
+        });
 
 
     function removeRoomFromCartHandler(roomID: number){
@@ -72,11 +86,23 @@ function EachRoomCartComponent(props: IPropsEachRoomCartComponent){
                     </p>
                     <p className="font-sans mb-2">
                         <span className="font-semibold">CheckIn Date: </span> 
-                        {getDateTextFromOnlyDate(typeof eachRoomInCart.checkinDate === 'string' ? eachRoomInCart.checkinDate : eachRoomInCart.checkinDate.toISOString())}  
+                        {
+                            getDateTextFromOnlyDate(
+                                typeof eachRoomInCart.checkinDate === 'string' 
+                                ? eachRoomInCart.checkinDate 
+                                : eachRoomInCart.checkinDate.toISOString()
+                            )
+                        }  
                     </p>
                     <p className="font-sans mb-2">
                         <span className="font-semibold">CheckOut Date: </span> 
-                        {getDateTextFromOnlyDate(typeof eachRoomInCart.checkoutDate === 'string' ? eachRoomInCart.checkoutDate : eachRoomInCart.checkoutDate.toISOString())} 
+                        {
+                            getDateTextFromOnlyDate(
+                                typeof eachRoomInCart.checkoutDate === 'string' 
+                                ? eachRoomInCart.checkoutDate 
+                                : eachRoomInCart.checkoutDate.toISOString()
+                            )
+                        } 
                     </p>
                     <p className="font-sans mb-2">
                         <span className="font-semibold">Total Number of Rooms: </span> 
@@ -90,10 +116,16 @@ function EachRoomCartComponent(props: IPropsEachRoomCartComponent){
                         <span className="font-semibold">Total Price Of Room: </span>
                         {convertToINR(eachRoomInCart.totalPriceOfAllRooms)} 
                     </p>
-                    <Button onClick={()=> removeRoomFromCartHandler(eachRoomInCart.roomCartId)} variant="contained">
+                    <Button 
+                        onClick={()=> removeRoomFromCartHandler(eachRoomInCart.roomCartId)} 
+                        variant="contained"
+                    >
                         Remove From Cart
                     </Button>
-                    <p onClick={()=>setDisplayGuestDetails(true)} className="mt-5 hover:cursor-pointer hover:uppercase hover:text-blue-600">
+                    <p 
+                        onClick={()=>setDisplayGuestDetails(true)} 
+                        className="mt-5 hover:cursor-pointer hover:uppercase hover:text-blue-600"
+                    >
                         View Guest Details
                     </p>
                 </div>
@@ -103,9 +135,14 @@ function EachRoomCartComponent(props: IPropsEachRoomCartComponent){
             {displayGuestDetails && 
             <div className="flex flex-col bg-orange-100 border-2 border-green-600 mt-4">
                 <div className="flex flex-row flex-wrap">
-                    {(eachRoomInCart.guestRoomsDetails).map(function(eachRoomForGuest: ParticularRoomInfoInterface){
+                    {(eachRoomInCart.guestRoomsDetails).map(function(
+                        eachRoomForGuest: ParticularRoomInfoInterface
+                    ){
                         return (
-                            <div key={eachRoomForGuest.roomNo} className="p-4 m-1 border border-dotted border-blue-600">
+                            <div 
+                                key={eachRoomForGuest.roomNo} 
+                                className="p-4 m-1 border border-dotted border-blue-600"
+                            >
                                 <p>
                                     <span className="font-semibold">Room: </span>
                                     {eachRoomForGuest.roomNo} 
@@ -128,7 +165,10 @@ function EachRoomCartComponent(props: IPropsEachRoomCartComponent){
                 </div>
 
                 <div className="flex items-center justify-center m-4">
-                    <Button onClick={()=>setDisplayGuestDetails(false)} variant="contained">
+                    <Button 
+                        onClick={()=>setDisplayGuestDetails(false)} 
+                        variant="contained"
+                    >
                         CLOSE
                     </Button>
                 </div>

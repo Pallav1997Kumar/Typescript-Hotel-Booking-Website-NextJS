@@ -4,12 +4,29 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot, faPhone, faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import { faFacebook, faInstagram, faSquareXTwitter, faLinkedin } from "@fortawesome/free-brands-svg-icons";
+
+import { 
+    faLocationDot, 
+    faPhone, 
+    faEnvelope 
+} from "@fortawesome/free-solid-svg-icons";
+
+import { 
+    faFacebook, 
+    faInstagram, 
+    faSquareXTwitter, 
+    faLinkedin 
+} from "@fortawesome/free-brands-svg-icons";
+
 
 import hotelBasicInfo from "@/json objects/hotelBasicInfo";
 import { useAppDispatch } from "@/redux store/hooks";
-import { updateLoginPageCalledFrom, updateLoginRedirectPage } from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
+
+import { 
+    updateLoginPageCalledFrom, 
+    updateLoginRedirectPage 
+} from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
+
 
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 

@@ -6,17 +6,40 @@ import { useRouter } from 'next/navigation';
 
 import Button from '@mui/material/Button';
 
-import { useAppSelector, useAppDispatch } from "@/redux store/hooks";
-import { updateLoginPageCalledFrom, updateLoginRedirectPage } from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
-import { addDiningBookingInfo, resetDiningBookingInfo } from "@/redux store/features/Booking Information/diningBookingInfoSlice";
 
-import { DINING_PRESENT_IN_CART, DINING_CART_IS_EMPTY } from "@/constant string files/apiSuccessMessageConstants";
+import { useAppSelector, useAppDispatch } from "@/redux store/hooks";
+
+import { 
+    updateLoginPageCalledFrom, 
+    updateLoginRedirectPage 
+} from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
+
+import { 
+    addDiningBookingInfo, 
+    resetDiningBookingInfo 
+} from "@/redux store/features/Booking Information/diningBookingInfoSlice";
+
+
+import { 
+    DINING_PRESENT_IN_CART, 
+    DINING_CART_IS_EMPTY 
+} from "@/constant string files/apiSuccessMessageConstants";
+
 
 import UserDiningBookingCart from "@/components/User Carts Component/UserDiningBookingCart";
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 
+
 import { LoginUserDetails } from "@/redux store/features/Auth Features/loginUserDetailsSlice"; 
-import { DeleteDiningCartByCartIdApiResponse, IDiningCartInformation, IViewDiningCartByCartIdSuccessApiResponse, ViewDiningCartByCartIdApiResponse, ViewDiningCartByUserIdApiResponse } from "@/interface/Dining Interface/diningCartApiResponse";
+
+import { 
+    DeleteDiningCartByCartIdApiResponse, 
+    IDiningCartInformation, 
+    IViewDiningCartByCartIdSuccessApiResponse, 
+    ViewDiningCartByCartIdApiResponse, 
+    ViewDiningCartByUserIdApiResponse 
+} from "@/interface/Dining Interface/diningCartApiResponse";
+
 
 
 function UserDiningCartPageComponentFunctionalComponent(){
@@ -24,7 +47,8 @@ function UserDiningCartPageComponentFunctionalComponent(){
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const loginUserDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
 
     useEffect(function() {
         if (loginUserDetails == null) {
@@ -57,7 +81,9 @@ function UserDiningCartPageComponentFunctionalComponent(){
 
     async function fetchDiningCartDb(loginUserId: string) {
         try {
-            const response: Response = await fetch(`/api/view-cart/dining/search-by-user-id/${loginUserId}`);
+            const response: Response = await fetch(
+                `/api/view-cart/dining/search-by-user-id/${loginUserId}`
+            );
             const data: ViewDiningCartByUserIdApiResponse = await response.json();
             if(response.status === 200){
                 if('message' in data){
@@ -85,12 +111,14 @@ function UserDiningCartPageComponentFunctionalComponent(){
 
     async function removeDiningItemFromCartDb(id: string){
         try {
-            const response: Response = await fetch(`/api/delete-cart/dining/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8',
+            const response: Response = await fetch(`/api/delete-cart/dining/${id}`, 
+                {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8',
+                    }
                 }
-            }); 
+            ); 
             const data: DeleteDiningCartByCartIdApiResponse = await response.json();   
             if(response.status !== 200){
 
@@ -113,12 +141,16 @@ function UserDiningCartPageComponentFunctionalComponent(){
         const diningPaymentCartList: IViewDiningCartByCartIdSuccessApiResponse[] = [];
         setProceedBtnClickable(false);
         try{
-            const fetchDiningCartPromise: Promise<ViewDiningCartByCartIdApiResponse>[] = diningCartIdList.map(async function(eachDiningCartId: string){
-                const diningCartResponse: Response = await fetch(`/api/view-cart/dining/search-by-cart-id/${eachDiningCartId}`);
-                const diningCartData: ViewDiningCartByCartIdApiResponse = await diningCartResponse.json();              
-                return diningCartData;
-            });
-            const diningCartPromiseResult: ViewDiningCartByCartIdApiResponse[] = await Promise.all(fetchDiningCartPromise);
+            const fetchDiningCartPromise: Promise<ViewDiningCartByCartIdApiResponse>[] = 
+                diningCartIdList.map(async function(eachDiningCartId: string){
+                    const diningCartResponse: Response = await fetch(
+                        `/api/view-cart/dining/search-by-cart-id/${eachDiningCartId}`
+                    );
+                    const diningCartData: ViewDiningCartByCartIdApiResponse = await diningCartResponse.json();              
+                    return diningCartData;
+                });
+            const diningCartPromiseResult: ViewDiningCartByCartIdApiResponse[] = 
+                await Promise.all(fetchDiningCartPromise);
             diningCartPromiseResult.forEach(function(eachDiningCartPromise: ViewDiningCartByCartIdApiResponse){
                 if('cartInfo' in eachDiningCartPromise){
                     diningPaymentCartList.push(eachDiningCartPromise);
@@ -130,7 +162,7 @@ function UserDiningCartPageComponentFunctionalComponent(){
         }
         finally{
             dispatch(addDiningBookingInfo(diningPaymentCartList));
-            const redirectPage = `/proceed-booking/dining/${loginUserId}`;
+            const redirectPage: string = `/proceed-booking/dining/${loginUserId}`;
             router.push(redirectPage);
             setProceedBtnClickable(true);
         }

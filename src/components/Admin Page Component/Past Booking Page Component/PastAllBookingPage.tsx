@@ -5,27 +5,40 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
+
 import { useAppSelector, useAppDispatch } from "@/redux store/hooks";
 import { 
     updateLoginPageCalledFrom, 
     updateLoginRedirectPage 
 } from "@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice";
 
+
 import { 
     DINING_ROOMS_SUITES_EVENT_MEETING_BOOKING_INFO_IS_PRESENT, 
     DINING_ROOMS_SUITES_EVENT_MEETING_BOOKING_INFO_IS_EMPTY 
 } from "@/constant string files/apiSuccessMessageConstants";
+
 
 import EachAdminEventMeetingBookingInfo from "@/components/Admin Booking Information Component/Event Meeting Booking/EachAdminEventMeetingBookingInfo";
 import EachAdminDiningBookingInfo from "@/components/Admin Booking Information Component/Dining Booking/EachAdminDiningBookingInfo";
 import EachAdminRoomBookingInfo from "@/components/Admin Booking Information Component/Rooms Suites Booking/EachAdminRoomBookingInfo";
 import ErrorBoundary from "@/components/Error Boundary/ErrorBoundary";
 
+
 import { LoginUserDetails } from "@/interface/Hotel User Interface/hotelUsersInterfce";
-import { DiningRoomsSuitesEventMeetingBookingInfoForAdmin, ViewDiningRoomsSuitesEventMeetingBookingResponseForAdmin } from "@/interface/viewRoomDiningEventBookingApiResponse";
 import { IDiningBookingInfoForAdmin } from "@/interface/Dining Interface/viewDiningBookingApiResponse";
 import { IRoomsSuitesBookingInfoForAdmin } from "@/interface/Rooms and Suites Interface/viewRoomSuiteBookingApiResponse";
-import { IContinousMultipleDatesBookingInfoForAdmin, INonContinousMultipleDatesBookingInfoForAdmin, ISingleDateBookingInfoForAdmin } from "@/interface/Event Meeting Interface/viewEventMeetingBookingApiResponse";
+
+import { 
+    DiningRoomsSuitesEventMeetingBookingInfoForAdmin, 
+    ViewDiningRoomsSuitesEventMeetingBookingResponseForAdmin 
+} from "@/interface/viewRoomDiningEventBookingApiResponse";
+
+import { 
+    IContinousMultipleDatesBookingInfoForAdmin, 
+    INonContinousMultipleDatesBookingInfoForAdmin, 
+    ISingleDateBookingInfoForAdmin 
+} from "@/interface/Event Meeting Interface/viewEventMeetingBookingApiResponse";
 
 
 function PastAllBookingPage(){
@@ -42,7 +55,8 @@ function PastAllBookingPageFunctionalComponent(){
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const loginUserDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const loginUserDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore) => reduxStore.userSlice.loginUserDetails);
 
     let loginUserId: string;
     let loginUserFullName: string;
@@ -57,7 +71,8 @@ function PastAllBookingPageFunctionalComponent(){
 
     useEffect(function(){
         if(loginUserDetails == null){
-            const loginPageCalledFrom = 'Admin Past Dining, Rooms Suites and Event Meeting Rooms Page';
+            const loginPageCalledFrom = 
+                'Admin Past Dining, Rooms Suites and Event Meeting Rooms Page';
             const loginRedirectPage = '/admin-home-page';
             dispatch(updateLoginPageCalledFrom(loginPageCalledFrom));
             dispatch(updateLoginRedirectPage(loginRedirectPage));
@@ -67,7 +82,8 @@ function PastAllBookingPageFunctionalComponent(){
 
         if(loginUserDetails != null && 
             !loginEmailAddress.endsWith("@royalpalace.co.in")){
-                const loginPageCalledFrom = 'Admin Past Dining, Rooms Suites and Event Meeting Rooms Page';
+                const loginPageCalledFrom = 
+                    'Admin Past Dining, Rooms Suites and Event Meeting Rooms Page';
                 const loginRedirectPage = '/admin-home-page';
                 dispatch(updateLoginPageCalledFrom(loginPageCalledFrom));
                 dispatch(updateLoginRedirectPage(loginRedirectPage));
@@ -77,9 +93,12 @@ function PastAllBookingPageFunctionalComponent(){
     }, [loginUserDetails, router, dispatch]);
 
 
-    const [diningRoomSuiteEventMeetingBooking, setDiningRoomSuiteEventMeetingBooking] = useState<null | DiningRoomsSuitesEventMeetingBookingInfoForAdmin[]>(null);
+    const [diningRoomSuiteEventMeetingBooking, setDiningRoomSuiteEventMeetingBooking] = 
+        useState<null | DiningRoomsSuitesEventMeetingBookingInfoForAdmin[]>(null);
 
-    const [displayedDiningRoomSuiteEventMeetingBookings, setDiningRoomSuiteDisplayedEventMeetingBookings] = useState<DiningRoomsSuitesEventMeetingBookingInfoForAdmin[]>([]); 
+    const [displayedDiningRoomSuiteEventMeetingBookings, setDiningRoomSuiteDisplayedEventMeetingBookings] = 
+        useState<DiningRoomsSuitesEventMeetingBookingInfoForAdmin[]>([]); 
+
     const [hasMore, setHasMore] = useState<boolean>(true);
     const chunkSize: number = 5;
     const [nextIndex, setNextIndex] = useState<number>(0);
@@ -95,7 +114,8 @@ function PastAllBookingPageFunctionalComponent(){
     async function fetchDiningRoomSuiteEventMeetingBookingDb() {
         try {
             const response: Response = await fetch(`/api/view-past-booking`);
-            const data: ViewDiningRoomsSuitesEventMeetingBookingResponseForAdmin = await response.json();
+            const data: ViewDiningRoomsSuitesEventMeetingBookingResponseForAdmin = 
+                await response.json();
             console.log(data);
             
             if(response.status === 200){
@@ -106,7 +126,9 @@ function PastAllBookingPageFunctionalComponent(){
                         setHasMore(false);
                     }
                     else if(data.message === DINING_ROOMS_SUITES_EVENT_MEETING_BOOKING_INFO_IS_PRESENT){
-                        const diningRoomSuiteEventMeetingBookingDb: DiningRoomsSuitesEventMeetingBookingInfoForAdmin[] | undefined = data.diningRoomsSuitesEventMeetingBookingInfo;
+                        const diningRoomSuiteEventMeetingBookingDb: DiningRoomsSuitesEventMeetingBookingInfoForAdmin[] | undefined = 
+                            data.diningRoomsSuitesEventMeetingBookingInfo;
+                        
                         if(diningRoomSuiteEventMeetingBookingDb){
                             setDiningRoomSuiteEventMeetingBooking(diningRoomSuiteEventMeetingBookingDb);
                             loadMoreDiningRoomSuiteEventMeetingBooking(diningRoomSuiteEventMeetingBookingDb, 0);
@@ -120,11 +142,18 @@ function PastAllBookingPageFunctionalComponent(){
     }
 
 
-    function loadMoreDiningRoomSuiteEventMeetingBooking(diningRoomSuiteEventMeetingBookingInfo: DiningRoomsSuitesEventMeetingBookingInfoForAdmin[], startIndex: number){
+    function loadMoreDiningRoomSuiteEventMeetingBooking(
+        diningRoomSuiteEventMeetingBookingInfo: DiningRoomsSuitesEventMeetingBookingInfoForAdmin[], 
+        startIndex: number
+    ){
         const endIndex: number = startIndex + chunkSize;
-        const nextChunkDiningRoomSuiteEventMeetingInfo: DiningRoomsSuitesEventMeetingBookingInfoForAdmin[] = diningRoomSuiteEventMeetingBookingInfo.slice(startIndex, endIndex);
 
-        setDiningRoomSuiteDisplayedEventMeetingBookings(function(previousDisplayedDiningRoomSuiteEventMeeting: DiningRoomsSuitesEventMeetingBookingInfoForAdmin[]){
+        const nextChunkDiningRoomSuiteEventMeetingInfo: DiningRoomsSuitesEventMeetingBookingInfoForAdmin[] = 
+            diningRoomSuiteEventMeetingBookingInfo.slice(startIndex, endIndex);
+
+        setDiningRoomSuiteDisplayedEventMeetingBookings(function(
+            previousDisplayedDiningRoomSuiteEventMeeting: DiningRoomsSuitesEventMeetingBookingInfoForAdmin[]
+        ){
             //return [...previousDisplayedDiningRoomSuiteEventMeeting, ...nextChunkDiningRoomSuiteEventMeetingInfo];
             const existingIds: Set<string> = new Set<string>();
             for (let i = 0; i < previousDisplayedDiningRoomSuiteEventMeeting.length; i++) {
@@ -133,12 +162,18 @@ function PastAllBookingPageFunctionalComponent(){
 
             const filteredChunkDiningRoomSuiteEventMeetingInfo: DiningRoomsSuitesEventMeetingBookingInfoForAdmin[] = [];
             for (let i = 0; i < nextChunkDiningRoomSuiteEventMeetingInfo.length; i++) {
-                const item: DiningRoomsSuitesEventMeetingBookingInfoForAdmin = nextChunkDiningRoomSuiteEventMeetingInfo[i];
+                const item: DiningRoomsSuitesEventMeetingBookingInfoForAdmin = 
+                    nextChunkDiningRoomSuiteEventMeetingInfo[i];
+
                 if (!existingIds.has(item.bookingInfo._id)) {
                     filteredChunkDiningRoomSuiteEventMeetingInfo.push(item);
                 }
+                
             }
-            return [...previousDisplayedDiningRoomSuiteEventMeeting, ...filteredChunkDiningRoomSuiteEventMeetingInfo];
+            return [
+                ...previousDisplayedDiningRoomSuiteEventMeeting, 
+                ...filteredChunkDiningRoomSuiteEventMeetingInfo
+            ];
         });
         setNextIndex(endIndex);
 
@@ -147,10 +182,13 @@ function PastAllBookingPageFunctionalComponent(){
         }
     }
 
+
     function fetchNext(){
         setTimeout(function(){
             if(diningRoomSuiteEventMeetingBooking){
-                loadMoreDiningRoomSuiteEventMeetingBooking(diningRoomSuiteEventMeetingBooking, nextIndex);
+                loadMoreDiningRoomSuiteEventMeetingBooking(
+                    diningRoomSuiteEventMeetingBooking, nextIndex
+                );
             }
         }, 1000);
     }

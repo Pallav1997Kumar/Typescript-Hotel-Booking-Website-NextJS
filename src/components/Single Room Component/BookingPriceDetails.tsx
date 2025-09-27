@@ -11,8 +11,18 @@ import Paper from '@mui/material/Paper';
 import { getDatesInRange, getDateTextFromFullDate, convertDateTextToDate } from "@/functions/date";
 import { convertToINR } from '@/functions/currency';
 
-import { RoomWithDateDetails, DateDetail, RoomSuitesEachDayInfoRespone } from "@/interface/Rooms and Suites Interface/eachDayRoomSuitesInfoInterface";
-import { DateInfoInterface, RoomsSuitesBookingDetailsInterface, ParticularRoomInfoInterface } from '@/interface/Rooms and Suites Interface/roomsSuitesBookingInterface';
+
+import { 
+    RoomWithDateDetails, 
+    DateDetail, 
+    RoomSuitesEachDayInfoRespone 
+} from "@/interface/Rooms and Suites Interface/eachDayRoomSuitesInfoInterface";
+
+import { 
+    DateInfoInterface, 
+    RoomsSuitesBookingDetailsInterface, 
+    ParticularRoomInfoInterface 
+} from '@/interface/Rooms and Suites Interface/roomsSuitesBookingInterface';
 
 
 interface IPropsBookingPriceDetails{
@@ -91,12 +101,15 @@ function BookingPriceDetails(props: IPropsBookingPriceDetails) {
 
     async function fetchRoomsSuitesEachDayData(){
         try{
-            const response: Response = await fetch('/api/hotel-booking-information/room-and-suites-information/each-day-information/');
+            const response: Response = await fetch(
+                '/api/hotel-booking-information/room-and-suites-information/each-day-information/'
+            );
             const data: RoomSuitesEachDayInfoRespone = await response.json();
             const allRoomsWithDate: RoomWithDateDetails[] = data.roomsWithDate;
-            const particularRoomEachDayInfo: RoomWithDateDetails | undefined = allRoomsWithDate.find(function(eachRoomWithDate: RoomWithDateDetails){
-                return eachRoomWithDate.roomTitle == roomTitle
-            });
+            const particularRoomEachDayInfo: RoomWithDateDetails | undefined = 
+                allRoomsWithDate.find(function(eachRoomWithDate: RoomWithDateDetails){
+                    return eachRoomWithDate.roomTitle == roomTitle
+                });
             if(!particularRoomEachDayInfo){
                 throw new Error("particularRoomEachDayInfo missing");
             }
@@ -115,8 +128,11 @@ function BookingPriceDetails(props: IPropsBookingPriceDetails) {
         datesArrayList.forEach(function(eachDate: Date){
             const eachDateInArray = eachDate.toISOString();
             const dateDetailsOfRoom = roomWithDateInformation.dateDetails;
-            const currentDateRoomInfo = (dateDetailsOfRoom).find(function(eachDateDetails: DateDetail){
-                let eachDateInRoom: string | Date = eachDateDetails.date.toString().split("T")[0].toString();
+            const currentDateRoomInfo = (dateDetailsOfRoom).find(function(
+                eachDateDetails: DateDetail
+            ){
+                let eachDateInRoom: string | Date = 
+                    eachDateDetails.date.toString().split("T")[0].toString();
                 eachDateInRoom = new Date(eachDateInRoom);
                 eachDateInRoom = eachDateInRoom.toISOString();
                 return (eachDateInRoom == eachDateInArray);

@@ -6,8 +6,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { useAppSelector, useAppDispatch } from '@/redux store/hooks';
-import { updateLoginPageCalledFrom, updateLoginRedirectPage } from '@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice';
+import { 
+    updateLoginPageCalledFrom, 
+    updateLoginRedirectPage 
+} from '@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice';
 import { deleteParticularBookingFromRoomCart } from '@/redux store/features/Booking Features/roomBookingCartSlice';
+
 import { INFORMATION_ADD_TO_CART_SUCCESSFUL } from "@/constant string files/apiSuccessMessageConstants";
 
 import RoomsBookingCartComponent from "@/components/Carts Component/RoomsBookingCartComponent";
@@ -31,9 +35,11 @@ function RoomsSuitesCartComponentFunctionalComponent(){
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const allRoomBookingCart: IRoomsDetailsForCart[] = useAppSelector((reduxStore) => reduxStore.roomCartSlice.roomCart);
+    const allRoomBookingCart: IRoomsDetailsForCart[] = 
+        useAppSelector((reduxStore) => reduxStore.roomCartSlice.roomCart);
 
-    const loginUserIdDetails: LoginUserDetails | null = useAppSelector((reduxStore) => reduxStore.userSlice.loginUserDetails);
+    const loginUserIdDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore) => reduxStore.userSlice.loginUserDetails);
     
     let loginUserId: null | string = null;
     if(loginUserIdDetails != null){
@@ -56,13 +62,15 @@ function RoomsSuitesCartComponentFunctionalComponent(){
             if(allRoomBookingCart.length > 0){
                 allRoomBookingCart.forEach(async function(eachRoomCart){
                     try {
-                        const response: Response = await fetch(`/api/add-cart/rooms-suites/${loginUserId}`, {
-                            method: 'POST',
-                            body: JSON.stringify(eachRoomCart),
-                            headers: {
-                                'Content-type': 'application/json; charset=UTF-8',
+                        const response: Response = await fetch(`/api/add-cart/rooms-suites/${loginUserId}`, 
+                            {
+                                method: 'POST',
+                                body: JSON.stringify(eachRoomCart),
+                                headers: {
+                                    'Content-type': 'application/json; charset=UTF-8',
+                                }
                             }
-                        });
+                        );
                         const data: AddRoomsSuitesToCartApiResponse = await response.json();
                         if(response.status === 200){
                             if('message' in data){

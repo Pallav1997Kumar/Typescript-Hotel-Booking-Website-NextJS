@@ -15,9 +15,12 @@ interface IPropsEventMeetingMultipleDateNonContinuousCartComponent{
 }
 
 
-function EventMeetingMultipleDateNonContinuousCartComponent(props: IPropsEventMeetingMultipleDateNonContinuousCartComponent){
+function EventMeetingMultipleDateNonContinuousCartComponent(
+    props: IPropsEventMeetingMultipleDateNonContinuousCartComponent
+){
 
     const eachEventMeetingInCart: NonContinuousMultipleDatesBookingDetailsInterface = props.eachEventMeetingInCart;
+
     const dispatch = useAppDispatch();
 
     function removeCartHandler(eventCartId: number){
@@ -49,7 +52,10 @@ function EventMeetingMultipleDateNonContinuousCartComponent(props: IPropsEventMe
                 {convertToINR(eachEventMeetingInCart.totalPriceOfAllDates)}
             </p>
             
-            <Button onClick={()=>removeCartHandler(eachEventMeetingInCart.eventCartId)} variant="contained">
+            <Button 
+                onClick={()=>removeCartHandler(eachEventMeetingInCart.eventCartId)} 
+                variant="contained"
+            >
                 Remove From Cart
             </Button>
         </div>

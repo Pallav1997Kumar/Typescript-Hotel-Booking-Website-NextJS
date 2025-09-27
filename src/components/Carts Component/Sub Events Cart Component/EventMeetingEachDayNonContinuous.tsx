@@ -10,6 +10,7 @@ import { wantFoodServiceConstants, eventMeetingTimingConstants } from "@/constan
 import { convertToINR } from '@/functions/currency';
 
 import { NonContinuousMultipleDatesDateBookingDetailsWithPrice } from '@/interface/Event Meeting Interface/eventMeetingBookingInterface';
+import { MeetingEventBookingTime } from '@/interface/Event Meeting Interface/eventMeetingRoomConstantInterface';
 
 
 const boxStyle = {
@@ -30,9 +31,11 @@ interface IPropsEventMeetingEachDayNonContinuous{
 
 function EventMeetingEachDayNonContinuous(props: IPropsEventMeetingEachDayNonContinuous){
 
-    const eachBookingDate: NonContinuousMultipleDatesDateBookingDetailsWithPrice = props.eachBookingDate;
+    const eachBookingDate: NonContinuousMultipleDatesDateBookingDetailsWithPrice = 
+        props.eachBookingDate;
 
-    const meetingEventBookingTime: string[] = eachBookingDate.meetingEventBookingTime;
+    const meetingEventBookingTime: MeetingEventBookingTime[] = eachBookingDate.meetingEventBookingTime;
+
     const isMorningSlotBooked: boolean = meetingEventBookingTime.includes(eventMeetingTimingConstants.MORNING_TIME);
     const isAfternoonSlotBooked: boolean = meetingEventBookingTime.includes(eventMeetingTimingConstants.AFTERNOON_TIME);
     const isEveningSlotBooked: boolean = meetingEventBookingTime.includes(eventMeetingTimingConstants.EVENING_TIME);
@@ -53,6 +56,7 @@ function EventMeetingEachDayNonContinuous(props: IPropsEventMeetingEachDayNonCon
         midNightFoodItems = eachBookingDate.selectedMealsOnBookingDate.midNight;
     }
 
+
     function getFoodList(foodArrayList: string[]){
         const foodArray = foodArrayList.map(function(eachItem: string){
             return eachItem.split(" (")[0];
@@ -72,7 +76,13 @@ function EventMeetingEachDayNonContinuous(props: IPropsEventMeetingEachDayNonCon
         <div className="py-4 flex flex-row items-start gap-4">
             <p className="w-4/5 text-base">
                 <span className="font-semibold">Date: </span>                                            
-                {getDateTextFromFullDate(typeof eachBookingDate.meetingEventBookingDate === 'string' ? eachBookingDate.meetingEventBookingDate : eachBookingDate.meetingEventBookingDate.toISOString())}
+                {
+                    getDateTextFromFullDate(
+                        typeof eachBookingDate.meetingEventBookingDate === 'string' 
+                        ? eachBookingDate.meetingEventBookingDate 
+                        : eachBookingDate.meetingEventBookingDate.toISOString()
+                    )
+                }
             </p>
             
             <Button onClick={()=>setViewDateDetails(true)} variant="outlined">

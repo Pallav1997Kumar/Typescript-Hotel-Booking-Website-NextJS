@@ -6,26 +6,39 @@ import Button from '@mui/material/Button';
 import { useRouter } from 'next/navigation';
 import { wrapper } from '@/redux store/storePersistance';
 
-import { updateLoginPageCalledFrom, updateLoginRedirectPage } from '@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice';
+
+import { 
+    updateLoginPageCalledFrom, 
+    updateLoginRedirectPage 
+} from '@/redux store/features/Login Page Called From Features/loginPageCalledFromSlice';
+
 import { deleteParticularBookingFromRoomCart } from '@/redux store/features/Booking Features/roomBookingCartSlice';
 import { deleteParticularBookingFromDiningCart } from '@/redux store/features/Booking Features/diningBookingCartSlice';
 import { deleteParticularBookingFromEventMeetingCart } from '@/redux store/features/Booking Features/eventMeetingRoomBookingCartSlice';
+import { useAppDispatch, useAppSelector } from '@/redux store/hooks';
+
 import { roomBookingDateTypeConstants } from "@/constant string files/eventsMeetingRoomImportantConstants";
 import { INFORMATION_ADD_TO_CART_SUCCESSFUL } from "@/constant string files/apiSuccessMessageConstants";
-import { useAppDispatch, useAppSelector } from '@/redux store/hooks';
+
 
 import RoomsBookingCartComponent from "@/components/Carts Component/RoomsBookingCartComponent";
 import DiningBookingCartComponent from "@/components/Carts Component/DiningBookingCartComponent";
 import EventMeetingRoomBookingCartComponent from "@/components/Carts Component/EventMeetingRoomBookingCartComponent";
 import ErrorBoundary from '@/components/Error Boundary/ErrorBoundary';
 
+
 import { IRoomsDetailsForCart } from '@/interface/Rooms and Suites Interface/roomsSuitesBookingInterface';
 import { DiningDetailsForCart } from '@/interface/Dining Interface/diningBookingInterface';
-import { MultipleContinuousDatesBookingDetailsWithPriceInterface, NonContinuousMultipleDatesBookingDetailsInterface, SingleDateEventBookingDetailsWithPriceInterface } from '@/interface/Event Meeting Interface/eventMeetingBookingInterface';
 import { LoginUserDetails } from '@/redux store/features/Auth Features/loginUserDetailsSlice';
 import { AddEventMeetingRoomCartApiResponse } from '@/interface/Event Meeting Interface/eventMeetingCartApiResponse';
 import { AddDiningCartApiResponse } from '@/interface/Dining Interface/diningCartApiResponse';
 import { AddRoomsSuitesToCartApiResponse } from '@/interface/Rooms and Suites Interface/roomsSuitesCartApiResponse';
+
+import { 
+    MultipleContinuousDatesBookingDetailsWithPriceInterface, 
+    NonContinuousMultipleDatesBookingDetailsInterface, 
+    SingleDateEventBookingDetailsWithPriceInterface 
+} from '@/interface/Event Meeting Interface/eventMeetingBookingInterface';
 
 
 function AllCartsComponent(){
@@ -43,11 +56,20 @@ function AllCartsComponentFunctionalComponent(){
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    const allRoomBookingCart: IRoomsDetailsForCart[] = useAppSelector((reduxStore) => reduxStore.roomCartSlice.roomCart);
-    const allDiningBookingCart: DiningDetailsForCart[] = useAppSelector((reduxStore) => reduxStore.diningCartSlice.diningCart);
-    const allEventMeetingBookingCart: (NonContinuousMultipleDatesBookingDetailsInterface | MultipleContinuousDatesBookingDetailsWithPriceInterface | SingleDateEventBookingDetailsWithPriceInterface)[] = useAppSelector((reduxStore) => reduxStore.eventMeetingCartSlice.eventMeetingCart);
+    const allRoomBookingCart: IRoomsDetailsForCart[] = 
+        useAppSelector((reduxStore) => reduxStore.roomCartSlice.roomCart);
 
-    const loginUserIdDetails: LoginUserDetails | null = useAppSelector((reduxStore)=> reduxStore.userSlice.loginUserDetails);
+    const allDiningBookingCart: DiningDetailsForCart[] = 
+        useAppSelector((reduxStore) => reduxStore.diningCartSlice.diningCart);
+
+    const allEventMeetingBookingCart: (
+        NonContinuousMultipleDatesBookingDetailsInterface 
+        | MultipleContinuousDatesBookingDetailsWithPriceInterface 
+        | SingleDateEventBookingDetailsWithPriceInterface
+    )[] = useAppSelector((reduxStore) => reduxStore.eventMeetingCartSlice.eventMeetingCart);
+
+    const loginUserIdDetails: LoginUserDetails | null = 
+        useAppSelector((reduxStore) => reduxStore.userSlice.loginUserDetails);
     
     let loginUserId: null | string = null;
     if(loginUserIdDetails != null){
@@ -69,15 +91,17 @@ function AllCartsComponentFunctionalComponent(){
         try {
             setInformationAddingToUserCart(true);
             if(allRoomBookingCart.length > 0){
-                allRoomBookingCart.forEach(async function(eachRoomCart){
+                allRoomBookingCart.forEach(async function(eachRoomCart: IRoomsDetailsForCart){
                     try {
-                        const response: Response = await fetch(`/api/add-cart/rooms-suites/${loginUserId}`, {
-                            method: 'POST',
-                            body: JSON.stringify(eachRoomCart),
-                            headers: {
-                                'Content-type': 'application/json; charset=UTF-8',
+                        const response: Response = await fetch(`/api/add-cart/rooms-suites/${loginUserId}`, 
+                            {
+                                method: 'POST',
+                                body: JSON.stringify(eachRoomCart),
+                                headers: {
+                                    'Content-type': 'application/json; charset=UTF-8',
+                                }
                             }
-                        });
+                        );
                         const data: AddRoomsSuitesToCartApiResponse = await response.json();
                         if(response.status === 200){
                             if('message' in data){
@@ -93,15 +117,17 @@ function AllCartsComponentFunctionalComponent(){
             }
 
             if(allDiningBookingCart.length > 0){
-                allDiningBookingCart.forEach(async function(eachDiningCart){
+                allDiningBookingCart.forEach(async function(eachDiningCart: DiningDetailsForCart){
                     try {
-                        const response: Response = await fetch(`/api/add-cart/dining/${loginUserId}`, {
-                            method: 'POST',
-                            body: JSON.stringify(eachDiningCart),
-                            headers: {
-                                'Content-type': 'application/json; charset=UTF-8',
+                        const response: Response = await fetch(`/api/add-cart/dining/${loginUserId}`, 
+                            {
+                                method: 'POST',
+                                body: JSON.stringify(eachDiningCart),
+                                headers: {
+                                    'Content-type': 'application/json; charset=UTF-8',
+                                }
                             }
-                        });
+                        );
                         const data: AddDiningCartApiResponse = await response.json();
                         if(response.status === 200){
                             if('message' in data){
@@ -118,17 +144,24 @@ function AllCartsComponentFunctionalComponent(){
 
             if(allEventMeetingBookingCart.length > 0){
 
-                allEventMeetingBookingCart.forEach(async function(eachEventMeeting){
+                allEventMeetingBookingCart.forEach(async function(
+                    eachEventMeeting: 
+                        | NonContinuousMultipleDatesBookingDetailsInterface 
+                        | MultipleContinuousDatesBookingDetailsWithPriceInterface 
+                        | SingleDateEventBookingDetailsWithPriceInterface
+                ){
 
                     if(eachEventMeeting.roomBookingDateType === roomBookingDateTypeConstants.SINGLE_DATE){
                         try {
-                            const response: Response = await fetch(`/api/add-cart/meeting-events/single-date/${loginUserId}`, {
-                                method: 'POST',
-                                body: JSON.stringify(eachEventMeeting),
-                                headers: {
-                                    'Content-type': 'application/json; charset=UTF-8',
+                            const response: Response = await fetch(`/api/add-cart/meeting-events/single-date/${loginUserId}`, 
+                                {
+                                    method: 'POST',
+                                    body: JSON.stringify(eachEventMeeting),
+                                    headers: {
+                                        'Content-type': 'application/json; charset=UTF-8',
+                                    }
                                 }
-                            });
+                            );
                             const data: AddEventMeetingRoomCartApiResponse = await response.json();
                             if(response.status === 200){
                                 if('message' in data){
@@ -144,13 +177,15 @@ function AllCartsComponentFunctionalComponent(){
 
                     if(eachEventMeeting.roomBookingDateType === roomBookingDateTypeConstants.MULTIPLE_DATES_CONTINOUS){
                         try {
-                            const response: Response = await fetch(`/api/add-cart/meeting-events/multiple-dates-continous/${loginUserId}`, {
-                                method: 'POST',
-                                body: JSON.stringify(eachEventMeeting),
-                                headers: {
-                                    'Content-type': 'application/json; charset=UTF-8',
+                            const response: Response = await fetch(`/api/add-cart/meeting-events/multiple-dates-continous/${loginUserId}`, 
+                                {
+                                    method: 'POST',
+                                    body: JSON.stringify(eachEventMeeting),
+                                    headers: {
+                                        'Content-type': 'application/json; charset=UTF-8',
+                                    }
                                 }
-                            });
+                            );
                             const data: AddEventMeetingRoomCartApiResponse = await response.json();
                             if(response.status === 200){
                                 if('message' in data){
@@ -166,13 +201,15 @@ function AllCartsComponentFunctionalComponent(){
 
                     if(eachEventMeeting.roomBookingDateType === roomBookingDateTypeConstants.MULTIPLE_DATES_NON_CONTINOUS){
                         try {
-                            const response: Response = await fetch(`/api/add-cart/meeting-events/multiple-dates-non-continous/${loginUserId}`, {
-                                method: 'POST',
-                                body: JSON.stringify(eachEventMeeting),
-                                headers: {
-                                    'Content-type': 'application/json; charset=UTF-8',
+                            const response: Response = await fetch(`/api/add-cart/meeting-events/multiple-dates-non-continous/${loginUserId}`, 
+                                {
+                                    method: 'POST',
+                                    body: JSON.stringify(eachEventMeeting),
+                                    headers: {
+                                        'Content-type': 'application/json; charset=UTF-8',
+                                    }
                                 }
-                            });
+                            );
                             const data: AddEventMeetingRoomCartApiResponse = await response.json();
                             if(response.status === 200){
                                 if('message' in data){
@@ -244,30 +281,32 @@ function AllCartsComponentFunctionalComponent(){
                     <h3 className="text-xl font-semibold">All Carts</h3>
 
                     {/* Empty Cart Condition */}
-                    {(allRoomBookingCart.length == 0 && allDiningBookingCart.length == 0 && allEventMeetingBookingCart.length == 0) &&
-                        <div className="flex flex-col items-center justify-center bg-amber-100 p-12">
-                            <p className="uppercase font-extrabold text-2xl tracking-wider text-center underline">
-                                Your Cart is Empty
-                            </p>
-                            <p className="text-center text-xl font-semibold">
-                                Add Items in Your Cart
-                            </p>
-                        </div>
+                    {(allRoomBookingCart.length == 0 && 
+                        allDiningBookingCart.length == 0 && 
+                        allEventMeetingBookingCart.length == 0) &&
+                            <div className="flex flex-col items-center justify-center bg-amber-100 p-12">
+                                <p className="uppercase font-extrabold text-2xl tracking-wider text-center underline">
+                                    Your Cart is Empty
+                                </p>
+                                <p className="text-center text-xl font-semibold">
+                                    Add Items in Your Cart
+                                </p>
+                            </div>
                     }
 
                     {/* Room Booking Cart */}
                     {(allRoomBookingCart.length > 0) &&
-                    <RoomsBookingCartComponent />
+                        <RoomsBookingCartComponent />
                     }
 
                     {/* Dining Booking Cart */}
                     {(allDiningBookingCart.length > 0) &&
-                    <DiningBookingCartComponent />
+                        <DiningBookingCartComponent />
                     }
 
                     {/* Event Meeting Room Booking Cart */}
                     {(allEventMeetingBookingCart.length > 0) &&
-                    <EventMeetingRoomBookingCartComponent />
+                        <EventMeetingRoomBookingCartComponent />
                     }
 
                     {/* Login Button */}
